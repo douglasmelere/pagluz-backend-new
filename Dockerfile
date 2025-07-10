@@ -12,7 +12,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Instalar dependências
-RUN npm ci --only=production
+RUN npm ci
 
 # Copiar código fonte
 COPY . .
@@ -28,4 +28,3 @@ EXPOSE 3000
 
 # Comando de inicialização
 CMD ["npm", "run", "deploy"]
-
