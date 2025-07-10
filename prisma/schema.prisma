@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Consumer {
+  id                    String            @id @default(cuid())
+  name                  String
+  cpfCnpj               String            @unique
+  ucNumber              String
+  concessionaire        String
+  city                  String
+  state                 String
+  consumerType          ConsumerType
+  phase                 PhaseType
+  averageMonthlyConsumption Float
+  discountOffered       Float
+  status                ConsumerStatus    @default(AVAILABLE)
+  
+  // Campos para quando estiver alocado
+  allocatedPercentage   Float?
+  generatorId           String?
+  generator             Generator?        @relation(fields: [generatorId], references: [id])
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@map("consumers")
+}
+
+model Generator {
+  id                    String            @id @default(cuid())
+  ownerName             String
+  cpfCnpj               String            @unique
+  sourceType            SourceType
+  installedPower        Float
+  concessionaire        String
+  ucNumber              String
+  city                  String
+  state                 String
+  status                GeneratorStatus   @default(UNDER_ANALYSIS)
+  observations          String?
+  
+  // Relacionamento com consumidores
+  consumers             Consumer[]
+  
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@map("generators")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ConsumerType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  RURAL
+  PUBLIC_POWER
+}
+
+enum PhaseType {
+  MONOPHASIC
+  BIPHASIC
+  TRIPHASIC
+}
+
+enum ConsumerStatus {
+  AVAILABLE
+  ALLOCATED
+}
+
+enum SourceType {
+  SOLAR
+  HYDRO
+  BIOMASS
+  WIND
+}
+
+enum GeneratorStatus {
+  UNDER_ANALYSIS
+  AWAITING_ALLOCATION
+}
+
