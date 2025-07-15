@@ -18,7 +18,7 @@ export class ConsumersService {
 
     // Se um gerador foi especificado, verifica se existe
     if (generatorId) {
-      const generator = await this.prisma.clienteGerador.findUnique({
+      const generator = await this.prisma.generator.findUnique({
         where: { id: generatorId },
       });
 
@@ -27,7 +27,7 @@ export class ConsumersService {
       }
     }
 
-    const consumer = await this.prisma.clienteConsumidor.create({
+    const consumer = await this.prisma.consumer.create({
       data: {
         cpfCnpj,
         generatorId,
@@ -42,7 +42,7 @@ export class ConsumersService {
   }
 
   async findAll() {
-    const consumers = await this.prisma.clienteConsumidor.findMany({
+    const consumers = await this.prisma.consumer.findMany({
       include: {
         generator: {
           select: {
@@ -62,7 +62,7 @@ export class ConsumersService {
   }
 
   async findOne(id: string) {
-    const consumer = await this.prisma.clienteConsumidor.findUnique({
+    const consumer = await this.prisma.consumer.findUnique({
       where: { id },
       include: {
         generator: true,
@@ -78,7 +78,7 @@ export class ConsumersService {
 
   // Nova função para busca por cpfCnpj (caso necessário)
   async findByCpfCnpj(cpfCnpj: string) {
-    const consumers = await this.prisma.clienteConsumidor.findMany({
+    const consumers = await this.prisma.consumer.findMany({
       where: { cpfCnpj },
       include: {
         generator: {
@@ -103,7 +103,7 @@ export class ConsumersService {
 
     // Se um gerador foi especificado, verifica se existe
     if (generatorId) {
-      const generator = await this.prisma.clienteGerador.findUnique({
+      const generator = await this.prisma.generator.findUnique({
         where: { id: generatorId },
       });
 
@@ -112,7 +112,7 @@ export class ConsumersService {
       }
     }
 
-    const consumer = await this.prisma.clienteConsumidor.update({
+    const consumer = await this.prisma.consumer.update({
       where: { id },
       data: {
         generatorId,
@@ -130,7 +130,7 @@ export class ConsumersService {
     // Verifica se o consumidor existe
     await this.findOne(id);
 
-    await this.prisma.clienteConsumidor.delete({
+    await this.prisma.consumer.delete({
       where: { id },
     });
 
@@ -146,7 +146,7 @@ export class ConsumersService {
     const consumer = await this.findOne(consumerId);
 
     // Verifica se o gerador existe
-    const generator = await this.prisma.clienteGerador.findUnique({
+    const generator = await this.prisma.generator.findUnique({
       where: { id: generatorId },
     });
 
@@ -160,7 +160,7 @@ export class ConsumersService {
     }
 
     // Atualiza o consumidor
-    const updatedConsumer = await this.prisma.clienteConsumidor.update({
+    const updatedConsumer = await this.prisma.consumer.update({
       where: { id: consumerId },
       data: {
         status: ConsumerStatus.ALLOCATED,
@@ -179,7 +179,7 @@ export class ConsumersService {
     // Verifica se o consumidor existe
     await this.findOne(consumerId);
 
-    const updatedConsumer = await this.prisma.clienteConsumidor.update({
+    const updatedConsumer = await this.prisma.consumer.update({
       where: { id: consumerId },
       data: {
         status: ConsumerStatus.AVAILABLE,
@@ -192,7 +192,7 @@ export class ConsumersService {
   }
 
   async getByState(state: string) {
-    const consumers = await this.prisma.clienteConsumidor.findMany({
+    const consumers = await this.prisma.consumer.findMany({
       where: { state },
       include: {
         generator: {
@@ -209,21 +209,21 @@ export class ConsumersService {
   }
 
   async getStatistics() {
-    const total = await this.prisma.clienteConsumidor.count();
-    const allocated = await this.prisma.clienteConsumidor.count({
+    const total = await this.prisma.consumer.count();
+    const allocated = await this.prisma.consumer.count({
       where: { status: ConsumerStatus.ALLOCATED },
     });
-    const available = await this.prisma.clienteConsumidor.count({
+    const available = await this.prisma.consumer.count({
       where: { status: ConsumerStatus.AVAILABLE },
     });
 
-    const totalConsumption = await this.prisma.clienteConsumidor.aggregate({
+    const totalConsumption = await this.prisma.consumer.aggregate({
       _sum: {
         averageMonthlyConsumption: true,
       },
     });
 
-    const byState = await this.prisma.clienteConsumidor.groupBy({
+    const byState = await this.prisma.consumer.groupBy({
       by: ['state'],
       _count: {
         id: true,
