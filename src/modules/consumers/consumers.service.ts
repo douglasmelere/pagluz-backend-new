@@ -16,18 +16,9 @@ export class ConsumersService {
   async create(createConsumerDto: CreateConsumerDto) {
     const { cpfCnpj, generatorId, ...consumerData } = createConsumerDto;
 
-    // Verifica se o CPF/CNPJ já existe
-    const existingConsumer = await this.prisma.consumer.findUnique({
-      where: { cpfCnpj },
-    });
-
-    if (existingConsumer) {
-      throw new ConflictException('CPF/CNPJ já está cadastrado');
-    }
-
     // Se um gerador foi especificado, verifica se existe
     if (generatorId) {
-      const generator = await this.prisma.generator.findUnique({
+      const generator = await this.prisma.clienteGerador.findUnique({
         where: { id: generatorId },
       });
 
@@ -36,7 +27,7 @@ export class ConsumersService {
       }
     }
 
-    const consumer = await this.prisma.consumer.create({
+    const consumer = await this.prisma.clienteConsumidor.create({
       data: {
         cpfCnpj,
         generatorId,
@@ -51,7 +42,7 @@ export class ConsumersService {
   }
 
   async findAll() {
-    const consumers = await this.prisma.consumer.findMany({
+    const consumers = await this.prisma.clienteConsumidor.findMany({
       include: {
         generator: {
           select: {
@@ -71,7 +62,7 @@ export class ConsumersService {
   }
 
   async findOne(id: string) {
-    const consumer = await this.prisma.consumer.findUnique({
+    const consumer = await this.prisma.clienteConsumidor.findUnique({
       where: { id },
       include: {
         generator: true,
@@ -85,6 +76,25 @@ export class ConsumersService {
     return consumer;
   }
 
+  // Nova função para busca por cpfCnpj (caso necessário)
+  async findByCpfCnpj(cpfCnpj: string) {
+    const consumers = await this.prisma.clienteConsumidor.findMany({
+      where: { cpfCnpj },
+      include: {
+        generator: {
+          select: {
+            id: true,
+            ownerName: true,
+            sourceType: true,
+            installedPower: true,
+          },
+        },
+      },
+    });
+
+    return consumers;
+  }
+
   async update(id: string, updateConsumerDto: UpdateConsumerDto) {
     const { generatorId, ...updateData } = updateConsumerDto;
 
@@ -93,7 +103,7 @@ export class ConsumersService {
 
     // Se um gerador foi especificado, verifica se existe
     if (generatorId) {
-      const generator = await this.prisma.generator.findUnique({
+      const generator = await this.prisma.clienteGerador.findUnique({
         where: { id: generatorId },
       });
 
@@ -102,7 +112,7 @@ export class ConsumersService {
       }
     }
 
-    const consumer = await this.prisma.consumer.update({
+    const consumer = await this.prisma.clienteConsumidor.update({
       where: { id },
       data: {
         generatorId,
@@ -120,7 +130,7 @@ export class ConsumersService {
     // Verifica se o consumidor existe
     await this.findOne(id);
 
-    await this.prisma.consumer.delete({
+    await this.prisma.clienteConsumidor.delete({
       where: { id },
     });
 
@@ -136,7 +146,7 @@ export class ConsumersService {
     const consumer = await this.findOne(consumerId);
 
     // Verifica se o gerador existe
-    const generator = await this.prisma.generator.findUnique({
+    const generator = await this.prisma.clienteGerador.findUnique({
       where: { id: generatorId },
     });
 
@@ -150,7 +160,7 @@ export class ConsumersService {
     }
 
     // Atualiza o consumidor
-    const updatedConsumer = await this.prisma.consumer.update({
+    const updatedConsumer = await this.prisma.clienteConsumidor.update({
       where: { id: consumerId },
       data: {
         status: ConsumerStatus.ALLOCATED,
@@ -169,7 +179,7 @@ export class ConsumersService {
     // Verifica se o consumidor existe
     await this.findOne(consumerId);
 
-    const updatedConsumer = await this.prisma.consumer.update({
+    const updatedConsumer = await this.prisma.clienteConsumidor.update({
       where: { id: consumerId },
       data: {
         status: ConsumerStatus.AVAILABLE,
@@ -182,7 +192,7 @@ export class ConsumersService {
   }
 
   async getByState(state: string) {
-    const consumers = await this.prisma.consumer.findMany({
+    const consumers = await this.prisma.clienteConsumidor.findMany({
       where: { state },
       include: {
         generator: {
@@ -199,21 +209,21 @@ export class ConsumersService {
   }
 
   async getStatistics() {
-    const total = await this.prisma.consumer.count();
-    const allocated = await this.prisma.consumer.count({
+    const total = await this.prisma.clienteConsumidor.count();
+    const allocated = await this.prisma.clienteConsumidor.count({
       where: { status: ConsumerStatus.ALLOCATED },
     });
-    const available = await this.prisma.consumer.count({
+    const available = await this.prisma.clienteConsumidor.count({
       where: { status: ConsumerStatus.AVAILABLE },
     });
 
-    const totalConsumption = await this.prisma.consumer.aggregate({
+    const totalConsumption = await this.prisma.clienteConsumidor.aggregate({
       _sum: {
         averageMonthlyConsumption: true,
       },
     });
 
-    const byState = await this.prisma.consumer.groupBy({
+    const byState = await this.prisma.clienteConsumidor.groupBy({
       by: ['state'],
       _count: {
         id: true,
@@ -230,4 +240,3 @@ export class ConsumersService {
     };
   }
 }
-
