@@ -15,15 +15,6 @@ export class GeneratorsService {
   async create(createGeneratorDto: CreateGeneratorDto) {
     const { cpfCnpj, ...generatorData } = createGeneratorDto;
 
-    // Verifica se o CPF/CNPJ já existe
-    const existingGenerator = await this.prisma.generator.findUnique({
-      where: { cpfCnpj },
-    });
-
-    if (existingGenerator) {
-      throw new ConflictException('CPF/CNPJ já está cadastrado');
-    }
-
     const generator = await this.prisma.generator.create({
       data: {
         cpfCnpj,
@@ -238,4 +229,3 @@ export class GeneratorsService {
     };
   }
 }
-
