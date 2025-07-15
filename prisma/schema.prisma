@@ -25,7 +25,7 @@ model User {
 model Consumer {
   id                    String            @id @default(cuid())
   name                  String
-  cpfCnpj               String            @unique
+  cpfCnpj               String            
   ucNumber              String
   concessionaire        String
   city                  String
@@ -50,7 +50,7 @@ model Consumer {
 model Generator {
   id                    String            @id @default(cuid())
   ownerName             String
-  cpfCnpj               String            @unique
+  cpfCnpj               String            
   sourceType            SourceType
   installedPower        Float
   concessionaire        String
