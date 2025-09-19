@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  password             String
+  name                 String?
+  role                 UserRole  @default(ADMIN)
+  isActive             Boolean   @default(true)
+  lastLoginAt          DateTime?
+  loginCount           Int       @default(0)
+  failedLoginAttempts  Int       @default(0) // Contador de tentativas de login falhadas
+  lockedUntil          DateTime? // Data até quando a conta está bloqueada
+  passwordChangedAt    DateTime? // Última vez que a senha foi alterada
+  passwordResetToken   String? // Token para reset de senha
+  passwordResetExpires DateTime? // Expiração do token de reset
+  createdBy            String? // ID do usuário que criou este usuário
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  // Relacionamento com logs de auditoria
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String? // ID do usuário que executou a ação (pode ser nulo em eventos anônimos)
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String // Ação executada (CREATE, UPDATE, DELETE, LOGIN, LOGOUT, etc.)
+  entityType String // Tipo de entidade afetada (User, Consumer, Representative, etc.)
+  entityId   String? // ID da entidade afetada (opcional)
+  oldValues  Json? // Valores anteriores (para UPDATE)
+  newValues  Json? // Novos valores (para CREATE/UPDATE)
+  ipAddress  String? // IP do usuário
+  userAgent  String? // User agent do navegador
+  metadata   Json? // Dados adicionais da ação
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model BlacklistedToken {
+  id        String   @id @default(cuid())
+  token     String   @unique // Hash do token JWT
+  userId    String // ID do usuário que fez logout
+  expiresAt DateTime // Quando o token expiraria naturalmente
+  reason    String // Motivo da invalidação (LOGOUT, SECURITY, etc.)
+  createdAt DateTime @default(now())
+
+  @@map("blacklisted_tokens")
+}
+
+model Representative {
+  id              String               @id @default(cuid())
+  name            String
+  email           String               @unique
+  password        String
+  cpfCnpj         String               @unique
+  phone           String
+  city            String
+  state           String
+  commissionRate  Float                @default(0)
+  specializations String[]             @default([])
+  status          RepresentativeStatus @default(PENDING_APPROVAL)
+  notes           String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  lastLoginAt     DateTime?
+  loginCount      Int                  @default(0)
+
+  // Relacionamento com tokens
+  representative_tokens representative_tokens[]
+  Consumer              Consumer[]
+
+  @@map("commercial_representatives")
+}
+
+model Consumer {
+  id                        String         @id @default(cuid())
+  name                      String
+  cpfCnpj                   String
+  ucNumber                  String
+  concessionaire            String
+  city                      String
+  state                     String
+  consumerType              ConsumerType
+  phase                     PhaseType
+  averageMonthlyConsumption Float
+  discountOffered           Float
+  status                    ConsumerStatus @default(AVAILABLE)
+  allocatedPercentage       Float?
+  generatorId               String?
+
+  // Relacionamento com gerador
+  generator Generator? @relation(fields: [generatorId], references: [id])
+
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  Representative   Representative? @relation(fields: [representativeId], references: [id])
+  representativeId String?
+
+  @@map("consumers")
+}
+
+model Generator {
+  id             String          @id @default(cuid())
+  ownerName      String
+  cpfCnpj        String
+  sourceType     SourceType
+  installedPower Float
+  concessionaire String
+  ucNumber       String
+  city           String
+  state          String
+  status         GeneratorStatus @default(UNDER_ANALYSIS)
+  observations   String?
+
+  // Relacionamento com consumidores
+  consumers Consumer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("generators")
+}
+
+model representative_tokens {
+  id                         String         @id
+  token                      String         @unique
+  representativeId           String
+  expiresAt                  DateTime
+  isRevoked                  Boolean        @default(false)
+  createdAt                  DateTime       @default(now())
+  commercial_representatives Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  SUPER_ADMIN // Apenas Douglas
+  ADMIN // Usuários de nível alto (podem fazer tudo menos criar users)
+  MANAGER // Usuários de nível médio (podem gerenciar representantes e consumidores)
+  OPERATOR // Usuários de nível baixo (podem apenas visualizar e editar dados básicos)
+  REPRESENTATIVE
+}
+
+enum RepresentativeStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_APPROVAL
+  SUSPENDED
+}
+
+enum ConsumerType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  RURAL
+  PUBLIC_POWER
+}
+
+enum PhaseType {
+  MONOPHASIC
+  BIPHASIC
+  TRIPHASIC
+}
+
+enum ConsumerStatus {
+  AVAILABLE
+  ALLOCATED
+  IN_PROCESS
+  CONVERTED
+}
+
+enum SourceType {
+  SOLAR
+  HYDRO
+  BIOMASS
+  WIND
+}
+
+enum GeneratorStatus {
+  UNDER_ANALYSIS
+  AWAITING_ALLOCATION
+  ACTIVE
+  INACTIVE
+}
+
+enum CommissionStatus {
+  PENDING
+  CALCULATED
+  PAID
+  CANCELLED
+}
