@@ -1,0 +1,72 @@
+import { PrismaService } from '../../config/prisma.service';
+export declare class DashboardService {
+    private prisma;
+    constructor(prisma: PrismaService);
+    getDashboardData(): Promise<{
+        summary: {
+            totalGenerators: number;
+            totalConsumers: number;
+            totalInstalledPower: number;
+            newClientsThisWeek: number;
+            newGeneratorsThisWeek: number;
+            newConsumersThisWeek: number;
+            pendingConsumers: number;
+            pendingChangeRequests: number;
+        };
+        stateDistribution: any[];
+        recentActivity: ({
+            id: string;
+            type: "generator";
+            name: string;
+            subtype: import(".prisma/client").$Enums.SourceType;
+            createdAt: Date;
+        } | {
+            id: string;
+            type: "consumer";
+            name: string;
+            subtype: import(".prisma/client").$Enums.ConsumerType;
+            createdAt: Date;
+        })[];
+        insights: {
+            totalMonthlyConsumption: number;
+            allocationRate: number;
+            estimatedMonthlySavings: number;
+            totalAllocatedEnergy: number;
+            capacityUtilization: {
+                totalCapacity: number;
+                allocatedCapacity: number;
+                availableCapacity: number;
+                utilizationRate: number;
+            };
+            generatorStatus: {
+                underAnalysis: number;
+                awaitingAllocation: number;
+            };
+        };
+        notifications: {
+            pendingChangeRequests: {
+                id: string;
+                consumerId: string;
+                consumerName: string;
+                representativeName: string;
+                changedFields: string[];
+                requestedAt: Date;
+            }[];
+            pendingConsumers: number;
+        };
+    }>;
+    private getPendingChangeRequests;
+    private getRecentActivity;
+    private calculateInsights;
+    private mergeStateData;
+    getGeneratorsBySourceType(): Promise<{
+        sourceType: import(".prisma/client").$Enums.SourceType;
+        count: number;
+        totalPower: number;
+    }[]>;
+    getConsumersByType(): Promise<{
+        consumerType: import(".prisma/client").$Enums.ConsumerType;
+        count: number;
+        totalConsumption: number;
+    }[]>;
+}

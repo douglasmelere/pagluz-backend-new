@@ -1,0 +1,31 @@
+import { ConsumerType, PhaseType, ConsumerStatus, DocumentType } from '../../../common/enums';
+export declare class CreateConsumerDto {
+    name: string;
+    documentType?: DocumentType;
+    cpfCnpj: string;
+    representativeName?: string;
+    representativeRg?: string;
+    phone?: string;
+    email?: string;
+    concessionaire: string;
+    ucNumber: string;
+    consumerType: ConsumerType;
+    phase: PhaseType;
+    averageMonthlyConsumption: number;
+    discountOffered: number;
+    receiveWhatsapp?: boolean;
+    street?: string;
+    number?: string;
+    complement?: string;
+    neighborhood?: string;
+    city: string;
+    state: string;
+    zipCode?: string;
+    birthDate?: string;
+    observations?: string;
+    arrivalDate?: string;
+    status?: ConsumerStatus;
+    allocatedPercentage?: number;
+    generatorId?: string;
+    representativeId?: string;
+}
