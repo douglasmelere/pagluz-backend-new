@@ -261,8 +261,8 @@ export class ConsumersController {
   ) {
     const representativeId = req.user.id;
     return this.consumersService.updateRepresentativeConsumerWithApproval(
-      consumerId,
       representativeId,
+      consumerId,
       updateConsumerDto,
     );
   }
