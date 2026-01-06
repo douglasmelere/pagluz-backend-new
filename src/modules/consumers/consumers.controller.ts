@@ -218,6 +218,15 @@ export class ConsumersController {
     });
   }
 
+  @ApiOperation({ summary: 'Listar solicitações de mudança do representante' })
+  @ApiResponse({ status: 200, description: 'Lista de solicitações do representante' })
+  @Get('representative/change-requests')
+  @UseGuards(RepresentativeJwtAuthGuard)
+  getRepresentativeChangeRequests(@Request() req: any) {
+    const representativeId = req.user.id;
+    return this.changeRequestsService.getRepresentativeRequests(representativeId);
+  }
+
   @ApiOperation({ summary: 'Obter consumidor específico do representante' })
   @ApiResponse({ status: 200, description: 'Detalhes do consumidor' })
   @ApiResponse({ status: 404, description: 'Consumidor não encontrado' })
@@ -494,15 +503,6 @@ export class ConsumersController {
       page || 1,
       limit || 10,
     );
-  }
-
-  @ApiOperation({ summary: 'Listar solicitações de mudança do representante' })
-  @ApiResponse({ status: 200, description: 'Lista de solicitações do representante' })
-  @Get('representative/change-requests')
-  @UseGuards(RepresentativeJwtAuthGuard)
-  getRepresentativeChangeRequests(@Request() req: any) {
-    const representativeId = req.user.id;
-    return this.changeRequestsService.getRepresentativeRequests(representativeId);
   }
 
   @ApiOperation({ summary: 'Aprovar solicitação de mudança (Admin)' })
