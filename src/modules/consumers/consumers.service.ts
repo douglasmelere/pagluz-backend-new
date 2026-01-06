@@ -1771,45 +1771,58 @@ export class ConsumersService {
    * Faz download de fatura (Admin)
    */
   async downloadInvoiceAdmin(consumerId: string, res: any) {
-    // Verifica se o consumidor existe
-    const consumer = await this.prisma.consumer.findUnique({
-      where: { id: consumerId },
-    });
+    try {
+      // Verifica se o consumidor existe
+      const consumer = await this.prisma.consumer.findUnique({
+        where: { id: consumerId },
+      });
 
-    if (!consumer) {
-      throw new NotFoundException('Consumidor não encontrado');
+      if (!consumer) {
+        throw new NotFoundException('Consumidor não encontrado');
+      }
+
+      if (!consumer.invoiceFileName) {
+        throw new NotFoundException('Este consumidor não possui fatura anexada');
+      }
+
+      console.log(`[downloadInvoiceAdmin] Tentando fazer download do arquivo: ${consumer.invoiceFileName}`);
+
+      // Faz download do arquivo do Supabase
+      const fileBuffer = await this.supabaseStorage.downloadFile(
+        consumer.invoiceFileName,
+      );
+
+      // Determina o content-type baseado na extensão
+      const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
+      const contentTypeMap: Record<string, string> = {
+        pdf: 'application/pdf',
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        webp: 'image/webp',
+      };
+      const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
+
+      // Gera nome amigável para download
+      const friendlyName = this.getFriendlyInvoiceName(consumer);
+      
+      // Define headers e envia o arquivo
+      res.setHeader('Content-Type', contentType);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${friendlyName}"`,
+      );
+      res.send(fileBuffer);
+    } catch (error: any) {
+      // Se o erro for relacionado ao bucket, fornece mensagem mais clara
+      if (error.message?.includes('Bucket') || error.message?.includes('bucket')) {
+        throw new NotFoundException(
+          `Erro ao acessar a fatura: ${error.message}. Verifique se o bucket 'faturas-representantes' está configurado corretamente no Supabase.`
+        );
+      }
+      // Re-lança outros erros
+      throw error;
     }
-
-    if (!consumer.invoiceFileName) {
-      throw new NotFoundException('Este consumidor não possui fatura anexada');
-    }
-
-    // Faz download do arquivo do Supabase
-    const fileBuffer = await this.supabaseStorage.downloadFile(
-      consumer.invoiceFileName,
-    );
-
-    // Determina o content-type baseado na extensão
-    const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
-    const contentTypeMap: Record<string, string> = {
-      pdf: 'application/pdf',
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      png: 'image/png',
-      webp: 'image/webp',
-    };
-    const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
-
-    // Gera nome amigável para download
-    const friendlyName = this.getFriendlyInvoiceName(consumer);
-    
-    // Define headers e envia o arquivo
-    res.setHeader('Content-Type', contentType);
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="${friendlyName}"`,
-    );
-    res.send(fileBuffer);
   }
 
   /**

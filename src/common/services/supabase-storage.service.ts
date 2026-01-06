@@ -112,22 +112,66 @@ export class SupabaseStorageService {
   }
 
   /**
+   * Verifica se o bucket existe
+   * @returns true se o bucket existe, false caso contrário
+   */
+  async bucketExists(): Promise<boolean> {
+    try {
+      const { data, error } = await this.supabase.storage.listBuckets();
+      if (error) {
+        console.error('Erro ao listar buckets:', error);
+        return false;
+      }
+      return data?.some(bucket => bucket.name === this.bucketName) || false;
+    } catch (error) {
+      console.error('Erro ao verificar bucket:', error);
+      return false;
+    }
+  }
+
+  /**
    * Faz download de um arquivo do bucket
    * @param filePath Caminho do arquivo no bucket
    * @returns Buffer do arquivo
    */
   async downloadFile(filePath: string): Promise<Buffer> {
-    const { data, error } = await this.supabase.storage
-      .from(this.bucketName)
-      .download(filePath);
+    try {
+      // Verifica se o bucket existe antes de tentar fazer download
+      const bucketExists = await this.bucketExists();
+      if (!bucketExists) {
+        throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+      }
 
-    if (error) {
-      throw new Error(`Erro ao fazer download: ${error.message}`);
+      const { data, error } = await this.supabase.storage
+        .from(this.bucketName)
+        .download(filePath);
+
+      if (error) {
+        // Verifica se o erro é relacionado ao bucket
+        if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
+          throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+        }
+        // Verifica se o arquivo não foi encontrado
+        if (error.message?.includes('Object not found') || error.statusCode === '404') {
+          throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);
+        }
+        throw new Error(`Erro ao fazer download: ${error.message}`);
+      }
+
+      if (!data) {
+        throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);
+      }
+
+      // Converte Blob para Buffer
+      const arrayBuffer = await data.arrayBuffer();
+      return Buffer.from(arrayBuffer);
+    } catch (error: any) {
+      // Re-lança o erro com mais contexto
+      if (error.message) {
+        throw error;
+      }
+      throw new Error(`Erro ao fazer download do arquivo: ${error.message || 'Erro desconhecido'}`);
     }
-
-    // Converte Blob para Buffer
-    const arrayBuffer = await data.arrayBuffer();
-    return Buffer.from(arrayBuffer);
   }
 }
 
