@@ -110,3 +110,5 @@ Ambos requerem autenticação JWT.
 
 **Ver guia completo:** `docs/FRONTEND_INVOICE_ACCESS_GUIDE.md`
 
+
+

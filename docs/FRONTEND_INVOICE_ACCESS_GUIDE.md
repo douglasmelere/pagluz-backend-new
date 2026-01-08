@@ -484,3 +484,5 @@ Response: Arquivo (PDF ou imagem)
 
 **Última atualização:** 27/12/2025
 
+
+

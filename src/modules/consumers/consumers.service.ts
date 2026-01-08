@@ -1591,33 +1591,14 @@ export class ConsumersService {
       folder,
     );
 
-    // Se for imagem, faz OCR automático
-    let scannedData: any = null;
-    if (file.mimetype.startsWith('image/')) {
-      try {
-        const ocrResult = await this.ocrService.extractTextFromImage(file.buffer);
-        scannedData = {
-          text: ocrResult.text,
-          confidence: ocrResult.confidence,
-          extractedData: ocrResult.data,
-        };
-      } catch (error) {
-        // Log do erro mas não falha o upload
-        console.error('Erro ao processar OCR:', error);
-      }
-    }
-
-    // Remove fatura anterior se existir
+    // Remove fatura anterior se existir (em background para não bloquear)
     if (consumer.invoiceUrl) {
-      try {
-        await this.supabaseStorage.deleteFile(consumer.invoiceFileName || '');
-      } catch (error) {
+      this.supabaseStorage.deleteFile(consumer.invoiceFileName || '').catch((error) => {
         console.error('Erro ao remover fatura anterior:', error);
-      }
+      });
     }
 
-    // Atualiza o consumidor com a nova fatura
-    // Salva o nome amigável no metadata do scannedData ou cria um campo separado
+    // Atualiza o consumidor com a nova fatura (sem OCR ainda)
     const updatedConsumer = await this.prisma.consumer.update({
       where: { id: consumerId },
       data: {
@@ -1625,14 +1606,34 @@ export class ConsumersService {
         invoiceFileName: path,
         invoiceUploadedAt: new Date(),
         invoiceScannedData: {
-          ...(scannedData || {}),
           friendlyFileName: friendlyFileName, // Nome amigável para exibição
+          processing: true, // Indica que OCR está em processamento
         } as any,
       },
     });
 
-    // Log de auditoria
-    await this.auditService.log({
+    // Processa OCR em background (não bloqueia a resposta)
+    let scannedData: any = null;
+    if (file.mimetype.startsWith('image/')) {
+      // Processa OCR de forma assíncrona sem bloquear a resposta
+      this.processOcrAsync(consumerId, file.buffer, friendlyFileName).catch((error) => {
+        console.error('Erro ao processar OCR em background:', error);
+      });
+    } else {
+      // Para PDFs, já atualiza sem OCR
+      await this.prisma.consumer.update({
+        where: { id: consumerId },
+        data: {
+          invoiceScannedData: {
+            friendlyFileName: friendlyFileName,
+            processing: false,
+          } as any,
+        },
+      });
+    }
+
+    // Log de auditoria (em background para não bloquear)
+    this.auditService.log({
       representativeId: representativeId,
       action: 'UPLOAD_INVOICE',
       entityType: 'Consumer',
@@ -1641,8 +1642,10 @@ export class ConsumersService {
         fileName: file.originalname,
         fileSize: file.size,
         mimeType: file.mimetype,
-        hasOcrData: !!scannedData,
+        isImage: file.mimetype.startsWith('image/'),
       },
+    }).catch((error) => {
+      console.error('Erro ao registrar log de auditoria:', error);
     });
 
     // Retorna URL do endpoint do backend ao invés da URL pública do Supabase
@@ -1654,8 +1657,56 @@ export class ConsumersService {
       invoiceUrl: backendUrl, // URL do endpoint do backend
       invoiceStorageUrl: url, // URL original do Supabase (para referência)
       invoiceFileName: friendlyFileName, // Nome amigável para exibição
-      scannedData,
+      scannedData: file.mimetype.startsWith('image/') 
+        ? { processing: true } // Indica que OCR está sendo processado
+        : null,
     };
+  }
+
+  /**
+   * Processa OCR de forma assíncrona em background
+   */
+  private async processOcrAsync(
+    consumerId: string,
+    imageBuffer: Buffer,
+    friendlyFileName: string,
+  ): Promise<void> {
+    try {
+      const ocrResult = await this.ocrService.extractTextFromImage(imageBuffer);
+      
+      const scannedData = {
+        text: ocrResult.text,
+        confidence: ocrResult.confidence,
+        extractedData: ocrResult.data,
+        friendlyFileName: friendlyFileName,
+        processing: false,
+        processedAt: new Date().toISOString(),
+      };
+
+      // Atualiza o consumidor com os dados do OCR
+      await this.prisma.consumer.update({
+        where: { id: consumerId },
+        data: {
+          invoiceScannedData: scannedData as any,
+        },
+      });
+
+      console.log(`OCR processado com sucesso para consumidor ${consumerId}`);
+    } catch (error) {
+      console.error(`Erro ao processar OCR para consumidor ${consumerId}:`, error);
+      
+      // Atualiza indicando que houve erro no processamento
+      await this.prisma.consumer.update({
+        where: { id: consumerId },
+        data: {
+          invoiceScannedData: {
+            friendlyFileName: friendlyFileName,
+            processing: false,
+            error: 'Erro ao processar OCR',
+          } as any,
+        },
+      });
+    }
   }
 
   /**

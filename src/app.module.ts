@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { CommissionsModule } from './modules/commissions/commissions.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { ContractsModule } from './modules/contracts/contracts.module';
 import { PrismaService } from './config/prisma.service';
 import { AuditService } from './common/services/audit.service';
 import { LogoutService } from './common/services/logout.service';
@@ -31,6 +32,7 @@ import { HierarchyAuthGuard } from './common/guards/hierarchy-auth.guard';
     AuditModule,
     CommissionsModule,
     SettingsModule,
+    ContractsModule,
   ],
   controllers: [AppController],
   providers: [
