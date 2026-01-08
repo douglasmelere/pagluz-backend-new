@@ -152,7 +152,7 @@ export class SupabaseStorageService {
           throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
         }
         // Verifica se o arquivo não foi encontrado
-        if (error.message?.includes('Object not found') || error.statusCode === '404') {
+        if (error.message?.includes('Object not found') || error.message?.includes('404')) {
           throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);
         }
         throw new Error(`Erro ao fazer download: ${error.message}`);
