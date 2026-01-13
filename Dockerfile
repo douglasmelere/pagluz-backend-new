@@ -1,30 +1,30 @@
 # Dockerfile para deploy alternativo
-FROM node:20-alpine
 
-# Instalar dependências do sistema
-RUN apk add --no-cache openssl
+# Define um estágio de construção
+FROM node:20-alpine AS build
 
-# Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar arquivos de dependências
+# Instale as dependências, incluindo as de desenvolvimento
 COPY package*.json ./
-COPY prisma ./prisma/
+RUN npm install
 
-# Instalar dependências
-RUN npm ci
-
-# Copiar código fonte
+# Copie os arquivos e construa a aplicação
 COPY . .
-
-# Gerar cliente Prisma
-RUN npx prisma generate
-
-# Compilar aplicação
 RUN npm run build
 
-# Expor porta
+# Define o estágio de produção
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
+# Copie apenas o necessário de build para produção
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY package.json package-lock.json ./
+
+# Expor porta para a aplicação
 EXPOSE 3000
 
-# Comando de inicialização
-CMD ["npm", "run", "deploy"]
+# Comando de inicialização da aplicação
+CMD ["node", "dist/main"]
