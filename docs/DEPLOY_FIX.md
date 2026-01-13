@@ -90,3 +90,5 @@ Os warnings sobre secrets em ARG/ENV são apenas avisos de segurança e não imp
 
 **Data da Correção:** 08/01/2026
 
+
+

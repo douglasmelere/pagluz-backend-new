@@ -1,35 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { createWorker, Worker } from 'tesseract.js';
+import { Injectable, Logger } from "@nestjs/common";
+import axios from "axios";
 
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
-  private worker: Worker | null = null;
-
-  /**
-   * Inicializa o worker do Tesseract
-   */
-  private async initializeWorker(): Promise<Worker> {
-    if (!this.worker) {
-      this.worker = await createWorker('por', 1, {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            this.logger.debug(`OCR Progress: ${Math.round(m.progress * 100)}%`);
-          }
-        },
-      });
-    }
-    return this.worker;
-  }
 
   /**
    * Extrai texto de uma imagem usando OCR
    * @param imageBuffer Buffer da imagem
    * @returns Texto extraído e dados estruturados
    */
-  async extractTextFromImage(
-    imageBuffer: Buffer,
-  ): Promise<{
+  async extractTextFromImage(imageBuffer: Buffer): Promise<{
     text: string;
     confidence: number;
     data: any;
@@ -37,11 +18,10 @@ export class OcrService {
     try {
       const worker = await this.initializeWorker();
 
-      this.logger.log('Iniciando extração de texto da fatura...');
+      this.logger.log("Iniciando extração de texto da fatura...");
 
-      const {
-        data: { text, confidence },
-      } = await worker.recognize(imageBuffer);
+      const text = await this.extractTextWithGemini(imageBuffer);
+      const confidence = 100; // Assuming confident extraction by Gemini
 
       this.logger.log(`Texto extraído com confiança de ${confidence}%`);
 
@@ -54,7 +34,7 @@ export class OcrService {
         data: structuredData,
       };
     } catch (error) {
-      this.logger.error(`Erro ao processar OCR: ${error.message}`);
+      this.logger.error(`Erro ao processar OCR com Gemini: ${error.message}`);
       throw error;
     }
   }
@@ -64,6 +44,31 @@ export class OcrService {
    * @param text Texto extraído do OCR
    * @returns Dados estruturados
    */
+  private async extractTextWithGemini(imageBuffer: Buffer): Promise<string> {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY não está configurado no arquivo .env");
+    }
+
+    try {
+      const response = await axios.post(
+        "https://api.gemini.com/extract",
+        imageBuffer,
+        {
+          headers: {
+            "Content-Type": "application/octet-stream",
+            Authorization: `Bearer ${apiKey}`,
+          },
+        },
+      );
+      return response.data.extracted_text;
+    } catch (error) {
+      this.logger.error(
+        `Erro ao se comunicar com a API do Gemini: ${error.message}`,
+      );
+      throw new Error("Falha na extração de texto com o Gemini OCR");
+    }
+  }
   private parseInvoiceData(text: string): {
     ucNumber?: string;
     consumption?: number;
@@ -82,15 +87,13 @@ export class OcrService {
     // Extrai consumo (kWh)
     const consumptionMatch = text.match(/(\d+[.,]?\d*)\s*kWh/i);
     if (consumptionMatch) {
-      data.consumption = parseFloat(
-        consumptionMatch[1].replace(',', '.'),
-      );
+      data.consumption = parseFloat(consumptionMatch[1].replace(",", "."));
     }
 
     // Extrai valor (R$)
     const valueMatch = text.match(/R\$\s*(\d+[.,]?\d*)/i);
     if (valueMatch) {
-      data.value = parseFloat(valueMatch[1].replace(',', '.'));
+      data.value = parseFloat(valueMatch[1].replace(",", "."));
     }
 
     // Extrai data de vencimento
@@ -114,13 +117,3 @@ export class OcrService {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-

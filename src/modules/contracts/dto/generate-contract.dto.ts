@@ -231,3 +231,5 @@ export class GenerateContractDto {
   enderecoOutorgante?: string;
 }
 
+
+
