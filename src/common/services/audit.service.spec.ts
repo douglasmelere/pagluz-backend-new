@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuditService } from './audit.service';
-import { PrismaService } from '../../config/prisma.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuditService } from "./audit.service";
+import { PrismaService } from "../../config/prisma.service";
 
-describe('AuditService', () => {
+describe("AuditService", () => {
   let service: AuditService;
   let prismaService: PrismaService;
 
@@ -33,16 +33,16 @@ describe('AuditService', () => {
     jest.clearAllMocks();
   });
 
-  describe('logLogin', () => {
-    it('should create audit log for successful login', async () => {
-      const userId = '1';
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logLogin", () => {
+    it("should create audit log for successful login", async () => {
+      const userId = "1";
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'LOGIN',
+        action: "LOGIN",
         ipAddress,
         userAgent,
         timestamp: new Date(),
@@ -54,7 +54,7 @@ describe('AuditService', () => {
         expect.objectContaining({
           data: expect.objectContaining({
             userId,
-            action: 'LOGIN',
+            action: "LOGIN",
             ipAddress,
             userAgent,
           }),
@@ -62,16 +62,16 @@ describe('AuditService', () => {
       );
     });
 
-    it('should record login timestamp', async () => {
-      const userId = '1';
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+    it("should record login timestamp", async () => {
+      const userId = "1";
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       const now = new Date();
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'LOGIN',
+        action: "LOGIN",
         ipAddress,
         userAgent,
         timestamp: now,
@@ -83,16 +83,16 @@ describe('AuditService', () => {
     });
   });
 
-  describe('logLogout', () => {
-    it('should create audit log for logout', async () => {
-      const userId = '1';
-      const ipAddress = '192.168.1.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logLogout", () => {
+    it("should create audit log for logout", async () => {
+      const userId = "1";
+      const ipAddress = "192.168.1.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'LOGOUT',
+        action: "LOGOUT",
         ipAddress,
         userAgent,
         timestamp: new Date(),
@@ -104,16 +104,16 @@ describe('AuditService', () => {
     });
   });
 
-  describe('logSecurityEvent', () => {
-    it('should create audit log for security event', async () => {
-      const userId = '1';
-      const action = 'UNAUTHORIZED_ACCESS_ATTEMPT';
-      const metadata = { resource: 'sensitive-data' };
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logSecurityEvent", () => {
+    it("should create audit log for security event", async () => {
+      const userId = "1";
+      const action = "UNAUTHORIZED_ACCESS_ATTEMPT";
+      const metadata = { resource: "sensitive-data" };
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
         action,
         metadata,
@@ -125,7 +125,7 @@ describe('AuditService', () => {
       await service.log({
         userId,
         action,
-        entityType: 'Security',
+        entityType: "Security",
         ipAddress,
         userAgent,
         metadata,
@@ -133,21 +133,21 @@ describe('AuditService', () => {
 
       expect(mockPrismaService.auditLog.create).toHaveBeenCalled();
     });
-  });;
+  });
 
-  describe('logCreate', () => {
-    it('should create audit log for resource creation', async () => {
-      const userId = '1';
-      const entityType = 'User';
-      const entityId = '2';
-      const newValues = { email: 'newuser@example.com', name: 'New User' };
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logCreate", () => {
+    it("should create audit log for resource creation", async () => {
+      const userId = "1";
+      const entityType = "User";
+      const entityId = "2";
+      const newValues = { email: "newuser@example.com", name: "New User" };
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'CREATE',
+        action: "CREATE",
         entityType,
         entityId,
         newValues,
@@ -169,20 +169,20 @@ describe('AuditService', () => {
     });
   });
 
-  describe('logUpdate', () => {
-    it('should create audit log for resource update', async () => {
-      const userId = '1';
-      const entityType = 'User';
-      const entityId = '2';
-      const oldValues = { email: 'old@example.com' };
-      const newValues = { email: 'new@example.com' };
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logUpdate", () => {
+    it("should create audit log for resource update", async () => {
+      const userId = "1";
+      const entityType = "User";
+      const entityId = "2";
+      const oldValues = { email: "old@example.com" };
+      const newValues = { email: "new@example.com" };
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'UPDATE',
+        action: "UPDATE",
         entityType,
         entityId,
         oldValues,
@@ -206,19 +206,19 @@ describe('AuditService', () => {
     });
   });
 
-  describe('logDelete', () => {
-    it('should create audit log for resource deletion', async () => {
-      const userId = '1';
-      const entityType = 'User';
-      const entityId = '2';
-      const oldValues = { email: 'deleted@example.com', name: 'Deleted User' };
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logDelete", () => {
+    it("should create audit log for resource deletion", async () => {
+      const userId = "1";
+      const entityType = "User";
+      const entityId = "2";
+      const oldValues = { email: "deleted@example.com", name: "Deleted User" };
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'DELETE',
+        action: "DELETE",
         entityType,
         entityId,
         oldValues,
@@ -240,37 +240,37 @@ describe('AuditService', () => {
     });
   });
 
-  describe('general logging', () => {
-    it('should handle errors gracefully during log creation', async () => {
-      const mockError = new Error('Database error');
+  describe("general logging", () => {
+    it("should handle errors gracefully during log creation", async () => {
+      const mockError = new Error("Database error");
       mockPrismaService.auditLog.create.mockRejectedValue(mockError);
 
       // Should not throw, just log the error
       await service.log({
-        userId: '1',
-        action: 'TEST',
-        entityType: 'Test',
+        userId: "1",
+        action: "TEST",
+        entityType: "Test",
       });
 
       expect(mockPrismaService.auditLog.create).toHaveBeenCalled();
     });
 
-    it('should include metadata in audit log', async () => {
-      const userId = '1';
+    it("should include metadata in audit log", async () => {
+      const userId = "1";
       const metadata = { timestamp: new Date().toISOString() };
 
       mockPrismaService.auditLog.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         userId,
-        action: 'LOGIN',
-        entityType: 'User',
+        action: "LOGIN",
+        entityType: "User",
         metadata,
       });
 
       await service.log({
         userId,
-        action: 'LOGIN',
-        entityType: 'User',
+        action: "LOGIN",
+        entityType: "User",
         metadata,
       });
 

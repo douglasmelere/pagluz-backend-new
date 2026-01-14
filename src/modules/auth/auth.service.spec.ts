@@ -1,23 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UnauthorizedException, BadRequestException, ConflictException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../../config/prisma.service';
-import * as bcrypt from 'bcryptjs';
+import { Test, TestingModule } from "@nestjs/testing";
+import {
+  UnauthorizedException,
+  BadRequestException,
+  ConflictException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { AuthService } from "./auth.service";
+import { PrismaService } from "../../config/prisma.service";
+import * as bcrypt from "bcryptjs";
 
-jest.mock('bcryptjs');
+jest.mock("bcryptjs");
 
-describe('AuthService', () => {
+describe("AuthService", () => {
   let service: AuthService;
   let prismaService: PrismaService;
   let jwtService: JwtService;
 
   const mockUser = {
-    id: '1',
-    email: 'test@example.com',
-    password: '$2a$10$hashedpassword',
-    name: 'Test User',
-    role: 'USER',
+    id: "1",
+    email: "test@example.com",
+    password: "$2a$10$hashedpassword",
+    name: "Test User",
+    role: "USER",
     isActive: true,
     failedLoginAttempts: 0,
     lockedUntil: null,
@@ -39,7 +43,7 @@ describe('AuthService', () => {
   };
 
   const mockJwtService = {
-    sign: jest.fn(() => 'mock-jwt-token'),
+    sign: jest.fn(() => "mock-jwt-token"),
     verify: jest.fn(),
   };
 
@@ -67,11 +71,11 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
-  describe('login', () => {
-    it('should successfully login with valid credentials', async () => {
+  describe("login", () => {
+    it("should successfully login with valid credentials", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -80,8 +84,8 @@ describe('AuthService', () => {
 
       const result = await service.login(loginDto);
 
-      expect(result).toHaveProperty('access_token');
-      expect(result).toHaveProperty('user');
+      expect(result).toHaveProperty("access_token");
+      expect(result).toHaveProperty("user");
       expect(result.user.email).toBe(mockUser.email);
       expect(result.user.role).toBe(mockUser.role);
       expect(jwtService.sign).toHaveBeenCalledWith(
@@ -93,10 +97,10 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw UnauthorizedException with invalid credentials', async () => {
+    it("should throw UnauthorizedException with invalid credentials", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'wrongpassword',
+        email: "test@example.com",
+        password: "wrongpassword",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
@@ -107,10 +111,10 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw UnauthorizedException when user not found', async () => {
+    it("should throw UnauthorizedException when user not found", async () => {
       const loginDto = {
-        email: 'nonexistent@example.com',
-        password: 'password123',
+        email: "nonexistent@example.com",
+        password: "password123",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(null);
@@ -120,11 +124,11 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw UnauthorizedException when account is inactive', async () => {
+    it("should throw UnauthorizedException when account is inactive", async () => {
       const inactiveUser = { ...mockUser, isActive: false };
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(inactiveUser);
@@ -135,12 +139,12 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw UnauthorizedException when account is locked', async () => {
+    it("should throw UnauthorizedException when account is locked", async () => {
       const futureDate = new Date(Date.now() + 60000);
       const lockedUser = { ...mockUser, lockedUntil: futureDate };
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(lockedUser);
@@ -151,14 +155,14 @@ describe('AuthService', () => {
       );
     });
 
-    it('should reset failed login attempts on successful login', async () => {
+    it("should reset failed login attempts on successful login", async () => {
       const userWithFailedAttempts = {
         ...mockUser,
         failedLoginAttempts: 3,
       };
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(
@@ -179,10 +183,10 @@ describe('AuthService', () => {
       );
     });
 
-    it('should update lastLoginAt and loginCount', async () => {
+    it("should update lastLoginAt and loginCount", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
@@ -203,54 +207,54 @@ describe('AuthService', () => {
     });
   });
 
-  describe('validateUser', () => {
-    it('should return user if credentials are valid', async () => {
+  describe("validateUser", () => {
+    it("should return user if credentials are valid", async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const result = await service.validateUser(
-        'test@example.com',
-        'password123',
+        "test@example.com",
+        "password123",
       );
 
       expect(result).toEqual(mockUser);
     });
 
-    it('should return null if user not found', async () => {
+    it("should return null if user not found", async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
       const result = await service.validateUser(
-        'nonexistent@example.com',
-        'password123',
+        "nonexistent@example.com",
+        "password123",
       );
 
       expect(result).toBeNull();
     });
 
-    it('should return null if password is incorrect', async () => {
+    it("should return null if password is incorrect", async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       mockPrismaService.user.update.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       const result = await service.validateUser(
-        'test@example.com',
-        'wrongpassword',
+        "test@example.com",
+        "wrongpassword",
       );
 
       expect(result).toBeNull();
     });
 
-    it('should increment failed login attempts on invalid password', async () => {
+    it("should increment failed login attempts on invalid password", async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
       mockPrismaService.user.update.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await service.validateUser('test@example.com', 'wrongpassword');
+      await service.validateUser("test@example.com", "wrongpassword");
 
       expect(mockPrismaService.user.update).toHaveBeenCalled();
     });
 
-    it('should lock account after 5 failed attempts', async () => {
+    it("should lock account after 5 failed attempts", async () => {
       const userWithFailedAttempts = {
         ...mockUser,
         failedLoginAttempts: 4,
@@ -262,7 +266,7 @@ describe('AuthService', () => {
       mockPrismaService.user.update.mockResolvedValue(userWithFailedAttempts);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await service.validateUser('test@example.com', 'wrongpassword');
+      await service.validateUser("test@example.com", "wrongpassword");
 
       expect(mockPrismaService.user.update).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -275,24 +279,24 @@ describe('AuthService', () => {
     });
   });
 
-  describe('createAdmin', () => {
-    it('should create a new admin user with valid data', async () => {
+  describe("createAdmin", () => {
+    it("should create a new admin user with valid data", async () => {
       const createUserDto = {
-        email: 'admin@example.com',
-        password: 'AdminPassword123!',
-        name: 'Admin User',
-        role: 'ADMIN',
+        email: "admin@example.com",
+        password: "AdminPassword123!",
+        name: "Admin User",
+        role: "ADMIN",
       };
 
       const createdUser = {
         ...mockUser,
         ...createUserDto,
-        id: '2',
-        role: 'ADMIN',
+        id: "2",
+        role: "ADMIN",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValueOnce(null); // Email doesn't exist
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashedpassword");
       mockPrismaService.user.create.mockResolvedValue(createdUser);
 
       const result = await service.createAdmin(createUserDto);
@@ -301,16 +305,16 @@ describe('AuthService', () => {
       expect(mockPrismaService.user.create).toHaveBeenCalled();
     });
 
-    it('should hash password before creating user', async () => {
+    it("should hash password before creating user", async () => {
       const createUserDto = {
-        email: 'admin@example.com',
-        password: 'AdminPassword123!',
-        name: 'Admin User',
-        role: 'ADMIN',
+        email: "admin@example.com",
+        password: "AdminPassword123!",
+        name: "Admin User",
+        role: "ADMIN",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValueOnce(null); // Email doesn't exist
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashedpassword");
       mockPrismaService.user.create.mockResolvedValue({
         ...mockUser,
         ...createUserDto,
@@ -321,10 +325,10 @@ describe('AuthService', () => {
       expect(bcrypt.hash).toHaveBeenCalledWith(createUserDto.password, 12);
     });
 
-    it('should require all mandatory fields', async () => {
+    it("should require all mandatory fields", async () => {
       const incompleteDto = {
-        email: 'admin@example.com',
-        password: 'AdminPassword123!',
+        email: "admin@example.com",
+        password: "AdminPassword123!",
         // missing name and role
       };
 
@@ -333,12 +337,12 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw error if email already exists', async () => {
+    it("should throw error if email already exists", async () => {
       const createUserDto = {
-        email: 'test@example.com',
-        password: 'password123',
-        name: 'Test User',
-        role: 'ADMIN',
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+        role: "ADMIN",
       };
 
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUser); // Email exists
@@ -349,28 +353,28 @@ describe('AuthService', () => {
     });
   });
 
-  describe('createDefaultAdmin', () => {
-    it('should create default SUPER_ADMIN if not exists', async () => {
+  describe("createDefaultAdmin", () => {
+    it("should create default SUPER_ADMIN if not exists", async () => {
       mockPrismaService.user.findFirst.mockResolvedValue(null);
       mockPrismaService.user.create.mockResolvedValue({
-        id: '1',
-        email: 'douglas@pagluz.com',
-        name: 'Douglas Melere',
-        role: 'SUPER_ADMIN',
+        id: "1",
+        email: "douglas@pagluz.com",
+        name: "Douglas Melere",
+        role: "SUPER_ADMIN",
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
 
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
+      (bcrypt.hash as jest.Mock).mockResolvedValue("hashedpassword");
 
       const result = await service.createDefaultAdmin();
 
       expect(result).toBeDefined();
-      expect(result.role).toBe('SUPER_ADMIN');
+      expect(result.role).toBe("SUPER_ADMIN");
     });
 
-    it('should throw error if SUPER_ADMIN already exists', async () => {
+    it("should throw error if SUPER_ADMIN already exists", async () => {
       mockPrismaService.user.findFirst.mockResolvedValue(mockUser);
 
       await expect(service.createDefaultAdmin()).rejects.toThrow(
@@ -379,13 +383,13 @@ describe('AuthService', () => {
     });
   });
 
-  describe('validateRepresentative', () => {
-    it('should return representative if credentials are valid', async () => {
+  describe("validateRepresentative", () => {
+    it("should return representative if credentials are valid", async () => {
       const mockRepresentative = {
-        id: '2',
-        email: 'rep@example.com',
-        password: '$2a$10$hashedpassword',
-        name: 'Representative User',
+        id: "2",
+        email: "rep@example.com",
+        password: "$2a$10$hashedpassword",
+        name: "Representative User",
         failedLoginAttempts: 0,
         lockedUntil: null,
       };
@@ -396,29 +400,29 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       const result = await service.validateRepresentative(
-        'rep@example.com',
-        'password123',
+        "rep@example.com",
+        "password123",
       );
 
       expect(result).toEqual(mockRepresentative);
     });
 
-    it('should return null if representative not found', async () => {
+    it("should return null if representative not found", async () => {
       mockPrismaService.representative.findUnique.mockResolvedValue(null);
 
       const result = await service.validateRepresentative(
-        'nonexistent@example.com',
-        'password123',
+        "nonexistent@example.com",
+        "password123",
       );
 
       expect(result).toBeNull();
     });
 
-    it('should return null if password is incorrect', async () => {
+    it("should return null if password is incorrect", async () => {
       const mockRepresentative = {
-        id: '2',
-        email: 'rep@example.com',
-        password: '$2a$10$hashedpassword',
+        id: "2",
+        email: "rep@example.com",
+        password: "$2a$10$hashedpassword",
       };
 
       mockPrismaService.representative.findUnique.mockResolvedValue(
@@ -427,8 +431,8 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       const result = await service.validateRepresentative(
-        'rep@example.com',
-        'wrongpassword',
+        "rep@example.com",
+        "wrongpassword",
       );
 
       expect(result).toBeNull();

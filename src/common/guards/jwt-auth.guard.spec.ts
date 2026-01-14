@@ -1,9 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { Test } from "@nestjs/testing";
+import { UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 
-describe('JwtAuthGuard', () => {
+describe("JwtAuthGuard", () => {
   let guard: JwtAuthGuard;
   let jwtService: JwtService;
 
@@ -30,91 +30,93 @@ describe('JwtAuthGuard', () => {
     jest.clearAllMocks();
   });
 
-  describe('JWT Token Validation', () => {
-    it('should verify JWT token correctly', () => {
+  describe("JWT Token Validation", () => {
+    it("should verify JWT token correctly", () => {
       const mockUser = {
-        id: '1',
-        email: 'test@example.com',
-        role: 'USER',
+        id: "1",
+        email: "test@example.com",
+        role: "USER",
       };
 
       mockJwtService.verify.mockReturnValue(mockUser);
 
-      const token = 'valid-jwt-token';
+      const token = "valid-jwt-token";
       const result = jwtService.verify(token);
 
       expect(result).toEqual(mockUser);
       expect(jwtService.verify).toHaveBeenCalledWith(token);
     });
 
-    it('should throw error on invalid token', () => {
+    it("should throw error on invalid token", () => {
       mockJwtService.verify.mockImplementation(() => {
-        throw new Error('jwt expired');
+        throw new Error("jwt expired");
       });
 
-      const token = 'expired-token';
+      const token = "expired-token";
 
-      expect(() => jwtService.verify(token)).toThrow('jwt expired');
+      expect(() => jwtService.verify(token)).toThrow("jwt expired");
     });
 
-    it('should handle token without Bearer prefix', () => {
-      const token = 'invalid-format-token';
+    it("should handle token without Bearer prefix", () => {
+      const token = "invalid-format-token";
 
       // Token without Bearer prefix should not be processed
       expect(token).not.toMatch(/^Bearer\s/);
     });
   });
 
-  describe('User Extraction', () => {
-    it('should extract user ID from token', () => {
+  describe("User Extraction", () => {
+    it("should extract user ID from token", () => {
       const mockUser = {
-        id: '1',
-        email: 'test@example.com',
-        role: 'USER',
-        sub: '1',
+        id: "1",
+        email: "test@example.com",
+        role: "USER",
+        sub: "1",
       };
 
       mockJwtService.verify.mockReturnValue(mockUser);
 
-      const result = jwtService.verify('token');
+      const result = jwtService.verify("token");
 
-      expect(result.id).toBe('1');
-      expect(result.sub).toBe('1');
+      expect(result.id).toBe("1");
+      expect(result.sub).toBe("1");
     });
 
-    it('should extract user role from token', () => {
+    it("should extract user role from token", () => {
       const mockUser = {
-        id: '1',
-        email: 'test@example.com',
-        role: 'ADMIN',
+        id: "1",
+        email: "test@example.com",
+        role: "ADMIN",
       };
 
       mockJwtService.verify.mockReturnValue(mockUser);
 
-      const result = jwtService.verify('token');
+      const result = jwtService.verify("token");
 
-      expect(result.role).toBe('ADMIN');
+      expect(result.role).toBe("ADMIN");
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle jwt malformed error', () => {
+  describe("Error Handling", () => {
+    it("should handle jwt malformed error", () => {
       mockJwtService.verify.mockImplementation(() => {
-        throw new Error('jwt malformed');
+        throw new Error("jwt malformed");
       });
 
-      expect(() => jwtService.verify('bad-token')).toThrow('jwt malformed');
+      expect(() => jwtService.verify("bad-token")).toThrow("jwt malformed");
     });
 
-    it('should handle jwt invalid signature error', () => {
+    it("should handle jwt invalid signature error", () => {
       mockJwtService.verify.mockImplementation(() => {
-        throw new Error('invalid signature');
+        throw new Error("invalid signature");
       });
 
-      expect(() => jwtService.verify('forged-token')).toThrow('invalid signature');
+      expect(() => jwtService.verify("forged-token")).toThrow(
+        "invalid signature",
+      );
     });
 
-    it('should handle missing token', () => {
+    it("should handle missing token", () => {
       // Token should be provided
       expect(undefined).toBeUndefined();
     });

@@ -1,21 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { LogoutService } from '../../common/services/logout.service';
-import { AuditService } from '../../common/services/audit.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { HttpException, HttpStatus } from "@nestjs/common";
+import { AuthController } from "./auth.controller";
+import { AuthService } from "./auth.service";
+import { LogoutService } from "../../common/services/logout.service";
+import { AuditService } from "../../common/services/audit.service";
 
-describe('AuthController', () => {
+describe("AuthController", () => {
   let controller: AuthController;
   let authService: AuthService;
   let logoutService: LogoutService;
   let auditService: AuditService;
 
   const mockUser = {
-    id: '1',
-    email: 'test@example.com',
-    name: 'Test User',
-    role: 'USER',
+    id: "1",
+    email: "test@example.com",
+    name: "Test User",
+    role: "USER",
     isActive: true,
     lastLoginAt: new Date(),
     loginCount: 0,
@@ -23,11 +23,11 @@ describe('AuthController', () => {
 
   const mockRequest = {
     user: mockUser,
-    token: 'mock-jwt-token',
-    ipAddress: '127.0.0.1',
-    userAgent: 'Mozilla/5.0',
+    token: "mock-jwt-token",
+    ipAddress: "127.0.0.1",
+    userAgent: "Mozilla/5.0",
     headers: {
-      'user-agent': 'Mozilla/5.0',
+      "user-agent": "Mozilla/5.0",
     },
   };
 
@@ -79,15 +79,15 @@ describe('AuthController', () => {
     jest.clearAllMocks();
   });
 
-  describe('login', () => {
-    it('should successfully login and return token with user data', async () => {
+  describe("login", () => {
+    it("should successfully login and return token with user data", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'password123',
+        email: "test@example.com",
+        password: "password123",
       };
 
       const loginResponse = {
-        access_token: 'mock-jwt-token',
+        access_token: "mock-jwt-token",
         user: mockUser,
       };
 
@@ -104,14 +104,14 @@ describe('AuthController', () => {
       );
     });
 
-    it('should log security event on failed login', async () => {
+    it("should log security event on failed login", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'wrongpassword',
+        email: "test@example.com",
+        password: "wrongpassword",
       };
 
       const error = new HttpException(
-        'Credenciais inválidas',
+        "Credenciais inválidas",
         HttpStatus.UNAUTHORIZED,
       );
       mockAuthService.login.mockRejectedValue(error);
@@ -124,7 +124,7 @@ describe('AuthController', () => {
 
       expect(auditService.logSecurityEvent).toHaveBeenCalledWith(
         undefined,
-        'LOGIN_FAILED',
+        "LOGIN_FAILED",
         expect.objectContaining({
           email: loginDto.email,
         }),
@@ -133,14 +133,14 @@ describe('AuthController', () => {
       );
     });
 
-    it('should throw error if credentials are invalid', async () => {
+    it("should throw error if credentials are invalid", async () => {
       const loginDto = {
-        email: 'test@example.com',
-        password: 'wrongpassword',
+        email: "test@example.com",
+        password: "wrongpassword",
       };
 
       const error = new HttpException(
-        'Credenciais inválidas',
+        "Credenciais inválidas",
         HttpStatus.UNAUTHORIZED,
       );
       mockAuthService.login.mockRejectedValue(error);
@@ -151,22 +151,22 @@ describe('AuthController', () => {
     });
   });
 
-  describe('loginRepresentative', () => {
-    it('should successfully login representative', async () => {
+  describe("loginRepresentative", () => {
+    it("should successfully login representative", async () => {
       const loginDto = {
-        email: 'rep@example.com',
-        password: 'password123',
+        email: "rep@example.com",
+        password: "password123",
       };
 
       const repUser = {
         ...mockUser,
-        id: '2',
-        email: 'rep@example.com',
-        role: 'REPRESENTATIVE',
+        id: "2",
+        email: "rep@example.com",
+        role: "REPRESENTATIVE",
       };
 
       const loginResponse = {
-        access_token: 'mock-jwt-token',
+        access_token: "mock-jwt-token",
         user: repUser,
       };
 
@@ -186,14 +186,14 @@ describe('AuthController', () => {
       );
     });
 
-    it('should log failed representative login', async () => {
+    it("should log failed representative login", async () => {
       const loginDto = {
-        email: 'rep@example.com',
-        password: 'wrongpassword',
+        email: "rep@example.com",
+        password: "wrongpassword",
       };
 
       const error = new HttpException(
-        'Credenciais inválidas',
+        "Credenciais inválidas",
         HttpStatus.UNAUTHORIZED,
       );
       mockAuthService.loginRepresentative.mockRejectedValue(error);
@@ -206,7 +206,7 @@ describe('AuthController', () => {
 
       expect(auditService.logSecurityEvent).toHaveBeenCalledWith(
         undefined,
-        'REPRESENTATIVE_LOGIN_FAILED',
+        "REPRESENTATIVE_LOGIN_FAILED",
         expect.objectContaining({
           email: loginDto.email,
         }),
@@ -216,11 +216,11 @@ describe('AuthController', () => {
     });
   });
 
-  describe('logout', () => {
-    it('should successfully logout user', async () => {
+  describe("logout", () => {
+    it("should successfully logout user", async () => {
       const logoutResponse = {
         success: true,
-        message: 'Logout realizado com sucesso',
+        message: "Logout realizado com sucesso",
       };
 
       mockLogoutService.logout.mockResolvedValue(logoutResponse);
@@ -237,32 +237,32 @@ describe('AuthController', () => {
     });
   });
 
-  describe('getProfile', () => {
-    it('should return authenticated user profile', () => {
+  describe("getProfile", () => {
+    it("should return authenticated user profile", () => {
       const result = controller.getProfile(mockRequest);
 
       expect(result).toEqual(mockUser);
     });
   });
 
-  describe('createAdmin', () => {
-    it('should allow SUPER_ADMIN to create new admin', async () => {
+  describe("createAdmin", () => {
+    it("should allow SUPER_ADMIN to create new admin", async () => {
       const superAdminRequest = {
         ...mockRequest,
-        user: { ...mockUser, role: 'SUPER_ADMIN' },
+        user: { ...mockUser, role: "SUPER_ADMIN" },
       };
 
       const createUserDto = {
-        email: 'admin@example.com',
-        password: 'AdminPassword123!',
-        name: 'New Admin',
+        email: "admin@example.com",
+        password: "AdminPassword123!",
+        name: "New Admin",
       };
 
       const createdAdmin = {
         ...mockUser,
         ...createUserDto,
-        id: '2',
-        role: 'ADMIN',
+        id: "2",
+        role: "ADMIN",
       };
 
       mockAuthService.createAdmin.mockResolvedValue(createdAdmin);
@@ -276,7 +276,7 @@ describe('AuthController', () => {
       expect(authService.createAdmin).toHaveBeenCalledWith(createUserDto);
       expect(auditService.logCreate).toHaveBeenCalledWith(
         superAdminRequest.user.id,
-        'User',
+        "User",
         createdAdmin.id,
         expect.any(Object),
         expect.any(String),
@@ -284,11 +284,11 @@ describe('AuthController', () => {
       );
     });
 
-    it('should throw ForbiddenException if user is not SUPER_ADMIN', async () => {
+    it("should throw ForbiddenException if user is not SUPER_ADMIN", async () => {
       const createUserDto = {
-        email: 'admin@example.com',
-        password: 'AdminPassword123!',
-        name: 'New Admin',
+        email: "admin@example.com",
+        password: "AdminPassword123!",
+        name: "New Admin",
       };
 
       await expect(
@@ -297,37 +297,37 @@ describe('AuthController', () => {
     });
   });
 
-  describe('resetPassword', () => {
-    it('should allow SUPER_ADMIN to reset user password', async () => {
+  describe("resetPassword", () => {
+    it("should allow SUPER_ADMIN to reset user password", async () => {
       const superAdminRequest = {
         ...mockRequest,
-        user: { ...mockUser, role: 'SUPER_ADMIN' },
-        ipAddress: '127.0.0.1',
-        userAgent: 'Mozilla/5.0',
+        user: { ...mockUser, role: "SUPER_ADMIN" },
+        ipAddress: "127.0.0.1",
+        userAgent: "Mozilla/5.0",
       };
 
       const resetPasswordDto = {
-        userId: '2',
-        newPassword: 'NewPassword123!',
+        userId: "2",
+        newPassword: "NewPassword123!",
       };
 
       // Would call authService.resetPassword or similar
       // but for now we'll just test permission logic
-      expect(superAdminRequest.user.role).toBe('SUPER_ADMIN');
+      expect(superAdminRequest.user.role).toBe("SUPER_ADMIN");
     });
 
-    it('should throw ForbiddenException if user is not SUPER_ADMIN', () => {
+    it("should throw ForbiddenException if user is not SUPER_ADMIN", () => {
       const resetPasswordDto = {
-        userId: '2',
-        newPassword: 'NewPassword123!',
+        userId: "2",
+        newPassword: "NewPassword123!",
       };
 
-      expect(mockRequest.user.role).not.toBe('SUPER_ADMIN');
+      expect(mockRequest.user.role).not.toBe("SUPER_ADMIN");
     });
   });
 
-  describe('getProfile', () => {
-    it('should return authenticated user profile', () => {
+  describe("getProfile", () => {
+    it("should return authenticated user profile", () => {
       const result = controller.getProfile(mockRequest);
 
       expect(result).toEqual(mockUser);
@@ -335,7 +335,7 @@ describe('AuthController', () => {
       expect(result.role).toBe(mockUser.role);
     });
 
-    it('should return user with all profile information', () => {
+    it("should return user with all profile information", () => {
       const detailedUser = {
         ...mockUser,
         createdAt: new Date(),
@@ -355,12 +355,12 @@ describe('AuthController', () => {
     });
   });
 
-  describe('extractIpAddress', () => {
-    it('should extract IP from x-forwarded-for header', () => {
+  describe("extractIpAddress", () => {
+    it("should extract IP from x-forwarded-for header", () => {
       const requestWithHeader = {
         ...mockRequest,
-        headers: { 'x-forwarded-for': '192.168.1.1' },
-        ip: '127.0.0.1',
+        headers: { "x-forwarded-for": "192.168.1.1" },
+        ip: "127.0.0.1",
       };
 
       const result = (controller as any).extractIpAddress(requestWithHeader);
@@ -368,38 +368,34 @@ describe('AuthController', () => {
       expect(result).toMatch(/\d+\.\d+\.\d+\.\d+/);
     });
 
-    it('should fallback to request.ip', () => {
+    it("should fallback to request.ip", () => {
       const requestWithoutHeader = {
         ...mockRequest,
         headers: {},
-        ip: '127.0.0.1',
+        ip: "127.0.0.1",
       };
 
-      const result = (controller as any).extractIpAddress(
-        requestWithoutHeader,
-      );
+      const result = (controller as any).extractIpAddress(requestWithoutHeader);
 
-      expect(result).toBe('127.0.0.1');
+      expect(result).toBe("127.0.0.1");
     });
   });
 
-  describe('extractUserAgent', () => {
-    it('should extract user agent from headers', () => {
+  describe("extractUserAgent", () => {
+    it("should extract user agent from headers", () => {
       const requestWithUserAgent = {
         ...mockRequest,
         headers: {
-          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         },
       };
 
-      const result = (controller as any).extractUserAgent(
-        requestWithUserAgent,
-      );
+      const result = (controller as any).extractUserAgent(requestWithUserAgent);
 
-      expect(result).toBe('Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
+      expect(result).toBe("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
     });
 
-    it('should return empty string if no user agent', () => {
+    it("should return empty string if no user agent", () => {
       const requestWithoutUserAgent = {
         ...mockRequest,
         headers: {},
@@ -409,7 +405,7 @@ describe('AuthController', () => {
         requestWithoutUserAgent,
       );
 
-      expect(result).toBe('unknown');
+      expect(result).toBe("unknown");
     });
   });
 });

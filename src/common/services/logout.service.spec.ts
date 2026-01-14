@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { LogoutService } from './logout.service';
-import { PrismaService } from '../../config/prisma.service';
-import { AuditService } from './audit.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { LogoutService } from "./logout.service";
+import { PrismaService } from "../../config/prisma.service";
+import { AuditService } from "./audit.service";
 
-describe('LogoutService', () => {
+describe("LogoutService", () => {
   let service: LogoutService;
   let prismaService: PrismaService;
   let auditService: AuditService;
@@ -49,15 +49,15 @@ describe('LogoutService', () => {
     jest.clearAllMocks();
   });
 
-  describe('logout', () => {
-    it('should successfully logout user and add token to blacklist', async () => {
-      const userId = '1';
-      const token = 'jwt-token';
-      const ipAddress = '127.0.0.1';
-      const userAgent = 'Mozilla/5.0';
+  describe("logout", () => {
+    it("should successfully logout user and add token to blacklist", async () => {
+      const userId = "1";
+      const token = "jwt-token";
+      const ipAddress = "127.0.0.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.blacklistedToken.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
         userId,
         expiresAt: expect.any(Date),
@@ -80,12 +80,12 @@ describe('LogoutService', () => {
       );
     });
 
-    it('should hash the token before storing in blacklist', async () => {
-      const userId = '1';
-      const token = 'jwt-token';
+    it("should hash the token before storing in blacklist", async () => {
+      const userId = "1";
+      const token = "jwt-token";
 
       mockPrismaService.blacklistedToken.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
         userId,
         expiresAt: expect.any(Date),
@@ -107,12 +107,12 @@ describe('LogoutService', () => {
       );
     });
 
-    it('should set token expiration in blacklist', async () => {
-      const userId = '1';
-      const token = 'jwt-token';
+    it("should set token expiration in blacklist", async () => {
+      const userId = "1";
+      const token = "jwt-token";
 
       mockPrismaService.blacklistedToken.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
         userId,
         expiresAt: expect.any(Date),
@@ -134,12 +134,12 @@ describe('LogoutService', () => {
       );
     });
 
-    it('should update user lastLoginAt timestamp', async () => {
-      const userId = '1';
-      const token = 'jwt-token';
+    it("should update user lastLoginAt timestamp", async () => {
+      const userId = "1";
+      const token = "jwt-token";
 
       mockPrismaService.blacklistedToken.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
         userId,
         expiresAt: expect.any(Date),
@@ -160,14 +160,14 @@ describe('LogoutService', () => {
       );
     });
 
-    it('should log logout event in audit service', async () => {
-      const userId = '1';
-      const token = 'jwt-token';
-      const ipAddress = '192.168.1.1';
-      const userAgent = 'Mozilla/5.0';
+    it("should log logout event in audit service", async () => {
+      const userId = "1";
+      const token = "jwt-token";
+      const ipAddress = "192.168.1.1";
+      const userAgent = "Mozilla/5.0";
 
       mockPrismaService.blacklistedToken.create.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
         userId,
         expiresAt: expect.any(Date),
@@ -188,9 +188,9 @@ describe('LogoutService', () => {
     });
   });
 
-  describe('isTokenBlacklisted', () => {
-    it('should return false if token is not in blacklist', async () => {
-      const token = 'valid-token';
+  describe("isTokenBlacklisted", () => {
+    it("should return false if token is not in blacklist", async () => {
+      const token = "valid-token";
 
       mockPrismaService.blacklistedToken.findUnique.mockResolvedValue(null);
 
@@ -199,13 +199,13 @@ describe('LogoutService', () => {
       expect(result).toBe(false);
     });
 
-    it('should return true if token is in blacklist', async () => {
-      const token = 'blacklisted-token';
+    it("should return true if token is in blacklist", async () => {
+      const token = "blacklisted-token";
 
       mockPrismaService.blacklistedToken.findUnique.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
-        userId: '1',
+        userId: "1",
         expiresAt: new Date(Date.now() + 3600000), // 1 hour from now
       });
 
@@ -214,14 +214,14 @@ describe('LogoutService', () => {
       expect(result).toBe(true);
     });
 
-    it('should return true if token expiration has passed', async () => {
-      const token = 'expired-token';
+    it("should return true if token expiration has passed", async () => {
+      const token = "expired-token";
       const expiredDate = new Date(Date.now() - 3600000); // 1 hour ago
 
       mockPrismaService.blacklistedToken.findUnique.mockResolvedValue({
-        id: '1',
+        id: "1",
         token: expect.any(String),
-        userId: '1',
+        userId: "1",
         expiresAt: expiredDate,
       });
 
