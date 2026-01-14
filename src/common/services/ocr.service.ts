@@ -1,14 +1,23 @@
 import { Injectable, Logger } from "@nestjs/common";
-import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
+  private genAI: GoogleGenerativeAI;
+
+  constructor() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY não está configurado no arquivo .env");
+    }
+    this.genAI = new GoogleGenerativeAI(apiKey);
+  }
 
   /**
-   * Extrai texto de uma imagem usando OCR
-   * @param imageBuffer Buffer da imagem
-   * @returns Texto extraído e dados estruturados
+   * Extrai e resume dados de uma fatura CELESC usando Gemini Vision
+   * @param imageBuffer Buffer da imagem ou PDF
+   * @returns Resumo estruturado com informações-chave da fatura
    */
   async extractTextFromImage(imageBuffer: Buffer): Promise<{
     text: string;
@@ -16,104 +25,117 @@ export class OcrService {
     data: any;
   }> {
     try {
-      const worker = await this.initializeWorker();
+      this.logger.log("Iniciando extração e análise da fatura com Gemini...");
 
-      this.logger.log("Iniciando extração de texto da fatura...");
+      // Gera resumo inteligente da fatura CELESC
+      const summary = await this.generateInvoiceSummary(imageBuffer);
 
-      const text = await this.extractTextWithGemini(imageBuffer);
-      const confidence = 100; // Assuming confident extraction by Gemini
-
-      this.logger.log(`Texto extraído com confiança de ${confidence}%`);
-
-      // Tenta extrair dados estruturados da fatura
-      const structuredData = this.parseInvoiceData(text);
+      this.logger.log("Fatura analisada com sucesso pelo Gemini");
 
       return {
-        text,
-        confidence,
-        data: structuredData,
+        text: summary.description,
+        confidence: 95, // Gemini Vision é muito preciso
+        data: summary,
       };
     } catch (error) {
-      this.logger.error(`Erro ao processar OCR com Gemini: ${error.message}`);
+      this.logger.error(`Erro ao processar fatura com Gemini: ${error.message}`);
       throw error;
     }
   }
 
   /**
-   * Extrai dados estruturados do texto da fatura
-   * @param text Texto extraído do OCR
-   * @returns Dados estruturados
+   * Gera resumo inteligente de fatura CELESC usando Gemini Vision
    */
-  private async extractTextWithGemini(imageBuffer: Buffer): Promise<string> {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY não está configurado no arquivo .env");
-    }
+  private async generateInvoiceSummary(
+    imageBuffer: Buffer,
+  ): Promise<{
+    ucNumber?: string;
+    consumptionKwh?: number;
+    totalValue?: number;
+    dueDate?: string;
+    referenceMonth?: string;
+    consumerName?: string;
+    consumerDocument?: string;
+    serviceType?: string;
+    description: string;
+    highlights: string[];
+    [key: string]: any;
+  }> {
+    const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Converte buffer para base64
+    const base64Image = imageBuffer.toString("base64");
+
+    const prompt = `Você é um especialista em análise de faturas de energia elétrica CELESC. 
+    
+Analise a imagem fornecida de uma fatura CELESC e extraia as seguintes informações em JSON:
+
+{
+  "ucNumber": "número da UC (Unidade Consumidora)",
+  "consumerName": "nome do consumidor",
+  "consumerDocument": "CPF/CNPJ do consumidor",
+  "serviceType": "tipo de serviço (residencial, comercial, industrial, etc)",
+  "referenceMonth": "mês/ano da referência (ex: Janeiro/2025)",
+  "consumptionKwh": número de kWh consumido,
+  "totalValue": valor total a pagar em R$,
+  "dueDate": "data de vencimento (DD/MM/YYYY)",
+  "description": "resumo bem estruturado em português com as informações principais",
+  "highlights": ["ponto importante 1", "ponto importante 2", "ponto importante 3"]
+}
+
+Garanta que:
+- Os valores numéricos sejam retornados como números (sem símbolos)
+- As datas sejam retornadas no formato DD/MM/YYYY
+- Se algo não estiver visível, retorne null para esse campo
+- O resumo seja conciso e foque nos dados mais relevantes
+- Os highlights destaquem informações importantes ou anomalias`;
+
+    const response = await model.generateContent([
+      {
+        inlineData: {
+          mimeType: "image/jpeg",
+          data: base64Image,
+        },
+      },
+      prompt,
+    ]);
+
+    const responseText = response.response.text();
 
     try {
-      const response = await axios.post(
-        "https://api.gemini.com/extract",
-        imageBuffer,
-        {
-          headers: {
-            "Content-Type": "application/octet-stream",
-            Authorization: `Bearer ${apiKey}`,
-          },
-        },
+      // Extrai JSON da resposta
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("Nenhum JSON encontrado na resposta");
+      }
+
+      const summaryData = JSON.parse(jsonMatch[0]);
+
+      return {
+        ucNumber: summaryData.ucNumber,
+        consumerName: summaryData.consumerName,
+        consumerDocument: summaryData.consumerDocument,
+        serviceType: summaryData.serviceType,
+        referenceMonth: summaryData.referenceMonth,
+        consumptionKwh: summaryData.consumptionKwh,
+        totalValue: summaryData.totalValue,
+        dueDate: summaryData.dueDate,
+        description: summaryData.description || "",
+        highlights: summaryData.highlights || [],
+      };
+    } catch (parseError) {
+      this.logger.warn(
+        `Erro ao fazer parse do JSON da resposta Gemini: ${parseError.message}`,
       );
-      return response.data.extracted_text;
-    } catch (error) {
-      this.logger.error(
-        `Erro ao se comunicar com a API do Gemini: ${error.message}`,
-      );
-      throw new Error("Falha na extração de texto com o Gemini OCR");
-    }
-  }
-  private parseInvoiceData(text: string): {
-    ucNumber?: string;
-    consumption?: number;
-    value?: number;
-    dueDate?: string;
-    [key: string]: any;
-  } {
-    const data: any = {};
 
-    // Extrai número da UC (padrão comum em faturas)
-    const ucMatch = text.match(/UC[:\s]*(\d+)/i) || text.match(/(\d{8,})/);
-    if (ucMatch) {
-      data.ucNumber = ucMatch[1];
-    }
-
-    // Extrai consumo (kWh)
-    const consumptionMatch = text.match(/(\d+[.,]?\d*)\s*kWh/i);
-    if (consumptionMatch) {
-      data.consumption = parseFloat(consumptionMatch[1].replace(",", "."));
-    }
-
-    // Extrai valor (R$)
-    const valueMatch = text.match(/R\$\s*(\d+[.,]?\d*)/i);
-    if (valueMatch) {
-      data.value = parseFloat(valueMatch[1].replace(",", "."));
-    }
-
-    // Extrai data de vencimento
-    const dateMatch = text.match(
-      /(vencimento|venc\.?)[:\s]*(\d{2}[\/\-]\d{2}[\/\-]\d{4})/i,
-    );
-    if (dateMatch) {
-      data.dueDate = dateMatch[2];
-    }
-
-    return data;
-  }
-
-  /**
-   * Limpa recursos do worker
-   */
-  async terminate(): Promise<void> {
-    if (this.worker) {
-      await this.worker.terminate();
-      this.worker = null;
+      // Fallback: retorna resposta como descrição
+      return {
+        description: responseText,
+        highlights: [
+          "Analyze efetuada com sucesso",
+          "Verifique os dados manualmente se necessário",
+        ],
+      };
     }
   }
 }

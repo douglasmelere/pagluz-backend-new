@@ -11,5 +11,6 @@ export declare class SupabaseStorageService {
     deleteFile(filePath: string): Promise<void>;
     getPublicUrl(filePath: string): string;
     getSignedUrl(filePath: string, expiresIn?: number): Promise<string>;
+    bucketExists(): Promise<boolean>;
     downloadFile(filePath: string): Promise<Buffer>;
 }

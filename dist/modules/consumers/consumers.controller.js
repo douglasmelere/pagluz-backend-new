@@ -90,13 +90,17 @@ let ConsumersController = class ConsumersController {
             limit: limit || 20,
         });
     }
+    getRepresentativeChangeRequests(req) {
+        const representativeId = req.user.id;
+        return this.changeRequestsService.getRepresentativeRequests(representativeId);
+    }
     findRepresentativeConsumer(req, consumerId) {
         const representativeId = req.user.id;
         return this.consumersService.findRepresentativeConsumer(representativeId, consumerId);
     }
     async updateRepresentativeConsumer(req, consumerId, updateConsumerDto) {
         const representativeId = req.user.id;
-        return this.consumersService.updateRepresentativeConsumerWithApproval(consumerId, representativeId, updateConsumerDto);
+        return this.consumersService.updateRepresentativeConsumerWithApproval(representativeId, consumerId, updateConsumerDto);
     }
     getRepresentativeConsumerStats(req) {
         const representativeId = req.user.id;
@@ -174,10 +178,6 @@ let ConsumersController = class ConsumersController {
     }
     getPendingChangeRequests(page, limit) {
         return this.changeRequestsService.getPendingRequests(page || 1, limit || 10);
-    }
-    getRepresentativeChangeRequests(req) {
-        const representativeId = req.user.id;
-        return this.changeRequestsService.getRepresentativeRequests(representativeId);
     }
     approveChangeRequest(req, changeRequestId) {
         const adminUserId = req.user.id;
@@ -356,6 +356,16 @@ __decorate([
     __metadata("design:paramtypes", [Object, String, String, String, String, String, String, String, Number, Number]),
     __metadata("design:returntype", void 0)
 ], ConsumersController.prototype, "findRepresentativeConsumersWithFilters", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Listar solicitações de mudança do representante' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de solicitações do representante' }),
+    (0, common_1.Get)('representative/change-requests'),
+    (0, common_1.UseGuards)(representative_jwt_auth_guard_1.RepresentativeJwtAuthGuard),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ConsumersController.prototype, "getRepresentativeChangeRequests", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Obter consumidor específico do representante' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Detalhes do consumidor' }),
@@ -616,16 +626,6 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", void 0)
 ], ConsumersController.prototype, "getPendingChangeRequests", null);
-__decorate([
-    (0, swagger_1.ApiOperation)({ summary: 'Listar solicitações de mudança do representante' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de solicitações do representante' }),
-    (0, common_1.Get)('representative/change-requests'),
-    (0, common_1.UseGuards)(representative_jwt_auth_guard_1.RepresentativeJwtAuthGuard),
-    __param(0, (0, common_1.Request)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], ConsumersController.prototype, "getRepresentativeChangeRequests", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Aprovar solicitação de mudança (Admin)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Mudança aprovada e aplicada' }),

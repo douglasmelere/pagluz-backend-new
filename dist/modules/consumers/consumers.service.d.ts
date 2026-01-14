@@ -1150,8 +1150,11 @@ export declare class ConsumersService {
         invoiceUrl: string;
         invoiceStorageUrl: string;
         invoiceFileName: string;
-        scannedData: any;
+        scannedData: {
+            processing: boolean;
+        } | null;
     }>;
+    private processOcrAsync;
     removeInvoice(consumerId: string, representativeId: string): Promise<{
         number: string | null;
         email: string | null;

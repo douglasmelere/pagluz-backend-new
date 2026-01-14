@@ -1,0 +1,46 @@
+import { ConfigService } from "@nestjs/config";
+import { PrismaService } from "../../config/prisma.service";
+import { GoogleApisService } from "../../common/services/google-apis.service";
+import { NumberToWordsService } from "../../common/services/number-to-words.service";
+import { GenerateContractDto } from "./dto/generate-contract.dto";
+export declare class ContractsService {
+    private prisma;
+    private googleApis;
+    private numberToWords;
+    private configService;
+    private readonly logger;
+    private readonly TEMPLATE_LOCACAO_ID;
+    private readonly TEMPLATE_PRESTACAO_ID;
+    private readonly TEMPLATE_PROCURACAO_PJ_ID;
+    private readonly TEMPLATE_PROCURACAO_PF_ID;
+    private readonly FOLDER_LOCACAO_ID;
+    private readonly FOLDER_PRESTACAO_ID;
+    private readonly FOLDER_PROCURACAO_ID;
+    private readonly SPREADSHEET_ID;
+    private readonly SHEET_LOCACAO;
+    private readonly SHEET_PRESTACAO;
+    private readonly SHEET_PROCURACAO_PJ;
+    private readonly SHEET_PROCURACAO_PF;
+    private readonly EMAIL_TO;
+    constructor(prisma: PrismaService, googleApis: GoogleApisService, numberToWords: NumberToWordsService, configService: ConfigService);
+    generateContract(dto: GenerateContractDto): Promise<{
+        contractId: string;
+        documentUrl: string;
+    }>;
+    private generateContractId;
+    private generateLocacaoContract;
+    private generatePrestacaoContract;
+    private generateProcuracaoContract;
+    private generateProcuracaoPJ;
+    private generateProcuracaoPF;
+    private prepareLocacaoData;
+    private preparePrestacaoData;
+    private prepareProcuracaoPJData;
+    private prepareProcuracaoPFData;
+    private formatEnderecoCompleto;
+    private formatTipoEnergia;
+    private getMonthName;
+    private getEmailMessage;
+    private checkAndCreateGenerator;
+    private mapTipoUsinaToSourceType;
+}

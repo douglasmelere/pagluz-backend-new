@@ -584,6 +584,32 @@ export declare class ConsumersController {
             };
         };
     }>;
+    getRepresentativeChangeRequests(req: any): Promise<({
+        consumer: {
+            name: string;
+            id: string;
+            cpfCnpj: string;
+        };
+        reviewedBy: {
+            email: string;
+            name: string | null;
+            id: string;
+        } | null;
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        status: import(".prisma/client").$Enums.ChangeRequestStatus;
+        representativeId: string;
+        oldValues: import("@prisma/client/runtime/library").JsonValue | null;
+        newValues: import("@prisma/client/runtime/library").JsonValue;
+        rejectionReason: string | null;
+        consumerId: string;
+        changedFields: string[];
+        requestedAt: Date;
+        reviewedByUserId: string | null;
+        reviewedAt: Date | null;
+    })[]>;
     findRepresentativeConsumer(req: any, consumerId: string): Promise<({
         generator: {
             id: string;
@@ -1203,7 +1229,9 @@ export declare class ConsumersController {
         invoiceUrl: string;
         invoiceStorageUrl: string;
         invoiceFileName: string;
-        scannedData: any;
+        scannedData: {
+            processing: boolean;
+        } | null;
     }>;
     removeInvoice(req: any, consumerId: string): Promise<{
         number: string | null;
@@ -1284,32 +1312,6 @@ export declare class ConsumersController {
             totalPages: number;
         };
     }>;
-    getRepresentativeChangeRequests(req: any): Promise<({
-        consumer: {
-            name: string;
-            id: string;
-            cpfCnpj: string;
-        };
-        reviewedBy: {
-            email: string;
-            name: string | null;
-            id: string;
-        } | null;
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.ChangeRequestStatus;
-        representativeId: string;
-        oldValues: import("@prisma/client/runtime/library").JsonValue | null;
-        newValues: import("@prisma/client/runtime/library").JsonValue;
-        rejectionReason: string | null;
-        consumerId: string;
-        changedFields: string[];
-        requestedAt: Date;
-        reviewedByUserId: string | null;
-        reviewedAt: Date | null;
-    })[]>;
     approveChangeRequest(req: any, changeRequestId: string): Promise<{
         changeRequest: {
             consumer: {

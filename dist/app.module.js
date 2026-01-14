@@ -9,6 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const core_1 = require("@nestjs/core");
+const throttler_1 = require("@nestjs/throttler");
+const terminus_1 = require("@nestjs/terminus");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./modules/users/users.module");
@@ -20,10 +23,14 @@ const auth_module_1 = require("./modules/auth/auth.module");
 const audit_module_1 = require("./modules/audit/audit.module");
 const commissions_module_1 = require("./modules/commissions/commissions.module");
 const settings_module_1 = require("./modules/settings/settings.module");
+const contracts_module_1 = require("./modules/contracts/contracts.module");
 const prisma_service_1 = require("./config/prisma.service");
 const audit_service_1 = require("./common/services/audit.service");
 const logout_service_1 = require("./common/services/logout.service");
+const logger_service_1 = require("./common/services/logger.service");
 const hierarchy_auth_guard_1 = require("./common/guards/hierarchy-auth.guard");
+const throttler_config_1 = require("./common/config/throttler.config");
+const health_controller_1 = require("./common/controllers/health.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +41,8 @@ exports.AppModule = AppModule = __decorate([
                 isGlobal: true,
                 envFilePath: '.env',
             }),
+            throttler_1.ThrottlerModule.forRoot((0, throttler_config_1.throttlerConfig)()),
+            terminus_1.TerminusModule,
             users_module_1.UsersModule,
             consumers_module_1.ConsumersModule,
             generators_module_1.GeneratorsModule,
@@ -43,16 +52,22 @@ exports.AppModule = AppModule = __decorate([
             audit_module_1.AuditModule,
             commissions_module_1.CommissionsModule,
             settings_module_1.SettingsModule,
+            contracts_module_1.ContractsModule,
         ],
-        controllers: [app_controller_1.AppController],
+        controllers: [app_controller_1.AppController, health_controller_1.HealthController],
         providers: [
             app_service_1.AppService,
             prisma_service_1.PrismaService,
             audit_service_1.AuditService,
             logout_service_1.LogoutService,
+            logger_service_1.LoggerServiceImpl,
             hierarchy_auth_guard_1.HierarchyAuthGuard,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: throttler_config_1.CustomThrottlerGuard,
+            },
         ],
-        exports: [audit_service_1.AuditService, logout_service_1.LogoutService],
+        exports: [audit_service_1.AuditService, logout_service_1.LogoutService, logger_service_1.LoggerServiceImpl],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

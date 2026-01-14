@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { TerminusModule } from '@nestjs/terminus';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
@@ -15,7 +18,10 @@ import { ContractsModule } from './modules/contracts/contracts.module';
 import { PrismaService } from './config/prisma.service';
 import { AuditService } from './common/services/audit.service';
 import { LogoutService } from './common/services/logout.service';
+import { LoggerServiceImpl } from './common/services/logger.service';
 import { HierarchyAuthGuard } from './common/guards/hierarchy-auth.guard';
+import { CustomThrottlerGuard, throttlerConfig } from './common/config/throttler.config';
+import { HealthController } from './common/controllers/health.controller';
 
 @Module({
   imports: [
@@ -23,6 +29,8 @@ import { HierarchyAuthGuard } from './common/guards/hierarchy-auth.guard';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ThrottlerModule.forRoot(throttlerConfig()),
+    TerminusModule,
     UsersModule,
     ConsumersModule,
     GeneratorsModule,
@@ -34,15 +42,20 @@ import { HierarchyAuthGuard } from './common/guards/hierarchy-auth.guard';
     SettingsModule,
     ContractsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [
     AppService,
     PrismaService,
     AuditService,
     LogoutService,
+    LoggerServiceImpl,
     HierarchyAuthGuard,
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
   ],
-  exports: [AuditService, LogoutService],
+  exports: [AuditService, LogoutService, LoggerServiceImpl],
 })
 export class AppModule {}
 

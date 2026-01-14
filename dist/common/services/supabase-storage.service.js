@@ -71,15 +71,50 @@ let SupabaseStorageService = class SupabaseStorageService {
         }
         return data.signedUrl;
     }
-    async downloadFile(filePath) {
-        const { data, error } = await this.supabase.storage
-            .from(this.bucketName)
-            .download(filePath);
-        if (error) {
-            throw new Error(`Erro ao fazer download: ${error.message}`);
+    async bucketExists() {
+        try {
+            const { data, error } = await this.supabase.storage.listBuckets();
+            if (error) {
+                console.error('Erro ao listar buckets:', error);
+                return false;
+            }
+            return data?.some(bucket => bucket.name === this.bucketName) || false;
         }
-        const arrayBuffer = await data.arrayBuffer();
-        return Buffer.from(arrayBuffer);
+        catch (error) {
+            console.error('Erro ao verificar bucket:', error);
+            return false;
+        }
+    }
+    async downloadFile(filePath) {
+        try {
+            const bucketExists = await this.bucketExists();
+            if (!bucketExists) {
+                throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+            }
+            const { data, error } = await this.supabase.storage
+                .from(this.bucketName)
+                .download(filePath);
+            if (error) {
+                if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
+                    throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+                }
+                if (error.message?.includes('Object not found') || error.message?.includes('404')) {
+                    throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);
+                }
+                throw new Error(`Erro ao fazer download: ${error.message}`);
+            }
+            if (!data) {
+                throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);
+            }
+            const arrayBuffer = await data.arrayBuffer();
+            return Buffer.from(arrayBuffer);
+        }
+        catch (error) {
+            if (error.message) {
+                throw error;
+            }
+            throw new Error(`Erro ao fazer download do arquivo: ${error.message || 'Erro desconhecido'}`);
+        }
     }
 };
 exports.SupabaseStorageService = SupabaseStorageService;

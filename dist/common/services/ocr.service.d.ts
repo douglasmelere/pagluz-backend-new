@@ -1,12 +1,11 @@
 export declare class OcrService {
     private readonly logger;
-    private worker;
-    private initializeWorker;
+    private genAI;
+    constructor();
     extractTextFromImage(imageBuffer: Buffer): Promise<{
         text: string;
         confidence: number;
         data: any;
     }>;
-    private parseInvoiceData;
-    terminate(): Promise<void>;
+    private generateInvoiceSummary;
 }

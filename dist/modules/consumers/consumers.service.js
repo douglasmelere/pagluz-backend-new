@@ -1263,27 +1263,10 @@ let ConsumersService = class ConsumersService {
         const storageFileName = `fatura-${consumerId}-${Date.now()}.${fileExtension}`;
         const folder = `consumers/${consumerId}`;
         const { url, path } = await this.supabaseStorage.uploadFile(file, storageFileName, folder);
-        let scannedData = null;
-        if (file.mimetype.startsWith('image/')) {
-            try {
-                const ocrResult = await this.ocrService.extractTextFromImage(file.buffer);
-                scannedData = {
-                    text: ocrResult.text,
-                    confidence: ocrResult.confidence,
-                    extractedData: ocrResult.data,
-                };
-            }
-            catch (error) {
-                console.error('Erro ao processar OCR:', error);
-            }
-        }
         if (consumer.invoiceUrl) {
-            try {
-                await this.supabaseStorage.deleteFile(consumer.invoiceFileName || '');
-            }
-            catch (error) {
+            this.supabaseStorage.deleteFile(consumer.invoiceFileName || '').catch((error) => {
                 console.error('Erro ao remover fatura anterior:', error);
-            }
+            });
         }
         const updatedConsumer = await this.prisma.consumer.update({
             where: { id: consumerId },
@@ -1292,12 +1275,29 @@ let ConsumersService = class ConsumersService {
                 invoiceFileName: path,
                 invoiceUploadedAt: new Date(),
                 invoiceScannedData: {
-                    ...(scannedData || {}),
                     friendlyFileName: friendlyFileName,
+                    processing: true,
                 },
             },
         });
-        await this.auditService.log({
+        let scannedData = null;
+        if (file.mimetype.startsWith('image/')) {
+            this.processOcrAsync(consumerId, file.buffer, friendlyFileName).catch((error) => {
+                console.error('Erro ao processar OCR em background:', error);
+            });
+        }
+        else {
+            await this.prisma.consumer.update({
+                where: { id: consumerId },
+                data: {
+                    invoiceScannedData: {
+                        friendlyFileName: friendlyFileName,
+                        processing: false,
+                    },
+                },
+            });
+        }
+        this.auditService.log({
             representativeId: representativeId,
             action: 'UPLOAD_INVOICE',
             entityType: 'Consumer',
@@ -1306,8 +1306,10 @@ let ConsumersService = class ConsumersService {
                 fileName: file.originalname,
                 fileSize: file.size,
                 mimeType: file.mimetype,
-                hasOcrData: !!scannedData,
+                isImage: file.mimetype.startsWith('image/'),
             },
+        }).catch((error) => {
+            console.error('Erro ao registrar log de auditoria:', error);
         });
         const backendUrl = `/consumers/representative/${consumerId}/invoice`;
         return {
@@ -1315,8 +1317,43 @@ let ConsumersService = class ConsumersService {
             invoiceUrl: backendUrl,
             invoiceStorageUrl: url,
             invoiceFileName: friendlyFileName,
-            scannedData,
+            scannedData: file.mimetype.startsWith('image/')
+                ? { processing: true }
+                : null,
         };
+    }
+    async processOcrAsync(consumerId, imageBuffer, friendlyFileName) {
+        try {
+            const ocrResult = await this.ocrService.extractTextFromImage(imageBuffer);
+            const scannedData = {
+                text: ocrResult.text,
+                confidence: ocrResult.confidence,
+                extractedData: ocrResult.data,
+                friendlyFileName: friendlyFileName,
+                processing: false,
+                processedAt: new Date().toISOString(),
+            };
+            await this.prisma.consumer.update({
+                where: { id: consumerId },
+                data: {
+                    invoiceScannedData: scannedData,
+                },
+            });
+            console.log(`OCR processado com sucesso para consumidor ${consumerId}`);
+        }
+        catch (error) {
+            console.error(`Erro ao processar OCR para consumidor ${consumerId}:`, error);
+            await this.prisma.consumer.update({
+                where: { id: consumerId },
+                data: {
+                    invoiceScannedData: {
+                        friendlyFileName: friendlyFileName,
+                        processing: false,
+                        error: 'Erro ao processar OCR',
+                    },
+                },
+            });
+        }
     }
     async removeInvoice(consumerId, representativeId) {
         const consumer = await this.prisma.consumer.findUnique({
@@ -1385,29 +1422,38 @@ let ConsumersService = class ConsumersService {
         res.send(fileBuffer);
     }
     async downloadInvoiceAdmin(consumerId, res) {
-        const consumer = await this.prisma.consumer.findUnique({
-            where: { id: consumerId },
-        });
-        if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado');
+        try {
+            const consumer = await this.prisma.consumer.findUnique({
+                where: { id: consumerId },
+            });
+            if (!consumer) {
+                throw new common_1.NotFoundException('Consumidor não encontrado');
+            }
+            if (!consumer.invoiceFileName) {
+                throw new common_1.NotFoundException('Este consumidor não possui fatura anexada');
+            }
+            console.log(`[downloadInvoiceAdmin] Tentando fazer download do arquivo: ${consumer.invoiceFileName}`);
+            const fileBuffer = await this.supabaseStorage.downloadFile(consumer.invoiceFileName);
+            const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
+            const contentTypeMap = {
+                pdf: 'application/pdf',
+                jpg: 'image/jpeg',
+                jpeg: 'image/jpeg',
+                png: 'image/png',
+                webp: 'image/webp',
+            };
+            const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
+            const friendlyName = this.getFriendlyInvoiceName(consumer);
+            res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', `attachment; filename="${friendlyName}"`);
+            res.send(fileBuffer);
         }
-        if (!consumer.invoiceFileName) {
-            throw new common_1.NotFoundException('Este consumidor não possui fatura anexada');
+        catch (error) {
+            if (error.message?.includes('Bucket') || error.message?.includes('bucket')) {
+                throw new common_1.NotFoundException(`Erro ao acessar a fatura: ${error.message}. Verifique se o bucket 'faturas-representantes' está configurado corretamente no Supabase.`);
+            }
+            throw error;
         }
-        const fileBuffer = await this.supabaseStorage.downloadFile(consumer.invoiceFileName);
-        const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
-        const contentTypeMap = {
-            pdf: 'application/pdf',
-            jpg: 'image/jpeg',
-            jpeg: 'image/jpeg',
-            png: 'image/png',
-            webp: 'image/webp',
-        };
-        const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
-        const friendlyName = this.getFriendlyInvoiceName(consumer);
-        res.setHeader('Content-Type', contentType);
-        res.setHeader('Content-Disposition', `attachment; filename="${friendlyName}"`);
-        res.send(fileBuffer);
     }
     getFriendlyInvoiceName(consumer) {
         if (consumer.invoiceScannedData?.friendlyFileName) {
