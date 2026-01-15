@@ -1877,7 +1877,7 @@ export class ConsumersService {
         invoiceUrl: null,
         invoiceFileName: null,
         invoiceUploadedAt: null,
-        invoiceScannedData: Prisma.JsonNull,
+        invoiceScannedData: Prisma::DbNull,
       },
     });
 
