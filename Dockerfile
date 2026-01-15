@@ -1,30 +1,33 @@
-# Dockerfile para deploy alternativo
-
-# Define um estágio de construção
+# -------- Build stage --------
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Instale as dependências, incluindo as de desenvolvimento
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copie os arquivos e construa a aplicação
-COPY . .
+COPY tsconfig*.json ./
+COPY prisma ./prisma
+COPY src ./src
+
 RUN npm run build
 
-# Define o estágio de produção
+# -------- Production stage --------
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Copie apenas o necessário de build para produção
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY package.json package-lock.json ./
+ENV NODE_ENV=production
 
-# Expor porta para a aplicação
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY --from=build /app/dist ./dist
+COPY prisma ./prisma
+
 EXPOSE 3000
 
-# Comando de inicialização da aplicação
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://localhost:3000/health || exit 1
+
 CMD ["node", "dist/main"]
