@@ -1,17 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import {
-  HealthCheck,
-  HealthCheckService,
-} from '@nestjs/terminus';
-import { PrismaService } from '../../config/prisma.service';
+import { Controller, Get } from "@nestjs/common";
+import { SkipThrottle } from "@nestjs/throttler";
+import { HealthCheck, HealthCheckService } from "@nestjs/terminus";
+import { PrismaService } from "../../config/prisma.service";
 
-@Controller('health')
+@Controller("health")
 export class HealthController {
   constructor(
     private health: HealthCheckService,
     private prismaService: PrismaService,
   ) {}
 
+  @SkipThrottle()
   @Get()
   @HealthCheck()
   async check() {
@@ -21,13 +20,13 @@ export class HealthController {
           await this.prismaService.$queryRaw`SELECT 1`;
           return {
             database: {
-              status: 'up',
+              status: "up",
             },
           };
         } catch (error) {
           return {
             database: {
-              status: 'down',
+              status: "down",
               error: error.message,
             },
           };
@@ -36,7 +35,8 @@ export class HealthController {
     ]);
   }
 
-  @Get('ready')
+  @SkipThrottle()
+  @Get("ready")
   @HealthCheck()
   async readiness() {
     return this.health.check([
@@ -45,13 +45,13 @@ export class HealthController {
           await this.prismaService.$queryRaw`SELECT 1`;
           return {
             database: {
-              status: 'up',
+              status: "up",
             },
           };
         } catch (error) {
           return {
             database: {
-              status: 'down',
+              status: "down",
               error: error.message,
             },
           };
@@ -60,10 +60,11 @@ export class HealthController {
     ]);
   }
 
-  @Get('live')
+  @SkipThrottle()
+  @Get("live")
   liveness() {
     return {
-      status: 'ok',
+      status: "ok",
       timestamp: new Date().toISOString(),
     };
   }
