@@ -25,7 +25,8 @@
     "db:create-representatives": "npm run db:seed:representatives",
     "db:seed:representatives": "npx ts-node src/scripts/seed-representatives.ts",
     "db:setup:super-admin": "npx ts-node src/scripts/setup-super-admin.ts",
-    "db:cleanup:tokens": "npx ts-node -e \"require('./src/common/services/logout.service').LogoutService.prototype.cleanupExpiredTokens()\""
+    "db:cleanup:tokens": "npx ts-node -e \"require('./src/common/services/logout.service').LogoutService.prototype.cleanupExpiredTokens()\"",
+    "setup:storage": "npx ts-node src/scripts/setup-storage.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

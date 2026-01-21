@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
-export class SupabaseStorageService {
+export class SupabaseStorageService implements OnModuleInit {
   private supabase: SupabaseClient;
   private bucketName = 'faturas-representantes';
+  private bucketExistsCache: boolean | null = null;
+  private bucketCheckTime: number = 0;
+  private readonly BUCKET_CACHE_TTL = 300000; // 5 minutos
 
   constructor(private configService: ConfigService) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
@@ -27,6 +30,23 @@ export class SupabaseStorageService {
         persistSession: false,
       },
     });
+  }
+
+  /**
+   * Verifica o bucket na inicialização do módulo
+   */
+  async onModuleInit() {
+    try {
+      const exists = await this.bucketExists();
+      if (!exists) {
+        console.warn(`⚠️ ATENÇÃO: Bucket '${this.bucketName}' não foi encontrado!`);
+        console.warn('Execute o script de setup: npm run setup:storage');
+      } else {
+        console.log(`✅ Bucket '${this.bucketName}' verificado com sucesso!`);
+      }
+    } catch (error: any) {
+      console.error(`❌ Erro ao verificar bucket: ${error.message}`);
+    }
   }
 
   /**
@@ -112,44 +132,57 @@ export class SupabaseStorageService {
   }
 
   /**
-   * Verifica se o bucket existe
+   * Verifica se o bucket existe (com cache para melhor performance)
    * @returns true se o bucket existe, false caso contrário
    */
   async bucketExists(): Promise<boolean> {
     try {
+      // Retorna cache se ainda estiver válido
+      const now = Date.now();
+      if (this.bucketExistsCache !== null && (now - this.bucketCheckTime) < this.BUCKET_CACHE_TTL) {
+        return this.bucketExistsCache;
+      }
+
+      // Verifica bucket
       const { data, error } = await this.supabase.storage.listBuckets();
       if (error) {
         console.error('Erro ao listar buckets:', error);
-        return false;
+        // Em caso de erro, mantém cache anterior se existir
+        return this.bucketExistsCache || false;
       }
-      return data?.some(bucket => bucket.name === this.bucketName) || false;
+      
+      const exists = data?.some(bucket => bucket.name === this.bucketName) || false;
+      
+      // Atualiza cache
+      this.bucketExistsCache = exists;
+      this.bucketCheckTime = now;
+      
+      return exists;
     } catch (error) {
       console.error('Erro ao verificar bucket:', error);
-      return false;
+      // Em caso de erro, mantém cache anterior se existir
+      return this.bucketExistsCache || false;
     }
   }
 
   /**
-   * Faz download de um arquivo do bucket
+   * Faz download de um arquivo do bucket (otimizado)
    * @param filePath Caminho do arquivo no bucket
    * @returns Buffer do arquivo
    */
   async downloadFile(filePath: string): Promise<Buffer> {
     try {
-      // Verifica se o bucket existe antes de tentar fazer download
-      const bucketExists = await this.bucketExists();
-      if (!bucketExists) {
-        throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
-      }
-
+      // Tenta fazer o download diretamente (mais rápido)
       const { data, error } = await this.supabase.storage
         .from(this.bucketName)
         .download(filePath);
 
       if (error) {
-        // Verifica se o erro é relacionado ao bucket
+        // Se for erro de bucket não encontrado, verifica e atualiza cache
         if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
-          throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+          this.bucketExistsCache = false;
+          this.bucketCheckTime = Date.now();
+          throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Execute 'npm run setup:storage' para criar o bucket.`);
         }
         // Verifica se o arquivo não foi encontrado
         if (error.message?.includes('Object not found') || error.message?.includes('404')) {
