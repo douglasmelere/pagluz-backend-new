@@ -12,16 +12,16 @@ export const throttlerConfig = (): ThrottlerModuleOptions => [
   {
     name: "global",
     ttl: 60 * 1000, // 1 minute
-    limit: process.env.NODE_ENV === "production" ? 100 : 1000,
+    limit: process.env.NODE_ENV === "production" ? 5000 : 10000, // Aumentado para uso interno
   },
   {
     name: "auth",
     ttl: 15 * 60 * 1000, // 15 minutes
-    limit: 100, // relaxed for normal authenticated navigation
+    limit: 1000, // Aumentado para funcionários internos
   },
   {
     name: "upload",
     ttl: 60 * 60 * 1000, // 1 hour
-    limit: 50, // 50 uploads per hour
+    limit: 500, // Aumentado para 500 uploads por hora
   },
 ];
