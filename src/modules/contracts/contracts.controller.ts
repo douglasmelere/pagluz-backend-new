@@ -5,6 +5,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Get,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -15,6 +16,7 @@ import {
 import { ContractsService } from "./contracts.service";
 import { GenerateContractDto } from "./dto/generate-contract.dto";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { HierarchyAuthGuard, RequireHierarchy } from "../../common/guards/hierarchy-auth.guard";
 
 @ApiTags("Contracts")
 @Controller("contracts")
@@ -22,6 +24,17 @@ import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 @ApiBearerAuth()
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
+
+  @Get("generators")
+  @UseGuards(JwtAuthGuard, HierarchyAuthGuard)
+  @RequireHierarchy("OPERATOR")
+  @ApiOperation({
+    summary: "Lista geradores para preencher formulário de contratos",
+  })
+  @ApiResponse({ status: 200, description: "Lista de geradores" })
+  async getGenerators() {
+    return this.contractsService.getGeneratorsFromN8n();
+  }
 
   @Post("generate")
   @HttpCode(HttpStatus.OK)

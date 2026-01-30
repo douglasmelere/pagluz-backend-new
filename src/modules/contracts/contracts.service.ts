@@ -5,6 +5,8 @@ import { GoogleApisService } from "../../common/services/google-apis.service";
 import { NumberToWordsService } from "../../common/services/number-to-words.service";
 import { GenerateContractDto, ContractType } from "./dto/generate-contract.dto";
 import { SourceType } from "../../common/enums";
+import axios from "axios";
+import https from "https";
 
 @Injectable()
 export class ContractsService {
@@ -57,8 +59,54 @@ export class ContractsService {
     }
   }
 
+  async getGeneratorsFromN8n() {
+    try {
+      const auth = this.getBasicAuth();
+      const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+      const { data } = await axios.get(
+        "https://automation.pagluz.com.br/webhook/get-generators",
+        {
+          headers: { Authorization: `Basic ${auth}` },
+          timeout: 10000,
+          httpsAgent,
+        },
+      );
+
+      return (Array.isArray(data) ? data : []).map((g: any) => ({
+        id: g.id ?? g.cnpj ?? g.cpf,
+        nome: g.nome ?? g.razaoSocial,
+        cpfCnpj: g.cpf_cnpj ?? g.cpfCnpj ?? g.cnpj ?? g.cpf,
+        email: g.email,
+        rua: g.rua,
+        numero: g.numero_casa ?? g.numero ?? g.numeroCasa,
+        bairro: g.bairro,
+        cidade: g.cidade,
+        uf: g.uf,
+        cep: g.cep,
+        banco: g.banco,
+        agencia: g.agencia,
+        conta: g.conta,
+        numeroUcGerador: g.numero_uc ?? g.numeroUc ?? g.numeroUcGerador,
+        tipoUsina: g.tipo_usina ?? g.tipoUsina,
+        tipoDocumento:
+          g.tipo_documento?.toLowerCase() ??
+          g.tipoDocumento?.toLowerCase(),
+      }));
+    } catch (error: any) {
+      this.logger.error("Erro ao buscar geradores no n8n:", error);
+      throw error;
+    }
+  }
+
   private generateContractId(): string {
     return Date.now().toString();
+  }
+
+  private getBasicAuth(): string {
+    const user = this.configService.get<string>("N8N_BASIC_AUTH_USER");
+    const pass = this.configService.get<string>("N8N_BASIC_AUTH_PASS");
+    return Buffer.from(`${user}:${pass}`).toString("base64");
   }
 
   private async generateLocacaoContract(
