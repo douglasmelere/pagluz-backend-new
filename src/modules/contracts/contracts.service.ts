@@ -6,7 +6,7 @@ import { NumberToWordsService } from "../../common/services/number-to-words.serv
 import { GenerateContractDto, ContractType } from "./dto/generate-contract.dto";
 import { SourceType } from "../../common/enums";
 import axios from "axios";
-import https from "https";
+import * as https from "node:https";
 
 @Injectable()
 export class ContractsService {
@@ -65,7 +65,7 @@ export class ContractsService {
       const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
       const { data } = await axios.get(
-        "https://automation.pagluz.com.br/webhook/get-generators",
+        "https://automation.pagluz.com.br/webhook/get-generatos",
         {
           headers: { Authorization: `Basic ${auth}` },
           timeout: 10000,
