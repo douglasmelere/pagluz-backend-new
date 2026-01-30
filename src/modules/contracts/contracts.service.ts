@@ -44,8 +44,27 @@ export class ContractsService {
 
   async generateContract(
     dto: GenerateContractDto,
-  ): Promise<{ contractId: string; documentUrl: string }> {
+  ): Promise<{ contractId: string; documentUrl?: string; status?: string }> {
     const contractId = this.generateContractId();
+
+    const contractWebhookUrl = this.getContractWebhookUrl();
+    if (contractWebhookUrl) {
+      const payload = {
+        contractId,
+        documentType: dto.documentType,
+        source: "backend",
+        requestedAt: new Date().toISOString(),
+        data: dto,
+      };
+
+      const response = await this.sendToN8n(payload, contractWebhookUrl);
+
+      return {
+        contractId,
+        documentUrl: response?.documentUrl ?? undefined,
+        status: response?.status ?? "sent_to_generation",
+      };
+    }
 
     switch (dto.documentType) {
       case ContractType.LOCACAO:
@@ -99,6 +118,23 @@ export class ContractsService {
     }
   }
 
+  private async sendToN8n(payload: any, url: string) {
+    const auth = this.getBasicAuth();
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
+      httpsAgent,
+      timeout: 15000,
+    });
+
+    this.logger.log(`Contrato enviado para N8n. Status: ${response.status}`);
+    return response.data;
+  }
+
   private generateContractId(): string {
     return Date.now().toString();
   }
@@ -107,6 +143,13 @@ export class ContractsService {
     const user = this.configService.get<string>("N8N_BASIC_AUTH_USER");
     const pass = this.configService.get<string>("N8N_BASIC_AUTH_PASS");
     return Buffer.from(`${user}:${pass}`).toString("base64");
+  }
+
+  private getContractWebhookUrl(): string | undefined {
+    return (
+      this.configService.get<string>("N8N_CONTRACT_WEBHOOK_URL") ||
+      "https://automation.pagluz.com.br/webhook/contract-generation"
+    );
   }
 
   private async generateLocacaoContract(
