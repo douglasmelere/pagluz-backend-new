@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HealthController = void 0;
 const common_1 = require("@nestjs/common");
+const throttler_1 = require("@nestjs/throttler");
 const terminus_1 = require("@nestjs/terminus");
 const prisma_service_1 = require("../../config/prisma.service");
 let HealthController = class HealthController {
@@ -27,14 +28,14 @@ let HealthController = class HealthController {
                     await this.prismaService.$queryRaw `SELECT 1`;
                     return {
                         database: {
-                            status: 'up',
+                            status: "up",
                         },
                     };
                 }
                 catch (error) {
                     return {
                         database: {
-                            status: 'down',
+                            status: "down",
                             error: error.message,
                         },
                     };
@@ -49,14 +50,14 @@ let HealthController = class HealthController {
                     await this.prismaService.$queryRaw `SELECT 1`;
                     return {
                         database: {
-                            status: 'up',
+                            status: "up",
                         },
                     };
                 }
                 catch (error) {
                     return {
                         database: {
-                            status: 'down',
+                            status: "down",
                             error: error.message,
                         },
                     };
@@ -66,13 +67,14 @@ let HealthController = class HealthController {
     }
     liveness() {
         return {
-            status: 'ok',
+            status: "ok",
             timestamp: new Date().toISOString(),
         };
     }
 };
 exports.HealthController = HealthController;
 __decorate([
+    (0, throttler_1.SkipThrottle)(),
     (0, common_1.Get)(),
     (0, terminus_1.HealthCheck)(),
     __metadata("design:type", Function),
@@ -80,20 +82,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], HealthController.prototype, "check", null);
 __decorate([
-    (0, common_1.Get)('ready'),
+    (0, throttler_1.SkipThrottle)(),
+    (0, common_1.Get)("ready"),
     (0, terminus_1.HealthCheck)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], HealthController.prototype, "readiness", null);
 __decorate([
-    (0, common_1.Get)('live'),
+    (0, throttler_1.SkipThrottle)(),
+    (0, common_1.Get)("live"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], HealthController.prototype, "liveness", null);
 exports.HealthController = HealthController = __decorate([
-    (0, common_1.Controller)('health'),
+    (0, common_1.Controller)("health"),
     __metadata("design:paramtypes", [terminus_1.HealthCheckService,
         prisma_service_1.PrismaService])
 ], HealthController);

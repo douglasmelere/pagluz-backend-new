@@ -17,6 +17,9 @@ let SupabaseStorageService = class SupabaseStorageService {
     configService;
     supabase;
     bucketName = 'faturas-representantes';
+    bucketExistsCache = null;
+    bucketCheckTime = 0;
+    BUCKET_CACHE_TTL = 300000;
     constructor(configService) {
         this.configService = configService;
         const supabaseUrl = this.configService.get('SUPABASE_URL');
@@ -31,6 +34,21 @@ let SupabaseStorageService = class SupabaseStorageService {
                 persistSession: false,
             },
         });
+    }
+    async onModuleInit() {
+        try {
+            const exists = await this.bucketExists();
+            if (!exists) {
+                console.warn(`⚠️ ATENÇÃO: Bucket '${this.bucketName}' não foi encontrado!`);
+                console.warn('Execute o script de setup: npm run setup:storage');
+            }
+            else {
+                console.log(`✅ Bucket '${this.bucketName}' verificado com sucesso!`);
+            }
+        }
+        catch (error) {
+            console.error(`❌ Erro ao verificar bucket: ${error.message}`);
+        }
     }
     async uploadFile(file, fileName, folder) {
         const filePath = folder ? `${folder}/${fileName}` : fileName;
@@ -73,30 +91,35 @@ let SupabaseStorageService = class SupabaseStorageService {
     }
     async bucketExists() {
         try {
+            const now = Date.now();
+            if (this.bucketExistsCache !== null && (now - this.bucketCheckTime) < this.BUCKET_CACHE_TTL) {
+                return this.bucketExistsCache;
+            }
             const { data, error } = await this.supabase.storage.listBuckets();
             if (error) {
                 console.error('Erro ao listar buckets:', error);
-                return false;
+                return this.bucketExistsCache || false;
             }
-            return data?.some(bucket => bucket.name === this.bucketName) || false;
+            const exists = data?.some(bucket => bucket.name === this.bucketName) || false;
+            this.bucketExistsCache = exists;
+            this.bucketCheckTime = now;
+            return exists;
         }
         catch (error) {
             console.error('Erro ao verificar bucket:', error);
-            return false;
+            return this.bucketExistsCache || false;
         }
     }
     async downloadFile(filePath) {
         try {
-            const bucketExists = await this.bucketExists();
-            if (!bucketExists) {
-                throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
-            }
             const { data, error } = await this.supabase.storage
                 .from(this.bucketName)
                 .download(filePath);
             if (error) {
                 if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
-                    throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Verifique se o bucket existe e está configurado corretamente.`);
+                    this.bucketExistsCache = false;
+                    this.bucketCheckTime = Date.now();
+                    throw new Error(`Bucket '${this.bucketName}' não encontrado no Supabase. Execute 'npm run setup:storage' para criar o bucket.`);
                 }
                 if (error.message?.includes('Object not found') || error.message?.includes('404')) {
                     throw new Error(`Arquivo não encontrado no caminho: ${filePath}`);

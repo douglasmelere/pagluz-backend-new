@@ -31,6 +31,7 @@ const logger_service_1 = require("./common/services/logger.service");
 const hierarchy_auth_guard_1 = require("./common/guards/hierarchy-auth.guard");
 const throttler_config_1 = require("./common/config/throttler.config");
 const health_controller_1 = require("./common/controllers/health.controller");
+const metrics_controller_1 = require("./common/controllers/metrics.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,7 +40,7 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: '.env',
+                envFilePath: ".env",
             }),
             throttler_1.ThrottlerModule.forRoot((0, throttler_config_1.throttlerConfig)()),
             terminus_1.TerminusModule,
@@ -54,7 +55,7 @@ exports.AppModule = AppModule = __decorate([
             settings_module_1.SettingsModule,
             contracts_module_1.ContractsModule,
         ],
-        controllers: [app_controller_1.AppController, health_controller_1.HealthController],
+        controllers: [app_controller_1.AppController, health_controller_1.HealthController, metrics_controller_1.MetricsController],
         providers: [
             app_service_1.AppService,
             prisma_service_1.PrismaService,

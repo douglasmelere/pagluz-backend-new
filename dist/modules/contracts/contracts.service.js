@@ -18,6 +18,8 @@ const google_apis_service_1 = require("../../common/services/google-apis.service
 const number_to_words_service_1 = require("../../common/services/number-to-words.service");
 const generate_contract_dto_1 = require("./dto/generate-contract.dto");
 const enums_1 = require("../../common/enums");
+const axios_1 = require("axios");
+const https = require("node:https");
 let ContractsService = ContractsService_1 = class ContractsService {
     prisma;
     googleApis;
@@ -45,6 +47,22 @@ let ContractsService = ContractsService_1 = class ContractsService {
     }
     async generateContract(dto) {
         const contractId = this.generateContractId();
+        const contractWebhookUrl = this.getContractWebhookUrl();
+        if (contractWebhookUrl) {
+            const payload = {
+                contractId,
+                documentType: dto.documentType,
+                source: "backend",
+                requestedAt: new Date().toISOString(),
+                data: dto,
+            };
+            const response = await this.sendToN8n(payload, contractWebhookUrl);
+            return {
+                contractId,
+                documentUrl: response?.documentUrl ?? undefined,
+                status: response?.status ?? "sent_to_generation",
+            };
+        }
         switch (dto.documentType) {
             case generate_contract_dto_1.ContractType.LOCACAO:
                 return this.generateLocacaoContract(dto, contractId);
@@ -56,8 +74,65 @@ let ContractsService = ContractsService_1 = class ContractsService {
                 throw new Error(`Tipo de contrato não suportado: ${dto.documentType}`);
         }
     }
+    async getGeneratorsFromN8n() {
+        try {
+            const auth = this.getBasicAuth();
+            const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+            const { data } = await axios_1.default.get("https://automation.pagluz.com.br/webhook/get-generatos", {
+                headers: { Authorization: `Basic ${auth}` },
+                timeout: 10000,
+                httpsAgent,
+            });
+            return (Array.isArray(data) ? data : []).map((g) => ({
+                id: g.id ?? g.cnpj ?? g.cpf,
+                nome: g.nome ?? g.razaoSocial,
+                cpfCnpj: g.cpf_cnpj ?? g.cpfCnpj ?? g.cnpj ?? g.cpf,
+                email: g.email,
+                rua: g.rua,
+                numero: g.numero_casa ?? g.numero ?? g.numeroCasa,
+                bairro: g.bairro,
+                cidade: g.cidade,
+                uf: g.uf,
+                cep: g.cep,
+                banco: g.banco,
+                agencia: g.agencia,
+                conta: g.conta,
+                numeroUcGerador: g.numero_uc ?? g.numeroUc ?? g.numeroUcGerador,
+                tipoUsina: g.tipo_usina ?? g.tipoUsina,
+                tipoDocumento: g.tipo_documento?.toLowerCase() ??
+                    g.tipoDocumento?.toLowerCase(),
+            }));
+        }
+        catch (error) {
+            this.logger.error("Erro ao buscar geradores no n8n:", error);
+            throw error;
+        }
+    }
+    async sendToN8n(payload, url) {
+        const auth = this.getBasicAuth();
+        const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+        const response = await axios_1.default.post(url, payload, {
+            headers: {
+                Authorization: `Basic ${auth}`,
+                "Content-Type": "application/json",
+            },
+            httpsAgent,
+            timeout: 15000,
+        });
+        this.logger.log(`Contrato enviado para N8n. Status: ${response.status}`);
+        return response.data;
+    }
     generateContractId() {
         return Date.now().toString();
+    }
+    getBasicAuth() {
+        const user = this.configService.get("N8N_BASIC_AUTH_USER");
+        const pass = this.configService.get("N8N_BASIC_AUTH_PASS");
+        return Buffer.from(`${user}:${pass}`).toString("base64");
+    }
+    getContractWebhookUrl() {
+        return (this.configService.get("N8N_CONTRACT_WEBHOOK_URL") ||
+            "https://automation.pagluz.com.br/webhook/contract-generation");
     }
     async generateLocacaoContract(dto, contractId) {
         try {

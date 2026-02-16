@@ -1,5 +1,5 @@
-import { HealthCheckService } from '@nestjs/terminus';
-import { PrismaService } from '../../config/prisma.service';
+import { HealthCheckService } from "@nestjs/terminus";
+import { PrismaService } from "../../config/prisma.service";
 export declare class HealthController {
     private health;
     private prismaService;

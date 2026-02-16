@@ -20,19 +20,19 @@ exports.CustomThrottlerGuard = CustomThrottlerGuard = __decorate([
 ], CustomThrottlerGuard);
 const throttlerConfig = () => [
     {
-        name: 'global',
+        name: "global",
         ttl: 60 * 1000,
-        limit: process.env.NODE_ENV === 'production' ? 100 : 1000,
+        limit: process.env.NODE_ENV === "production" ? 5000 : 10000,
     },
     {
-        name: 'auth',
+        name: "auth",
         ttl: 15 * 60 * 1000,
-        limit: 5,
+        limit: 1000,
     },
     {
-        name: 'upload',
+        name: "upload",
         ttl: 60 * 60 * 1000,
-        limit: 50,
+        limit: 500,
     },
 ];
 exports.throttlerConfig = throttlerConfig;

@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsumersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
-const client_1 = require("@prisma/client");
 const enums_1 = require("../../common/enums");
 const audit_service_1 = require("../../common/services/audit.service");
 const commissions_service_1 = require("../commissions/commissions.service");
@@ -41,7 +40,7 @@ let ConsumersService = class ConsumersService {
                 where: { id: generatorId },
             });
             if (!generator) {
-                throw new common_1.NotFoundException('Gerador não encontrado');
+                throw new common_1.NotFoundException("Gerador não encontrado");
             }
         }
         const consumer = await this.prisma.consumer.create({
@@ -66,17 +65,17 @@ let ConsumersService = class ConsumersService {
             where: { id: representativeId },
         });
         if (!representative) {
-            throw new common_1.NotFoundException('Representante não encontrado');
+            throw new common_1.NotFoundException("Representante não encontrado");
         }
-        if (representative.status !== 'ACTIVE') {
-            throw new common_1.BadRequestException('Representante não está ativo');
+        if (representative.status !== "ACTIVE") {
+            throw new common_1.BadRequestException("Representante não está ativo");
         }
         if (generatorId) {
             const generator = await this.prisma.generator.findUnique({
                 where: { id: generatorId },
             });
             if (!generator) {
-                throw new common_1.NotFoundException('Gerador não encontrado');
+                throw new common_1.NotFoundException("Gerador não encontrado");
             }
         }
         const consumer = await this.prisma.consumer.create({
@@ -101,7 +100,7 @@ let ConsumersService = class ConsumersService {
                 },
             },
         });
-        await this.auditService.logRepresentativeCreate(representativeId, 'Consumer', consumer.id, {
+        await this.auditService.logRepresentativeCreate(representativeId, "Consumer", consumer.id, {
             name: consumer.name,
             cpfCnpj: consumer.cpfCnpj,
             status: consumer.status,
@@ -110,7 +109,7 @@ let ConsumersService = class ConsumersService {
         });
         return {
             ...consumer,
-            message: 'Cadastro enviado para aprovação. Você será notificado quando for aprovado ou se houver ajustes necessários.'
+            message: "Cadastro enviado para aprovação. Você será notificado quando for aprovado ou se houver ajustes necessários.",
         };
     }
     async findAll() {
@@ -132,10 +131,10 @@ let ConsumersService = class ConsumersService {
                 },
             },
             orderBy: {
-                createdAt: 'desc',
+                createdAt: "desc",
             },
         });
-        return consumers.map(consumer => {
+        return consumers.map((consumer) => {
             if (consumer.invoiceUrl && consumer.invoiceFileName) {
                 return {
                     ...consumer,
@@ -153,7 +152,7 @@ let ConsumersService = class ConsumersService {
             },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado');
+            throw new common_1.NotFoundException("Consumidor não encontrado");
         }
         if (consumer.invoiceUrl && consumer.invoiceFileName) {
             return {
@@ -201,10 +200,10 @@ let ConsumersService = class ConsumersService {
                 },
             },
             orderBy: {
-                createdAt: 'desc',
+                createdAt: "desc",
             },
         });
-        return consumers.map(consumer => {
+        return consumers.map((consumer) => {
             if (consumer.invoiceUrl && consumer.invoiceFileName) {
                 return {
                     ...consumer,
@@ -222,7 +221,7 @@ let ConsumersService = class ConsumersService {
                 where: { id: generatorId },
             });
             if (!generator) {
-                throw new common_1.NotFoundException('Gerador não encontrado');
+                throw new common_1.NotFoundException("Gerador não encontrado");
             }
         }
         const consumer = await this.prisma.consumer.update({
@@ -244,25 +243,25 @@ let ConsumersService = class ConsumersService {
         await this.prisma.consumer.delete({
             where: { id },
         });
-        return { message: 'Consumidor removido com sucesso' };
+        return { message: "Consumidor removido com sucesso" };
     }
     async allocateToGenerator(consumerId, generatorId, percentage) {
         const toAllocate = await this.findOne(consumerId);
         if (toAllocate.approvalStatus !== enums_1.ConsumerApprovalStatus.APPROVED) {
-            throw new common_1.BadRequestException('Consumidor ainda não aprovado para alocação');
+            throw new common_1.BadRequestException("Consumidor ainda não aprovado para alocação");
         }
         if (percentage <= 0 || percentage > 100) {
-            throw new common_1.BadRequestException('Porcentagem deve estar entre 0 e 100');
+            throw new common_1.BadRequestException("Porcentagem deve estar entre 0 e 100");
         }
         const consumer = await this.findOne(consumerId);
         const generator = await this.prisma.generator.findUnique({
             where: { id: generatorId },
         });
         if (!generator) {
-            throw new common_1.NotFoundException('Gerador não encontrado');
+            throw new common_1.NotFoundException("Gerador não encontrado");
         }
         if (consumer.status === enums_1.ConsumerStatus.ALLOCATED) {
-            throw new common_1.ConflictException('Consumidor já está alocado');
+            throw new common_1.ConflictException("Consumidor já está alocado");
         }
         const updatedConsumer = await this.prisma.consumer.update({
             where: { id: consumerId },
@@ -288,7 +287,7 @@ let ConsumersService = class ConsumersService {
                 }
             }
             catch (error) {
-                console.error('Erro ao criar comissão durante alocação:', error);
+                console.error("Erro ao criar comissão durante alocação:", error);
             }
         }
         return updatedConsumer;
@@ -296,7 +295,7 @@ let ConsumersService = class ConsumersService {
     async deallocate(consumerId) {
         const toDeallocate = await this.findOne(consumerId);
         if (toDeallocate.approvalStatus !== enums_1.ConsumerApprovalStatus.APPROVED) {
-            throw new common_1.BadRequestException('Consumidor ainda não aprovado');
+            throw new common_1.BadRequestException("Consumidor ainda não aprovado");
         }
         await this.findOne(consumerId);
         const updatedConsumer = await this.prisma.consumer.update({
@@ -324,13 +323,13 @@ let ConsumersService = class ConsumersService {
                 await this.commissionsService.createCommissionForApprovedConsumer(consumerId);
             }
             catch (error) {
-                console.error('Erro ao criar comissão:', error);
+                console.error("Erro ao criar comissão:", error);
             }
         }
         await this.auditService.log({
             userId: approverUserId,
-            action: 'APPROVE',
-            entityType: 'Consumer',
+            action: "APPROVE",
+            entityType: "Consumer",
             entityId: consumerId,
             oldValues: existing,
             newValues: approved,
@@ -345,13 +344,13 @@ let ConsumersService = class ConsumersService {
                 approvalStatus: enums_1.ConsumerApprovalStatus.REJECTED,
                 approvedByUserId: approverUserId,
                 approvedAt: new Date(),
-                rejectionReason: reason || 'Sem motivo informado',
+                rejectionReason: reason || "Sem motivo informado",
             },
         });
         await this.auditService.log({
             userId: approverUserId,
-            action: 'REJECT',
-            entityType: 'Consumer',
+            action: "REJECT",
+            entityType: "Consumer",
             entityId: consumerId,
             oldValues: existing,
             newValues: rejected,
@@ -380,7 +379,7 @@ let ConsumersService = class ConsumersService {
         return consumers;
     }
     async findPending(filters) {
-        const { state, city, representativeId, startDate, endDate, page = 1, limit = 20 } = filters;
+        const { state, city, representativeId, startDate, endDate, page = 1, limit = 20, } = filters;
         const where = {
             approvalStatus: enums_1.ConsumerApprovalStatus.PENDING,
             submittedByRepresentativeId: {
@@ -392,7 +391,7 @@ let ConsumersService = class ConsumersService {
         if (state)
             where.state = state;
         if (city)
-            where.city = { contains: city, mode: 'insensitive' };
+            where.city = { contains: city, mode: "insensitive" };
         if (startDate || endDate) {
             where.createdAt = {};
             if (startDate)
@@ -409,7 +408,7 @@ let ConsumersService = class ConsumersService {
                         select: { id: true, name: true, email: true },
                     },
                 },
-                orderBy: { createdAt: 'desc' },
+                orderBy: { createdAt: "desc" },
                 skip,
                 take: limit,
             }),
@@ -441,7 +440,7 @@ let ConsumersService = class ConsumersService {
             },
         });
         const byState = await this.prisma.consumer.groupBy({
-            by: ['state'],
+            by: ["state"],
             _count: {
                 id: true,
             },
@@ -459,7 +458,7 @@ let ConsumersService = class ConsumersService {
         const consumer = await this.prisma.consumer.findFirst({
             where: {
                 id: consumerId,
-                representativeId
+                representativeId,
             },
             include: {
                 generator: {
@@ -484,7 +483,7 @@ let ConsumersService = class ConsumersService {
             },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado ou não pertence ao representante');
+            throw new common_1.NotFoundException("Consumidor não encontrado ou não pertence ao representante");
         }
         if (consumer.invoiceUrl && consumer.invoiceFileName) {
             return {
@@ -494,12 +493,12 @@ let ConsumersService = class ConsumersService {
         }
         return consumer;
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado ou não pertence ao representante');
+            throw new common_1.NotFoundException("Consumidor não encontrado ou não pertence ao representante");
         }
         return consumer;
     }
     async findRepresentativeConsumersWithFilters(representativeId, filters) {
-        const { status, approvalStatus, consumerType, state, city, startDate, endDate, page = 1, limit = 20 } = filters;
+        const { status, approvalStatus, consumerType, state, city, startDate, endDate, page = 1, limit = 20, } = filters;
         const where = {
             representativeId,
         };
@@ -518,7 +517,7 @@ let ConsumersService = class ConsumersService {
         if (city) {
             where.city = {
                 contains: city,
-                mode: 'insensitive',
+                mode: "insensitive",
             };
         }
         if (startDate || endDate) {
@@ -548,7 +547,7 @@ let ConsumersService = class ConsumersService {
                     },
                 },
                 orderBy: {
-                    createdAt: 'desc',
+                    createdAt: "desc",
                 },
                 skip,
                 take: limit,
@@ -559,16 +558,17 @@ let ConsumersService = class ConsumersService {
             totalConsumers: total,
             totalKwh: consumers.reduce((sum, c) => sum + c.averageMonthlyConsumption, 0),
             allocatedKwh: consumers
-                .filter(c => c.status === 'ALLOCATED' && c.allocatedPercentage)
-                .reduce((sum, c) => sum + (c.averageMonthlyConsumption * (c.allocatedPercentage || 0) / 100), 0),
+                .filter((c) => c.status === "ALLOCATED" && c.allocatedPercentage)
+                .reduce((sum, c) => sum +
+                (c.averageMonthlyConsumption * (c.allocatedPercentage || 0)) / 100, 0),
             pendingKwh: consumers
-                .filter(c => c.status !== 'ALLOCATED')
+                .filter((c) => c.status !== "ALLOCATED")
                 .reduce((sum, c) => sum + c.averageMonthlyConsumption, 0),
             statusBreakdown: {
-                available: consumers.filter(c => c.status === 'AVAILABLE').length,
-                allocated: consumers.filter(c => c.status === 'ALLOCATED').length,
-                inProcess: consumers.filter(c => c.status === 'IN_PROCESS').length,
-                converted: consumers.filter(c => c.status === 'CONVERTED').length,
+                available: consumers.filter((c) => c.status === "AVAILABLE").length,
+                allocated: consumers.filter((c) => c.status === "ALLOCATED").length,
+                inProcess: consumers.filter((c) => c.status === "IN_PROCESS").length,
+                converted: consumers.filter((c) => c.status === "CONVERTED").length,
             },
         };
         return {
@@ -588,22 +588,22 @@ let ConsumersService = class ConsumersService {
         const existingConsumer = await this.prisma.consumer.findFirst({
             where: {
                 id: consumerId,
-                representativeId
+                representativeId,
             },
         });
         if (!existingConsumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado ou não pertence ao representante');
+            throw new common_1.NotFoundException("Consumidor não encontrado ou não pertence ao representante");
         }
         const criticalFields = [
-            'averageMonthlyConsumption',
-            'discountOffered',
-            'ucNumber',
-            'concessionaire',
-            'consumerType',
-            'phase',
-            'status',
-            'allocatedPercentage',
-            'generatorId',
+            "averageMonthlyConsumption",
+            "discountOffered",
+            "ucNumber",
+            "concessionaire",
+            "consumerType",
+            "phase",
+            "status",
+            "allocatedPercentage",
+            "generatorId",
         ];
         const criticalUpdates = {};
         const nonCriticalUpdates = {};
@@ -649,7 +649,7 @@ let ConsumersService = class ConsumersService {
                     },
                 },
             });
-            await this.auditService.logRepresentativeUpdate(representativeId, 'Consumer', consumerId, existingConsumer, nonCriticalUpdates);
+            await this.auditService.logRepresentativeUpdate(representativeId, "Consumer", consumerId, existingConsumer, nonCriticalUpdates);
         }
         if (Object.keys(criticalUpdates).length > 0) {
             changeRequest = await this.changeRequestsService.createChangeRequest(consumerId, representativeId, criticalUpdates);
@@ -657,11 +657,12 @@ let ConsumersService = class ConsumersService {
         return {
             consumer: updatedConsumer,
             changeRequest,
-            message: Object.keys(nonCriticalUpdates).length > 0 && Object.keys(criticalUpdates).length > 0
-                ? 'Campos não críticos atualizados. Campos críticos aguardam aprovação.'
+            message: Object.keys(nonCriticalUpdates).length > 0 &&
+                Object.keys(criticalUpdates).length > 0
+                ? "Campos não críticos atualizados. Campos críticos aguardam aprovação."
                 : Object.keys(criticalUpdates).length > 0
-                    ? 'Solicitação de alteração criada. Aguarde aprovação do administrador.'
-                    : 'Consumidor atualizado com sucesso.',
+                    ? "Solicitação de alteração criada. Aguarde aprovação do administrador."
+                    : "Consumidor atualizado com sucesso.",
             updatedFields: {
                 direct: Object.keys(nonCriticalUpdates),
                 pending: Object.keys(criticalUpdates),
@@ -706,9 +707,11 @@ let ConsumersService = class ConsumersService {
         }
         const totalKwh = consumers.reduce((sum, c) => sum + c.averageMonthlyConsumption, 0);
         const allocatedKwh = consumers
-            .filter(c => c.status === 'ALLOCATED' && c.allocatedPercentage)
-            .reduce((sum, c) => sum + (c.averageMonthlyConsumption * (c.allocatedPercentage || 0) / 100), 0);
-        const averageDiscount = consumers.reduce((sum, c) => sum + c.discountOffered, 0) / consumers.length;
+            .filter((c) => c.status === "ALLOCATED" && c.allocatedPercentage)
+            .reduce((sum, c) => sum +
+            (c.averageMonthlyConsumption * (c.allocatedPercentage || 0)) / 100, 0);
+        const averageDiscount = consumers.reduce((sum, c) => sum + c.discountOffered, 0) /
+            consumers.length;
         const statusBreakdown = consumers.reduce((acc, c) => {
             acc[c.status.toLowerCase()] = (acc[c.status.toLowerCase()] || 0) + 1;
             return acc;
@@ -729,12 +732,15 @@ let ConsumersService = class ConsumersService {
             date.setMonth(date.getMonth() - i);
             const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
             const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-            const monthConsumers = consumers.filter(c => {
+            const monthConsumers = consumers.filter((c) => {
                 const consumerDate = new Date(c.createdAt);
                 return consumerDate >= monthStart && consumerDate <= monthEnd;
             });
             monthlyEvolution.push({
-                month: monthStart.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }),
+                month: monthStart.toLocaleDateString("pt-BR", {
+                    month: "short",
+                    year: "numeric",
+                }),
                 count: monthConsumers.length,
                 kwh: monthConsumers.reduce((sum, c) => sum + c.averageMonthlyConsumption, 0),
             });
@@ -744,7 +750,9 @@ let ConsumersService = class ConsumersService {
             totalKwh: Math.round(totalKwh * 100) / 100,
             allocatedKwh: Math.round(allocatedKwh * 100) / 100,
             pendingKwh: Math.round((totalKwh - allocatedKwh) * 100) / 100,
-            allocationRate: totalKwh > 0 ? Math.round((allocatedKwh / totalKwh) * 100 * 100) / 100 : 0,
+            allocationRate: totalKwh > 0
+                ? Math.round((allocatedKwh / totalKwh) * 100 * 100) / 100
+                : 0,
             averageDiscount: Math.round(averageDiscount * 100) / 100,
             statusBreakdown,
             typeBreakdown,
@@ -753,7 +761,7 @@ let ConsumersService = class ConsumersService {
         };
     }
     async generateCommissionsForApprovedConsumers() {
-        console.log('🔍 [DEBUG] Iniciando geração de comissões...');
+        console.log("🔍 [DEBUG] Iniciando geração de comissões...");
         const consumersWithoutCommission = await this.prisma.consumer.findMany({
             where: {
                 approvalStatus: enums_1.ConsumerApprovalStatus.APPROVED,
@@ -784,10 +792,10 @@ let ConsumersService = class ConsumersService {
                 id: consumer.id,
                 name: consumer.name,
                 representativeId: consumer.representativeId,
-                representativeName: 'N/A',
+                representativeName: "N/A",
                 generatorId: consumer.generatorId,
                 averageMonthlyConsumption: consumer.averageMonthlyConsumption,
-                approvalStatus: consumer.approvalStatus
+                approvalStatus: consumer.approvalStatus,
             });
         });
         const results = [];
@@ -798,9 +806,9 @@ let ConsumersService = class ConsumersService {
                     consumerId: consumer.id,
                     consumerName: consumer.name,
                     representativeId: consumer.representativeId,
-                    representativeName: 'N/A',
+                    representativeName: "N/A",
                     commissionValue: commission.commissionValue,
-                    status: 'SUCCESS',
+                    status: "SUCCESS",
                 });
             }
             catch (error) {
@@ -808,26 +816,26 @@ let ConsumersService = class ConsumersService {
                     consumerId: consumer.id,
                     consumerName: consumer.name,
                     representativeId: consumer.representativeId,
-                    representativeName: 'N/A',
-                    status: 'ERROR',
+                    representativeName: "N/A",
+                    status: "ERROR",
                     error: error.message,
                 });
             }
         }
         console.log(`🔍 [DEBUG] Resultado final:`, {
             totalProcessed: consumersWithoutCommission.length,
-            successful: results.filter(r => r.status === 'SUCCESS').length,
-            errors: results.filter(r => r.status === 'ERROR').length,
+            successful: results.filter((r) => r.status === "SUCCESS").length,
+            errors: results.filter((r) => r.status === "ERROR").length,
         });
         return {
             totalProcessed: consumersWithoutCommission.length,
-            successful: results.filter(r => r.status === 'SUCCESS').length,
-            errors: results.filter(r => r.status === 'ERROR').length,
+            successful: results.filter((r) => r.status === "SUCCESS").length,
+            errors: results.filter((r) => r.status === "ERROR").length,
             results,
         };
     }
     async generateCommissionsForApprovedConsumersWithoutAllocation() {
-        console.log('🔍 [DEBUG] Iniciando geração de comissões (SEM alocação obrigatória)...');
+        console.log("🔍 [DEBUG] Iniciando geração de comissões (SEM alocação obrigatória)...");
         const consumersWithoutCommission = await this.prisma.consumer.findMany({
             where: {
                 approvalStatus: enums_1.ConsumerApprovalStatus.APPROVED,
@@ -855,10 +863,10 @@ let ConsumersService = class ConsumersService {
                 id: consumer.id,
                 name: consumer.name,
                 representativeId: consumer.representativeId,
-                representativeName: 'N/A',
+                representativeName: "N/A",
                 generatorId: consumer.generatorId,
                 averageMonthlyConsumption: consumer.averageMonthlyConsumption,
-                approvalStatus: consumer.approvalStatus
+                approvalStatus: consumer.approvalStatus,
             });
         });
         const results = [];
@@ -869,9 +877,9 @@ let ConsumersService = class ConsumersService {
                     consumerId: consumer.id,
                     consumerName: consumer.name,
                     representativeId: consumer.representativeId,
-                    representativeName: 'N/A',
+                    representativeName: "N/A",
                     commissionValue: commission.commissionValue,
-                    status: 'SUCCESS',
+                    status: "SUCCESS",
                 });
             }
             catch (error) {
@@ -879,26 +887,26 @@ let ConsumersService = class ConsumersService {
                     consumerId: consumer.id,
                     consumerName: consumer.name,
                     representativeId: consumer.representativeId,
-                    representativeName: 'N/A',
-                    status: 'ERROR',
+                    representativeName: "N/A",
+                    status: "ERROR",
                     error: error.message,
                 });
             }
         }
         console.log(`🔍 [DEBUG] Resultado final (sem alocação):`, {
             totalProcessed: consumersWithoutCommission.length,
-            successful: results.filter(r => r.status === 'SUCCESS').length,
-            errors: results.filter(r => r.status === 'ERROR').length,
+            successful: results.filter((r) => r.status === "SUCCESS").length,
+            errors: results.filter((r) => r.status === "ERROR").length,
         });
         return {
             totalProcessed: consumersWithoutCommission.length,
-            successful: results.filter(r => r.status === 'SUCCESS').length,
-            errors: results.filter(r => r.status === 'ERROR').length,
+            successful: results.filter((r) => r.status === "SUCCESS").length,
+            errors: results.filter((r) => r.status === "ERROR").length,
             results,
         };
     }
     async debugEligibleConsumers() {
-        console.log('🔍 [DEBUG] Iniciando análise de consumidores elegíveis...');
+        console.log("🔍 [DEBUG] Iniciando análise de consumidores elegíveis...");
         const totalConsumers = await this.prisma.consumer.count();
         const approvedConsumers = await this.prisma.consumer.count({
             where: {
@@ -980,7 +988,7 @@ let ConsumersService = class ConsumersService {
                 withCommission,
                 eligibleForCommission: eligibleForCommission.length,
             },
-            eligibleConsumers: eligibleForCommission.map(consumer => ({
+            eligibleConsumers: eligibleForCommission.map((consumer) => ({
                 id: consumer.id,
                 name: consumer.name,
                 cpfCnpj: consumer.cpfCnpj,
@@ -997,15 +1005,15 @@ let ConsumersService = class ConsumersService {
         const consumer = await this.prisma.consumer.findFirst({
             where: {
                 id: consumerId,
-                representativeId
+                representativeId,
             },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado ou não pertence ao representante');
+            throw new common_1.NotFoundException("Consumidor não encontrado ou não pertence ao representante");
         }
         const auditLogs = await this.prisma.auditLog.findMany({
             where: {
-                entityType: 'Consumer',
+                entityType: "Consumer",
                 entityId: consumerId,
             },
             include: {
@@ -1019,50 +1027,50 @@ let ConsumersService = class ConsumersService {
                 },
             },
             orderBy: {
-                createdAt: 'desc',
+                createdAt: "desc",
             },
         });
-        const formattedLogs = auditLogs.map(log => {
-            let description = '';
-            let icon = '';
-            let color = '';
+        const formattedLogs = auditLogs.map((log) => {
+            let description = "";
+            let icon = "";
+            let color = "";
             switch (log.action) {
-                case 'CREATE':
-                    description = 'Consumidor foi cadastrado';
-                    icon = 'user-plus';
-                    color = 'green';
+                case "CREATE":
+                    description = "Consumidor foi cadastrado";
+                    icon = "user-plus";
+                    color = "green";
                     break;
-                case 'UPDATE':
-                    description = 'Dados do consumidor foram atualizados';
-                    icon = 'edit';
-                    color = 'blue';
+                case "UPDATE":
+                    description = "Dados do consumidor foram atualizados";
+                    icon = "edit";
+                    color = "blue";
                     break;
-                case 'STATUS_CHANGE':
-                    description = 'Status do consumidor foi alterado';
-                    icon = 'refresh';
-                    color = 'orange';
+                case "STATUS_CHANGE":
+                    description = "Status do consumidor foi alterado";
+                    icon = "refresh";
+                    color = "orange";
                     break;
-                case 'ALLOCATE':
-                    description = 'Consumidor foi alocado a um gerador';
-                    icon = 'link';
-                    color = 'purple';
+                case "ALLOCATE":
+                    description = "Consumidor foi alocado a um gerador";
+                    icon = "link";
+                    color = "purple";
                     break;
-                case 'DEALLOCATE':
-                    description = 'Consumidor foi desalocado do gerador';
-                    icon = 'unlink';
-                    color = 'red';
+                case "DEALLOCATE":
+                    description = "Consumidor foi desalocado do gerador";
+                    icon = "unlink";
+                    color = "red";
                     break;
                 default:
                     description = `Ação: ${log.action}`;
-                    icon = 'activity';
-                    color = 'gray';
+                    icon = "activity";
+                    color = "gray";
             }
             if (log.newValues) {
                 const newValues = log.newValues;
                 if (newValues.status) {
                     description += ` para "${newValues.status}"`;
                 }
-                if (newValues.name && log.action === 'CREATE') {
+                if (newValues.name && log.action === "CREATE") {
                     description += ` - ${newValues.name}`;
                 }
             }
@@ -1073,12 +1081,14 @@ let ConsumersService = class ConsumersService {
                 icon,
                 color,
                 timestamp: log.createdAt,
-                user: log.user ? {
-                    id: log.user.id,
-                    name: log.user.name,
-                    email: log.user.email,
-                    role: log.user.role,
-                } : null,
+                user: log.user
+                    ? {
+                        id: log.user.id,
+                        name: log.user.name,
+                        email: log.user.email,
+                        role: log.user.role,
+                    }
+                    : null,
                 oldValues: log.oldValues,
                 newValues: log.newValues,
                 metadata: log.metadata,
@@ -1097,35 +1107,35 @@ let ConsumersService = class ConsumersService {
         };
     }
     async createTestConsumer() {
-        console.log('🔍 [DEBUG] Criando consumidor de teste...');
+        console.log("🔍 [DEBUG] Criando consumidor de teste...");
         const representative = await this.prisma.representative.findFirst({
             where: {
-                status: 'ACTIVE',
+                status: "ACTIVE",
             },
         });
         if (!representative) {
-            throw new Error('Nenhum representante ativo encontrado');
+            throw new Error("Nenhum representante ativo encontrado");
         }
         console.log(`🔍 [DEBUG] Usando representante: ${representative.name} (${representative.id})`);
         const testConsumer = await this.prisma.consumer.create({
             data: {
-                name: 'Consumidor Teste Comissão',
-                cpfCnpj: '123.456.789-00',
-                email: 'teste@comissao.com',
-                phone: '11999999999',
-                street: 'Rua Teste',
-                number: '123',
-                city: 'São Paulo',
-                state: 'SP',
-                zipCode: '01234-567',
+                name: "Consumidor Teste Comissão",
+                cpfCnpj: "123.456.789-00",
+                email: "teste@comissao.com",
+                phone: "11999999999",
+                street: "Rua Teste",
+                number: "123",
+                city: "São Paulo",
+                state: "SP",
+                zipCode: "01234-567",
                 averageMonthlyConsumption: 500,
-                consumerType: 'RESIDENTIAL',
-                status: 'AVAILABLE',
-                approvalStatus: 'APPROVED',
+                consumerType: "RESIDENTIAL",
+                status: "AVAILABLE",
+                approvalStatus: "APPROVED",
                 representativeId: representative.id,
-                concessionaire: 'CPFL',
-                ucNumber: '123456789',
-                phase: 'MONOPHASIC',
+                concessionaire: "CPFL",
+                ucNumber: "123456789",
+                phase: "MONOPHASIC",
                 discountOffered: 0,
                 generatorId: null,
             },
@@ -1148,7 +1158,7 @@ let ConsumersService = class ConsumersService {
             generatorId: testConsumer.generatorId,
         });
         return {
-            message: 'Consumidor de teste criado com sucesso',
+            message: "Consumidor de teste criado com sucesso",
             consumer: testConsumer,
         };
     }
@@ -1168,13 +1178,13 @@ let ConsumersService = class ConsumersService {
                 },
             });
             if (!consumer) {
-                throw new Error('Consumidor não encontrado');
+                throw new Error("Consumidor não encontrado");
             }
             console.log(`🔍 [DEBUG] Consumidor encontrado:`, {
                 id: consumer.id,
                 name: consumer.name,
                 representativeId: consumer.representativeId,
-                representativeName: 'N/A',
+                representativeName: "N/A",
                 approvalStatus: consumer.approvalStatus,
                 averageMonthlyConsumption: consumer.averageMonthlyConsumption,
                 generatorId: consumer.generatorId,
@@ -1191,15 +1201,17 @@ let ConsumersService = class ConsumersService {
                     totalProcessed: 0,
                     successful: 0,
                     errors: 1,
-                    results: [{
+                    results: [
+                        {
                             consumerId: consumer.id,
                             consumerName: consumer.name,
                             representativeId: consumer.representativeId,
-                            representativeName: 'N/A',
+                            representativeName: "N/A",
                             commissionValue: existingCommission.commissionValue,
-                            status: 'ERROR',
-                            error: 'Comissão já existe para este consumidor',
-                        }],
+                            status: "ERROR",
+                            error: "Comissão já existe para este consumidor",
+                        },
+                    ],
                 };
             }
             const commission = await this.commissionsService.createCommissionForApprovedConsumer(consumerId);
@@ -1213,14 +1225,16 @@ let ConsumersService = class ConsumersService {
                 totalProcessed: 1,
                 successful: 1,
                 errors: 0,
-                results: [{
+                results: [
+                    {
                         consumerId: consumer.id,
                         consumerName: consumer.name,
                         representativeId: consumer.representativeId,
-                        representativeName: 'N/A',
+                        representativeName: "N/A",
                         commissionValue: commission.commissionValue,
-                        status: 'SUCCESS',
-                    }],
+                        status: "SUCCESS",
+                    },
+                ],
             };
         }
         catch (error) {
@@ -1229,15 +1243,17 @@ let ConsumersService = class ConsumersService {
                 totalProcessed: 1,
                 successful: 0,
                 errors: 1,
-                results: [{
+                results: [
+                    {
                         consumerId: consumerId,
-                        consumerName: 'N/A',
+                        consumerName: "N/A",
                         representativeId: null,
-                        representativeName: 'N/A',
+                        representativeName: "N/A",
                         commissionValue: 0,
-                        status: 'ERROR',
+                        status: "ERROR",
                         error: error.message,
-                    }],
+                    },
+                ],
             };
         }
     }
@@ -1246,17 +1262,17 @@ let ConsumersService = class ConsumersService {
             where: { id: consumerId },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado');
+            throw new common_1.NotFoundException("Consumidor não encontrado");
         }
         if (consumer.representativeId !== representativeId) {
-            throw new common_1.ForbiddenException('Você só pode fazer upload de faturas para consumidores que você criou');
+            throw new common_1.ForbiddenException("Você só pode fazer upload de faturas para consumidores que você criou");
         }
-        const fileExtension = file.originalname.split('.').pop();
-        const timestamp = new Date().toISOString().split('T')[0];
+        const fileExtension = file.originalname.split(".").pop();
+        const timestamp = new Date().toISOString().split("T")[0];
         const consumerName = consumer.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-zA-Z0-9]/g, '-')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9]/g, "-")
             .toLowerCase()
             .substring(0, 30);
         const friendlyFileName = `${consumerName}-${timestamp}.${fileExtension}`;
@@ -1264,8 +1280,10 @@ let ConsumersService = class ConsumersService {
         const folder = `consumers/${consumerId}`;
         const { url, path } = await this.supabaseStorage.uploadFile(file, storageFileName, folder);
         if (consumer.invoiceUrl) {
-            this.supabaseStorage.deleteFile(consumer.invoiceFileName || '').catch((error) => {
-                console.error('Erro ao remover fatura anterior:', error);
+            this.supabaseStorage
+                .deleteFile(consumer.invoiceFileName || "")
+                .catch((error) => {
+                console.error("Erro ao remover fatura anterior:", error);
             });
         }
         const updatedConsumer = await this.prisma.consumer.update({
@@ -1281,9 +1299,9 @@ let ConsumersService = class ConsumersService {
             },
         });
         let scannedData = null;
-        if (file.mimetype.startsWith('image/')) {
+        if (file.mimetype.startsWith("image/")) {
             this.processOcrAsync(consumerId, file.buffer, friendlyFileName).catch((error) => {
-                console.error('Erro ao processar OCR em background:', error);
+                console.error("Erro ao processar OCR em background:", error);
             });
         }
         else {
@@ -1297,19 +1315,21 @@ let ConsumersService = class ConsumersService {
                 },
             });
         }
-        this.auditService.log({
+        this.auditService
+            .log({
             representativeId: representativeId,
-            action: 'UPLOAD_INVOICE',
-            entityType: 'Consumer',
+            action: "UPLOAD_INVOICE",
+            entityType: "Consumer",
             entityId: consumerId,
             metadata: {
                 fileName: file.originalname,
                 fileSize: file.size,
                 mimeType: file.mimetype,
-                isImage: file.mimetype.startsWith('image/'),
+                isImage: file.mimetype.startsWith("image/"),
             },
-        }).catch((error) => {
-            console.error('Erro ao registrar log de auditoria:', error);
+        })
+            .catch((error) => {
+            console.error("Erro ao registrar log de auditoria:", error);
         });
         const backendUrl = `/consumers/representative/${consumerId}/invoice`;
         return {
@@ -1317,7 +1337,7 @@ let ConsumersService = class ConsumersService {
             invoiceUrl: backendUrl,
             invoiceStorageUrl: url,
             invoiceFileName: friendlyFileName,
-            scannedData: file.mimetype.startsWith('image/')
+            scannedData: file.mimetype.startsWith("image/")
                 ? { processing: true }
                 : null,
         };
@@ -1349,7 +1369,7 @@ let ConsumersService = class ConsumersService {
                     invoiceScannedData: {
                         friendlyFileName: friendlyFileName,
                         processing: false,
-                        error: 'Erro ao processar OCR',
+                        error: "Erro ao processar OCR",
                     },
                 },
             });
@@ -1360,20 +1380,20 @@ let ConsumersService = class ConsumersService {
             where: { id: consumerId },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado');
+            throw new common_1.NotFoundException("Consumidor não encontrado");
         }
         if (consumer.representativeId !== representativeId) {
-            throw new common_1.ForbiddenException('Você só pode remover faturas de consumidores que você criou');
+            throw new common_1.ForbiddenException("Você só pode remover faturas de consumidores que você criou");
         }
         if (!consumer.invoiceUrl) {
-            throw new common_1.BadRequestException('Este consumidor não possui fatura anexada');
+            throw new common_1.BadRequestException("Este consumidor não possui fatura anexada");
         }
         if (consumer.invoiceFileName) {
             try {
                 await this.supabaseStorage.deleteFile(consumer.invoiceFileName);
             }
             catch (error) {
-                console.error('Erro ao remover arquivo do storage:', error);
+                console.error("Erro ao remover arquivo do storage:", error);
             }
         }
         const updatedConsumer = await this.prisma.consumer.update({
@@ -1382,13 +1402,12 @@ let ConsumersService = class ConsumersService {
                 invoiceUrl: null,
                 invoiceFileName: null,
                 invoiceUploadedAt: null,
-                invoiceScannedData: client_1.Prisma.DbNull,
             },
         });
         await this.auditService.log({
             representativeId: representativeId,
-            action: 'REMOVE_INVOICE',
-            entityType: 'Consumer',
+            action: "REMOVE_INVOICE",
+            entityType: "Consumer",
             entityId: consumerId,
         });
         return updatedConsumer;
@@ -1398,27 +1417,27 @@ let ConsumersService = class ConsumersService {
             where: { id: consumerId },
         });
         if (!consumer) {
-            throw new common_1.NotFoundException('Consumidor não encontrado');
+            throw new common_1.NotFoundException("Consumidor não encontrado");
         }
         if (consumer.representativeId !== representativeId) {
-            throw new common_1.ForbiddenException('Você só pode fazer download de faturas de consumidores que você criou');
+            throw new common_1.ForbiddenException("Você só pode fazer download de faturas de consumidores que você criou");
         }
         if (!consumer.invoiceFileName) {
-            throw new common_1.NotFoundException('Este consumidor não possui fatura anexada');
+            throw new common_1.NotFoundException("Este consumidor não possui fatura anexada");
         }
         const fileBuffer = await this.supabaseStorage.downloadFile(consumer.invoiceFileName);
-        const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
+        const extension = consumer.invoiceFileName.split(".").pop()?.toLowerCase();
         const contentTypeMap = {
-            pdf: 'application/pdf',
-            jpg: 'image/jpeg',
-            jpeg: 'image/jpeg',
-            png: 'image/png',
-            webp: 'image/webp',
+            pdf: "application/pdf",
+            jpg: "image/jpeg",
+            jpeg: "image/jpeg",
+            png: "image/png",
+            webp: "image/webp",
         };
-        const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
+        const contentType = contentTypeMap[extension || ""] || "application/octet-stream";
         const friendlyName = this.getFriendlyInvoiceName(consumer);
-        res.setHeader('Content-Type', contentType);
-        res.setHeader('Content-Disposition', `attachment; filename="${friendlyName}"`);
+        res.setHeader("Content-Type", contentType);
+        res.setHeader("Content-Disposition", `attachment; filename="${friendlyName}"`);
         res.send(fileBuffer);
     }
     async downloadInvoiceAdmin(consumerId, res) {
@@ -1427,29 +1446,33 @@ let ConsumersService = class ConsumersService {
                 where: { id: consumerId },
             });
             if (!consumer) {
-                throw new common_1.NotFoundException('Consumidor não encontrado');
+                throw new common_1.NotFoundException("Consumidor não encontrado");
             }
             if (!consumer.invoiceFileName) {
-                throw new common_1.NotFoundException('Este consumidor não possui fatura anexada');
+                throw new common_1.NotFoundException("Este consumidor não possui fatura anexada");
             }
             console.log(`[downloadInvoiceAdmin] Tentando fazer download do arquivo: ${consumer.invoiceFileName}`);
             const fileBuffer = await this.supabaseStorage.downloadFile(consumer.invoiceFileName);
-            const extension = consumer.invoiceFileName.split('.').pop()?.toLowerCase();
+            const extension = consumer.invoiceFileName
+                .split(".")
+                .pop()
+                ?.toLowerCase();
             const contentTypeMap = {
-                pdf: 'application/pdf',
-                jpg: 'image/jpeg',
-                jpeg: 'image/jpeg',
-                png: 'image/png',
-                webp: 'image/webp',
+                pdf: "application/pdf",
+                jpg: "image/jpeg",
+                jpeg: "image/jpeg",
+                png: "image/png",
+                webp: "image/webp",
             };
-            const contentType = contentTypeMap[extension || ''] || 'application/octet-stream';
+            const contentType = contentTypeMap[extension || ""] || "application/octet-stream";
             const friendlyName = this.getFriendlyInvoiceName(consumer);
-            res.setHeader('Content-Type', contentType);
-            res.setHeader('Content-Disposition', `attachment; filename="${friendlyName}"`);
+            res.setHeader("Content-Type", contentType);
+            res.setHeader("Content-Disposition", `attachment; filename="${friendlyName}"`);
             res.send(fileBuffer);
         }
         catch (error) {
-            if (error.message?.includes('Bucket') || error.message?.includes('bucket')) {
+            if (error.message?.includes("Bucket") ||
+                error.message?.includes("bucket")) {
                 throw new common_1.NotFoundException(`Erro ao acessar a fatura: ${error.message}. Verifique se o bucket 'faturas-representantes' está configurado corretamente no Supabase.`);
             }
             throw error;
@@ -1459,16 +1482,16 @@ let ConsumersService = class ConsumersService {
         if (consumer.invoiceScannedData?.friendlyFileName) {
             return consumer.invoiceScannedData.friendlyFileName;
         }
-        const extension = consumer.invoiceFileName?.split('.').pop() || 'pdf';
+        const extension = consumer.invoiceFileName?.split(".").pop() || "pdf";
         const consumerName = consumer.name
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-zA-Z0-9]/g, '-')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9]/g, "-")
             .toLowerCase()
             .substring(0, 30);
         const date = consumer.invoiceUploadedAt
-            ? new Date(consumer.invoiceUploadedAt).toISOString().split('T')[0]
-            : new Date().toISOString().split('T')[0];
+            ? new Date(consumer.invoiceUploadedAt).toISOString().split("T")[0]
+            : new Date().toISOString().split("T")[0];
         return `Fatura-${consumerName}-${date}.${extension}`;
     }
 };

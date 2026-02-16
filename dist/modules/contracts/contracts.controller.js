@@ -18,16 +18,32 @@ const swagger_1 = require("@nestjs/swagger");
 const contracts_service_1 = require("./contracts.service");
 const generate_contract_dto_1 = require("./dto/generate-contract.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
+const hierarchy_auth_guard_1 = require("../../common/guards/hierarchy-auth.guard");
 let ContractsController = class ContractsController {
     contractsService;
     constructor(contractsService) {
         this.contractsService = contractsService;
+    }
+    async getGenerators() {
+        return this.contractsService.getGeneratorsFromN8n();
     }
     async generateContract(dto) {
         return this.contractsService.generateContract(dto);
     }
 };
 exports.ContractsController = ContractsController;
+__decorate([
+    (0, common_1.Get)("generators"),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)("OPERATOR"),
+    (0, swagger_1.ApiOperation)({
+        summary: "Lista geradores para preencher formulário de contratos",
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Lista de geradores" }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ContractsController.prototype, "getGenerators", null);
 __decorate([
     (0, common_1.Post)("generate"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),

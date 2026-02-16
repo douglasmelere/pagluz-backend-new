@@ -4,8 +4,8 @@ export declare class CommissionsController {
     constructor(commissionsService: CommissionsService);
     getMyCommissions(req: any): Promise<({
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             city: string;
@@ -15,17 +15,17 @@ export declare class CommissionsController {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     getMyCommissionStats(req: any): Promise<{
         totalCommissions: number;
@@ -41,8 +41,8 @@ export declare class CommissionsController {
     }>;
     getCommissionsByPeriod(req: any, startDate: string, endDate: string): Promise<({
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             city: string;
@@ -50,28 +50,28 @@ export declare class CommissionsController {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     getCommissionDetails(commissionId: string): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
             phone: string;
+            email: string;
         };
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             city: string;
@@ -81,27 +81,27 @@ export declare class CommissionsController {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     getAllCommissions(): Promise<({
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             city: string;
@@ -109,27 +109,27 @@ export declare class CommissionsController {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     getPendingCommissions(): Promise<({
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             city: string;
@@ -137,42 +137,42 @@ export declare class CommissionsController {
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     markCommissionAsPaid(commissionId: string, req: any): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         consumer: {
-            name: string;
             id: string;
+            name: string;
             cpfCnpj: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.CommissionStatus;
         representativeId: string;
-        commissionValue: number;
+        consumerId: string;
         kwhConsumption: number;
         kwhPrice: number;
-        notes: string | null;
-        consumerId: string;
+        commissionValue: number;
+        status: import(".prisma/client").$Enums.CommissionStatus;
         calculatedAt: Date;
         paidAt: Date | null;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     getAdminCommissionStats(): Promise<{
         message: string;

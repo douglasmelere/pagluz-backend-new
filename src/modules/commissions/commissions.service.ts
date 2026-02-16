@@ -10,16 +10,38 @@ export class CommissionsService {
     private prisma: PrismaService,
     private auditService: AuditService,
     private settingsService: SettingsService,
-  ) {}
+  ) { }
 
   /**
-   * Calcula a comissão usando a fórmula: C = (K * 0.865 * P) / 2
+   * Calcula a comissão usando tabela progressiva baseada no consumo
    * @param kwhConsumption - Consumo em kWh (K)
    * @param kwhPrice - Preço do kWh (P)
    * @returns Valor da comissão calculada
+   * 
+   * Tabela de comissionamento:
+   * - Consumo 600 kW/h - 1000 kW/h: 30%
+   * - Consumo 1000 kW/h - 1500 kW/h: 35%
+   * - Consumo >= 1500 kW/h: 37.50%
    */
   calculateCommission(kwhConsumption: number, kwhPrice: number): number {
-    const commission = (kwhConsumption * 0.865 * kwhPrice) / 2;
+    // Calcula o valor base da fatura
+    const invoiceValue = kwhConsumption * kwhPrice;
+
+    // Define a porcentagem de comissão baseada no consumo
+    let commissionPercentage = 0;
+
+    if (kwhConsumption >= 1500) {
+      commissionPercentage = 0.375; // 37.50%
+    } else if (kwhConsumption >= 1000) {
+      commissionPercentage = 0.35; // 35%
+    } else if (kwhConsumption >= 600) {
+      commissionPercentage = 0.30; // 30%
+    } else {
+      // Consumo abaixo de 600 kW/h não gera comissão
+      commissionPercentage = 0;
+    }
+
+    const commission = invoiceValue * commissionPercentage;
     return Math.round(commission * 100) / 100; // Arredonda para 2 casas decimais
   }
 
@@ -189,7 +211,7 @@ export class CommissionsService {
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    const monthlyCommissions: Array<{month: string, count: number, value: number}> = [];
+    const monthlyCommissions: Array<{ month: string, count: number, value: number }> = [];
     for (let i = 5; i >= 0; i--) {
       const date = new Date();
       date.setMonth(date.getMonth() - i);

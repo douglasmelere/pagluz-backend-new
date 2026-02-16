@@ -25,7 +25,21 @@ let CommissionsService = class CommissionsService {
         this.settingsService = settingsService;
     }
     calculateCommission(kwhConsumption, kwhPrice) {
-        const commission = (kwhConsumption * 0.865 * kwhPrice) / 2;
+        const invoiceValue = kwhConsumption * kwhPrice;
+        let commissionPercentage = 0;
+        if (kwhConsumption >= 1500) {
+            commissionPercentage = 0.375;
+        }
+        else if (kwhConsumption >= 1000) {
+            commissionPercentage = 0.35;
+        }
+        else if (kwhConsumption >= 600) {
+            commissionPercentage = 0.30;
+        }
+        else {
+            commissionPercentage = 0;
+        }
+        const commission = invoiceValue * commissionPercentage;
         return Math.round(commission * 100) / 100;
     }
     async createCommissionForApprovedConsumer(consumerId) {

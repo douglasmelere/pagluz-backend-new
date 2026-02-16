@@ -25,9 +25,31 @@ export declare class ContractsService {
     constructor(prisma: PrismaService, googleApis: GoogleApisService, numberToWords: NumberToWordsService, configService: ConfigService);
     generateContract(dto: GenerateContractDto): Promise<{
         contractId: string;
-        documentUrl: string;
+        documentUrl?: string;
+        status?: string;
     }>;
+    getGeneratorsFromN8n(): Promise<{
+        id: any;
+        nome: any;
+        cpfCnpj: any;
+        email: any;
+        rua: any;
+        numero: any;
+        bairro: any;
+        cidade: any;
+        uf: any;
+        cep: any;
+        banco: any;
+        agencia: any;
+        conta: any;
+        numeroUcGerador: any;
+        tipoUsina: any;
+        tipoDocumento: any;
+    }[]>;
+    private sendToN8n;
     private generateContractId;
+    private getBasicAuth;
+    private getContractWebhookUrl;
     private generateLocacaoContract;
     private generatePrestacaoContract;
     private generateProcuracaoContract;

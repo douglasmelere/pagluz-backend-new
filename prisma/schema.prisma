@@ -29,7 +29,7 @@ model User {
   updatedAt            DateTime  @updatedAt
 
   // Relacionamento com logs de auditoria
-  auditLogs AuditLog[]
+  auditLogs              AuditLog[]
   reviewedChangeRequests ConsumerChangeRequest[]
 
   @@map("users")
@@ -92,12 +92,12 @@ model Representative {
 model Consumer {
   id                          String                 @id @default(cuid())
   name                        String
-  documentType                DocumentType?           @default(CPF)
+  documentType                DocumentType?          @default(CPF)
   cpfCnpj                     String
   representativeName          String?
-  representativeRg             String?
+  representativeRg            String?
   phone                       String?                @default("")
-  email                       String?                 @default("")
+  email                       String?                @default("")
   concessionaire              String
   ucNumber                    String
   consumerType                ConsumerType
@@ -105,13 +105,13 @@ model Consumer {
   averageMonthlyConsumption   Float
   discountOffered             Float
   receiveWhatsapp             Boolean                @default(false)
-  street                      String?                 @default("")
-  number                      String?                 @default("")
+  street                      String?                @default("")
+  number                      String?                @default("")
   complement                  String?
-  neighborhood                String?                 @default("")
+  neighborhood                String?                @default("")
   city                        String
   state                       String
-  zipCode                     String?                 @default("")
+  zipCode                     String?                @default("")
   birthDate                   DateTime?
   observations                String?
   arrivalDate                 DateTime?
@@ -126,17 +126,17 @@ model Consumer {
   rejectionReason             String?
 
   // Invoice fields
-  invoiceUrl                  String? // URL da fatura no Supabase Storage
-  invoiceFileName             String? // Nome do arquivo original
-  invoiceUploadedAt           DateTime? // Data do upload
-  invoiceScannedData          Json? // Dados extraídos do OCR (opcional)
+  invoiceUrl         String? // URL da fatura no Supabase Storage
+  invoiceFileName    String? // Nome do arquivo original
+  invoiceUploadedAt  DateTime? // Data do upload
+  invoiceScannedData Json? // Dados extraídos do OCR (opcional)
 
   // Relacionamento com gerador
   generator Generator? @relation(fields: [generatorId], references: [id])
 
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  Representative   Representative? @relation(fields: [representativeId], references: [id])
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  Representative   Representative?         @relation(fields: [representativeId], references: [id])
   representativeId String?
   commissions      Commission[]
   changeRequests   ConsumerChangeRequest[] // Mudanças pendentes de aprovação
@@ -177,23 +177,23 @@ model representative_tokens {
 }
 
 model Commission {
-  id                String           @id @default(cuid())
-  representativeId  String
-  consumerId        String
-  kwhConsumption   Float            // Consumo em kWh do consumidor
-  kwhPrice         Float            // Preço do kWh no momento do cálculo
-  commissionValue  Float            // Valor da comissão calculada
-  status           CommissionStatus  @default(PENDING)
+  id               String           @id @default(cuid())
+  representativeId String
+  consumerId       String
+  kwhConsumption   Float // Consumo em kWh do consumidor
+  kwhPrice         Float // Preço do kWh no momento do cálculo
+  commissionValue  Float // Valor da comissão calculada
+  status           CommissionStatus @default(PENDING)
   calculatedAt     DateTime         @default(now())
   paidAt           DateTime?
   notes            String?
-  
+
   // Relacionamentos
-  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
-  consumer         Consumer       @relation(fields: [consumerId], references: [id], onDelete: Cascade)
-  
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  representative Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  consumer       Consumer       @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("commissions")
 }
@@ -211,29 +211,29 @@ model SystemSettings {
 }
 
 model ConsumerChangeRequest {
-  id                String                    @id @default(cuid())
-  consumerId        String
-  consumer          Consumer                  @relation(fields: [consumerId], references: [id], onDelete: Cascade)
-  representativeId  String // Representante que solicitou a mudança
-  representative    Representative            @relation(fields: [representativeId], references: [id])
-  
+  id               String         @id @default(cuid())
+  consumerId       String
+  consumer         Consumer       @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  representativeId String // Representante que solicitou a mudança
+  representative   Representative @relation(fields: [representativeId], references: [id])
+
   // Dados da mudança
-  oldValues         Json? // Valores antigos
-  newValues         Json // Novos valores propostos
-  changedFields     String[] // Lista de campos alterados
-  
+  oldValues     Json? // Valores antigos
+  newValues     Json // Novos valores propostos
+  changedFields String[] // Lista de campos alterados
+
   // Status da aprovação
-  status            ChangeRequestStatus        @default(PENDING)
-  requestedAt       DateTime                  @default(now())
-  
+  status      ChangeRequestStatus @default(PENDING)
+  requestedAt DateTime            @default(now())
+
   // Aprovação/Rejeição
-  reviewedByUserId  String? // Admin que revisou
-  reviewedBy        User?                     @relation(fields: [reviewedByUserId], references: [id])
-  reviewedAt        DateTime?
-  rejectionReason   String?
-  
-  createdAt         DateTime                  @default(now())
-  updatedAt         DateTime                  @updatedAt
+  reviewedByUserId String? // Admin que revisou
+  reviewedBy       User?     @relation(fields: [reviewedByUserId], references: [id])
+  reviewedAt       DateTime?
+  rejectionReason  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("consumer_change_requests")
 }
