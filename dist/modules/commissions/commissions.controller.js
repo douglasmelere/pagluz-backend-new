@@ -19,6 +19,7 @@ const swagger_1 = require("@nestjs/swagger");
 const commissions_service_1 = require("./commissions.service");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const jwt_auth_or_query_guard_1 = require("../../common/guards/jwt-auth-or-query.guard");
+const representative_jwt_auth_or_query_guard_1 = require("../../common/guards/representative-jwt-auth-or-query.guard");
 const representative_jwt_auth_guard_1 = require("../../common/guards/representative-jwt-auth.guard");
 const hierarchy_auth_guard_1 = require("../../common/guards/hierarchy-auth.guard");
 let CommissionsController = class CommissionsController {
@@ -148,7 +149,7 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Comprovante não encontrado' }),
     (0, swagger_1.ApiQuery)({ name: 'token', required: false, description: 'Token JWT (alternativa ao header Authorization)' }),
     (0, common_1.Get)('representative/:id/payment-proof'),
-    (0, common_1.UseGuards)(jwt_auth_or_query_guard_1.JwtAuthOrQueryGuard),
+    (0, common_1.UseGuards)(representative_jwt_auth_or_query_guard_1.RepresentativeJwtAuthOrQueryGuard),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),

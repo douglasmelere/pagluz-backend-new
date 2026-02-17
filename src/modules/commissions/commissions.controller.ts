@@ -27,6 +27,7 @@ import {
 import { CommissionsService } from './commissions.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { JwtAuthOrQueryGuard } from '../../common/guards/jwt-auth-or-query.guard';
+import { RepresentativeJwtAuthOrQueryGuard } from '../../common/guards/representative-jwt-auth-or-query.guard';
 import { RepresentativeJwtAuthGuard } from '../../common/guards/representative-jwt-auth.guard';
 import { HierarchyAuthGuard, RequireHierarchy } from '../../common/guards/hierarchy-auth.guard';
 
@@ -83,7 +84,7 @@ export class CommissionsController {
   @ApiResponse({ status: 404, description: 'Comprovante não encontrado' })
   @ApiQuery({ name: 'token', required: false, description: 'Token JWT (alternativa ao header Authorization)' })
   @Get('representative/:id/payment-proof')
-  @UseGuards(JwtAuthOrQueryGuard)
+  @UseGuards(RepresentativeJwtAuthOrQueryGuard)
   async downloadPaymentProofAsRepresentative(
     @Param('id') commissionId: string,
     @Res() res: Response,
