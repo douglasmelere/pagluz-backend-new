@@ -14,9 +14,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommissionsController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const swagger_1 = require("@nestjs/swagger");
 const commissions_service_1 = require("./commissions.service");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
+const jwt_auth_or_query_guard_1 = require("../../common/guards/jwt-auth-or-query.guard");
 const representative_jwt_auth_guard_1 = require("../../common/guards/representative-jwt-auth.guard");
 const hierarchy_auth_guard_1 = require("../../common/guards/hierarchy-auth.guard");
 let CommissionsController = class CommissionsController {
@@ -39,6 +41,14 @@ let CommissionsController = class CommissionsController {
     getCommissionDetails(commissionId) {
         return this.commissionsService.getCommissionDetails(commissionId);
     }
+    async downloadPaymentProofAsRepresentative(commissionId, res) {
+        const { buffer, fileName, mimeType } = await this.commissionsService.downloadPaymentProof(commissionId);
+        res.set({
+            'Content-Type': mimeType,
+            'Content-Disposition': `inline; filename="${fileName}"`,
+        });
+        res.send(buffer);
+    }
     getAllCommissions() {
         return this.commissionsService.getAllCommissions();
     }
@@ -48,6 +58,33 @@ let CommissionsController = class CommissionsController {
     markCommissionAsPaid(commissionId, req) {
         const userId = req.user.id;
         return this.commissionsService.markCommissionAsPaid(commissionId, userId);
+    }
+    async uploadPaymentProof(commissionId, file, req) {
+        if (!file) {
+            throw new common_1.BadRequestException('Arquivo não fornecido');
+        }
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+        if (!allowedMimeTypes.includes(file.mimetype)) {
+            throw new common_1.BadRequestException('Tipo de arquivo não permitido. Use imagens (JPG, PNG) ou PDF.');
+        }
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            throw new common_1.BadRequestException('Arquivo muito grande. Tamanho máximo: 5MB');
+        }
+        const userId = req.user.id;
+        return this.commissionsService.uploadPaymentProof(commissionId, file, userId);
+    }
+    async downloadPaymentProof(commissionId, res) {
+        const { buffer, fileName, mimeType } = await this.commissionsService.downloadPaymentProof(commissionId);
+        res.set({
+            'Content-Type': mimeType,
+            'Content-Disposition': `inline; filename="${fileName}"`,
+        });
+        res.send(buffer);
+    }
+    deletePaymentProof(commissionId, req) {
+        const userId = req.user.id;
+        return this.commissionsService.deletePaymentProof(commissionId, userId);
     }
     async getAdminCommissionStats() {
         return {
@@ -106,6 +143,19 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CommissionsController.prototype, "getCommissionDetails", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Baixar comprovante de pagamento (Representante)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Comprovante de pagamento' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Comprovante não encontrado' }),
+    (0, swagger_1.ApiQuery)({ name: 'token', required: false, description: 'Token JWT (alternativa ao header Authorization)' }),
+    (0, common_1.Get)('representative/:id/payment-proof'),
+    (0, common_1.UseGuards)(jwt_auth_or_query_guard_1.JwtAuthOrQueryGuard),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], CommissionsController.prototype, "downloadPaymentProofAsRepresentative", null);
+__decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Listar todas as comissões (Admin/Operator)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de todas as comissões' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
@@ -138,6 +188,61 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], CommissionsController.prototype, "markCommissionAsPaid", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Upload de comprovante de pagamento (Admin/Operator)' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Comprovante de pagamento (imagem ou PDF)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Comprovante enviado com sucesso' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Comissão não encontrada' }),
+    (0, common_1.Post)(':id/payment-proof'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('OPERATOR'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFile)()),
+    __param(2, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", Promise)
+], CommissionsController.prototype, "uploadPaymentProof", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Baixar comprovante de pagamento (Admin/Operator)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Comprovante de pagamento' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Comprovante não encontrado' }),
+    (0, swagger_1.ApiQuery)({ name: 'token', required: false, description: 'Token JWT (alternativa ao header Authorization)' }),
+    (0, common_1.Get)(':id/payment-proof'),
+    (0, common_1.UseGuards)(jwt_auth_or_query_guard_1.JwtAuthOrQueryGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('OPERATOR'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], CommissionsController.prototype, "downloadPaymentProof", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Deletar comprovante de pagamento (Admin/Operator)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Comprovante deletado com sucesso' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Comprovante não encontrado' }),
+    (0, common_1.Delete)(':id/payment-proof'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('OPERATOR'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], CommissionsController.prototype, "deletePaymentProof", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Obter estatísticas gerais de comissões (Admin/Operator)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Estatísticas gerais de comissões' }),

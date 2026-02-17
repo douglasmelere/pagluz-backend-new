@@ -3,6 +3,7 @@ import { PrismaService } from '../../config/prisma.service';
 import { CommissionStatus } from '../../common/enums';
 import { AuditService } from '../../common/services/audit.service';
 import { SettingsService } from '../settings/settings.service';
+import { PaymentProofStorageService } from '../../common/services/payment-proof-storage.service';
 
 @Injectable()
 export class CommissionsService {
@@ -10,6 +11,7 @@ export class CommissionsService {
     private prisma: PrismaService,
     private auditService: AuditService,
     private settingsService: SettingsService,
+    private paymentProofStorage: PaymentProofStorageService,
   ) { }
 
   /**
@@ -150,7 +152,22 @@ export class CommissionsService {
   async getRepresentativeCommissions(representativeId: string) {
     const commissions = await this.prisma.commission.findMany({
       where: { representativeId },
-      include: {
+      select: {
+        id: true,
+        representativeId: true,
+        consumerId: true,
+        kwhConsumption: true,
+        kwhPrice: true,
+        commissionValue: true,
+        status: true,
+        calculatedAt: true,
+        paidAt: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+        paymentProofUrl: true,
+        paymentProofFileName: true,
+        paymentProofUploadedAt: true,
         consumer: {
           select: {
             id: true,
@@ -168,6 +185,12 @@ export class CommissionsService {
         calculatedAt: 'desc',
       },
     });
+
+    // DEBUG: Verificar se os campos de comprovante estão vindo do banco
+    if (commissions.length > 0) {
+      console.log('DEBUG: Primeira comissão retornada:', JSON.stringify(commissions[0], null, 2));
+      console.log('DEBUG: Tem paymentProofUrl?', 'paymentProofUrl' in commissions[0]);
+    }
 
     return commissions;
   }
@@ -440,4 +463,187 @@ export class CommissionsService {
 
     return commission;
   }
+
+  /**
+   * Faz upload do comprovante de pagamento e marca a comissão como paga
+   * @param commissionId - ID da comissão
+   * @param file - Arquivo do comprovante (imagem ou PDF)
+   * @param userId - ID do usuário que está fazendo o upload
+   */
+  async uploadPaymentProof(
+    commissionId: string,
+    file: Express.Multer.File,
+    userId: string,
+  ) {
+    const commission = await this.prisma.commission.findUnique({
+      where: { id: commissionId },
+      include: {
+        representative: true,
+        consumer: true,
+      },
+    });
+
+    if (!commission) {
+      throw new NotFoundException('Comissão não encontrada');
+    }
+
+    // Remove comprovante anterior se existir
+    if (commission.paymentProofFileName) {
+      try {
+        await this.paymentProofStorage.deletePaymentProof(commission.paymentProofFileName);
+      } catch (error) {
+        console.error('Erro ao deletar comprovante anterior:', error);
+        // Não falha se não conseguir deletar o arquivo anterior
+      }
+    }
+
+    // Gera nome único para o arquivo
+    const timestamp = Date.now();
+    const fileExtension = file.originalname.split('.').pop();
+    const fileName = `comprovante_${commissionId}_${timestamp}.${fileExtension}`;
+
+    // Faz upload do novo comprovante
+    const { url, path } = await this.paymentProofStorage.uploadPaymentProof(
+      file,
+      fileName,
+      commissionId,
+    );
+
+    // Atualiza a comissão com os dados do comprovante e marca como paga
+    const updatedCommission = await this.prisma.commission.update({
+      where: { id: commissionId },
+      data: {
+        paymentProofUrl: url,
+        paymentProofFileName: path,
+        paymentProofUploadedAt: new Date(),
+        status: CommissionStatus.PAID,
+        paidAt: new Date(),
+      },
+      include: {
+        representative: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        consumer: {
+          select: {
+            id: true,
+            name: true,
+            cpfCnpj: true,
+          },
+        },
+      },
+    });
+
+    // Registra a atividade
+    await this.auditService.log({
+      userId,
+      action: 'PAYMENT_PROOF_UPLOADED',
+      entityType: 'Commission',
+      entityId: commissionId,
+      oldValues: commission,
+      newValues: updatedCommission,
+    });
+
+    return updatedCommission;
+  }
+
+  /**
+   * Faz download do comprovante de pagamento
+   * @param commissionId - ID da comissão
+   * @returns Buffer do arquivo e informações
+   */
+  async downloadPaymentProof(commissionId: string) {
+    const commission = await this.prisma.commission.findUnique({
+      where: { id: commissionId },
+      select: {
+        id: true,
+        paymentProofFileName: true,
+        paymentProofUrl: true,
+      },
+    });
+
+    if (!commission) {
+      throw new NotFoundException('Comissão não encontrada');
+    }
+
+    if (!commission.paymentProofFileName) {
+      throw new NotFoundException('Comprovante de pagamento não encontrado para esta comissão');
+    }
+
+    // Faz download do arquivo do Supabase
+    const fileBuffer = await this.paymentProofStorage.downloadPaymentProof(
+      commission.paymentProofFileName,
+    );
+
+    // Extrai o nome original do arquivo
+    const fileName = commission.paymentProofFileName.split('/').pop() || 'comprovante';
+    const fileExtension = fileName.split('.').pop() || 'pdf';
+
+    // Determina o tipo MIME baseado na extensão
+    let mimeType = 'application/pdf';
+    if (['jpg', 'jpeg'].includes(fileExtension.toLowerCase())) {
+      mimeType = 'image/jpeg';
+    } else if (fileExtension.toLowerCase() === 'png') {
+      mimeType = 'image/png';
+    }
+
+    return {
+      buffer: fileBuffer,
+      fileName,
+      mimeType,
+    };
+  }
+
+  /**
+   * Remove o comprovante de pagamento de uma comissão
+   * @param commissionId - ID da comissão
+   * @param userId - ID do usuário que está removendo
+   */
+  async deletePaymentProof(commissionId: string, userId: string) {
+    const commission = await this.prisma.commission.findUnique({
+      where: { id: commissionId },
+    });
+
+    if (!commission) {
+      throw new NotFoundException('Comissão não encontrada');
+    }
+
+    if (!commission.paymentProofFileName) {
+      throw new NotFoundException('Comprovante de pagamento não encontrado para esta comissão');
+    }
+
+    // Remove do Supabase Storage
+    try {
+      await this.paymentProofStorage.deletePaymentProof(commission.paymentProofFileName);
+    } catch (error) {
+      console.error('Erro ao deletar comprovante do storage:', error);
+      // Continua mesmo se falhar ao deletar do storage
+    }
+
+    // Atualiza a comissão removendo as informações do comprovante
+    const updatedCommission = await this.prisma.commission.update({
+      where: { id: commissionId },
+      data: {
+        paymentProofUrl: null,
+        paymentProofFileName: null,
+        paymentProofUploadedAt: null,
+      },
+    });
+
+    // Registra a atividade
+    await this.auditService.log({
+      userId,
+      action: 'PAYMENT_PROOF_DELETED',
+      entityType: 'Commission',
+      entityId: commissionId,
+      oldValues: commission,
+      newValues: updatedCommission,
+    });
+
+    return updatedCommission;
+  }
 }
+

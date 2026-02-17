@@ -13,13 +13,14 @@ const commissions_controller_1 = require("./commissions.controller");
 const prisma_service_1 = require("../../config/prisma.service");
 const audit_service_1 = require("../../common/services/audit.service");
 const settings_service_1 = require("../settings/settings.service");
+const payment_proof_storage_service_1 = require("../../common/services/payment-proof-storage.service");
 let CommissionsModule = class CommissionsModule {
 };
 exports.CommissionsModule = CommissionsModule;
 exports.CommissionsModule = CommissionsModule = __decorate([
     (0, common_1.Module)({
         controllers: [commissions_controller_1.CommissionsController],
-        providers: [commissions_service_1.CommissionsService, prisma_service_1.PrismaService, audit_service_1.AuditService, settings_service_1.SettingsService],
+        providers: [commissions_service_1.CommissionsService, prisma_service_1.PrismaService, audit_service_1.AuditService, settings_service_1.SettingsService, payment_proof_storage_service_1.PaymentProofStorageService],
         exports: [commissions_service_1.CommissionsService],
     })
 ], CommissionsModule);

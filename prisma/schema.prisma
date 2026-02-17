@@ -188,6 +188,11 @@ model Commission {
   paidAt           DateTime?
   notes            String?
 
+  // Campos para comprovante de pagamento
+  paymentProofUrl        String? // URL do comprovante no Supabase Storage
+  paymentProofFileName   String? // Nome do arquivo original
+  paymentProofUploadedAt DateTime? // Data do upload do comprovante
+
   // Relacionamentos
   representative Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
   consumer       Consumer       @relation(fields: [consumerId], references: [id], onDelete: Cascade)

@@ -14,6 +14,7 @@ const consumers_controller_1 = require("./consumers.controller");
 const prisma_service_1 = require("../../config/prisma.service");
 const audit_service_1 = require("../../common/services/audit.service");
 const supabase_storage_service_1 = require("../../common/services/supabase-storage.service");
+const payment_proof_storage_service_1 = require("../../common/services/payment-proof-storage.service");
 const ocr_service_1 = require("../../common/services/ocr.service");
 const auth_module_1 = require("../auth/auth.module");
 const commissions_service_1 = require("../commissions/commissions.service");
@@ -33,6 +34,7 @@ exports.ConsumersModule = ConsumersModule = __decorate([
             commissions_service_1.CommissionsService,
             settings_service_1.SettingsService,
             supabase_storage_service_1.SupabaseStorageService,
+            payment_proof_storage_service_1.PaymentProofStorageService,
             ocr_service_1.OcrService,
         ],
         exports: [consumers_service_1.ConsumersService, consumer_change_requests_service_1.ConsumerChangeRequestsService],
