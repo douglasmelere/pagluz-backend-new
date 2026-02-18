@@ -296,6 +296,7 @@ export class ContractsService {
           "TIPO DE ENERGIA": this.formatTipoEnergia(data.tipoEnergia),
           "NÚMERO DE MESES RECISÃO ": data.prazoMinimoMulta,
           "EMAIL DO CONTRATANTE": data.emailContratante,
+          "EMAIL DE COMUNICAÇÕES": data.emailComunicacoes,
           "NOME DO REPRESENTANTE DO CONTRATANTE":
             data.nomeRepresentanteContratante,
           "CPF DO REPRESENTANTE DO CONTRATANTE":
@@ -328,6 +329,7 @@ export class ContractsService {
         "{TIPO DE ENERGIA}": this.formatTipoEnergia(data.tipoEnergia),
         "{NÚMERO DE MESES}": data.prazoMinimoMulta,
         "{EMAIL DO CONTRATANTE}": data.emailContratante,
+        "{EMAIL DE COMUNICAÇÕES}": data.emailComunicacoes,
         "{NOME DO REPRESENTANTE DO CONTRATANTE}":
           data.nomeRepresentanteContratante,
         "{CPF DO REPRESENTANTE DO CONTRATANTE}":
@@ -570,6 +572,7 @@ export class ContractsService {
       enderecoContratante: dto.enderecoContratante || "",
       cpfCnpjContratante: dto.cpfCnpjContratante || "",
       emailContratante: dto.emailContratante || "",
+      emailComunicacoes: dto.emailComunicacoes || "",
       nomeRepresentanteContratante: dto.nomeRepresentanteContratante || "",
       cpfRepresentanteContratante: dto.cpfRepresentanteContratante || "",
       tipoEnergia: dto.tipoEnergia || "",

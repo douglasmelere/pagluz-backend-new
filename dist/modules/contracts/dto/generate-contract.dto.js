@@ -63,6 +63,7 @@ class GenerateContractDto {
     cpfRepresentanteContratante;
     tipoEnergia;
     prazoMinimoMulta;
+    emailComunicacoes;
     procuracaoType;
     razaoSocialOutorgante;
     cnpjOutorgante;
@@ -300,6 +301,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], GenerateContractDto.prototype, "prazoMinimoMulta", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], GenerateContractDto.prototype, "emailComunicacoes", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

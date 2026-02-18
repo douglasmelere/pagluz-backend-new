@@ -6779,3 +6779,691 @@
 {"context":"Bootstrap","level":"info","message":"Application is running on: http://0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-02-17 16:55:31"}
 {"context":"Bootstrap","level":"info","message":"Environment: development","service":"pagluz-api","timestamp":"2026-02-17 16:55:31"}
 {"context":"Bootstrap","level":"info","message":"Swagger documentation: http://0.0.0.0:3000/api","service":"pagluz-api","timestamp":"2026-02-17 16:55:31"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-17 17:14:15"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started","service":"pagluz-api","timestamp":"2026-02-17 17:14:17"}
+{"context":"Bootstrap","level":"info","message":"Application is running on: http://0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-02-17 17:14:17"}
+{"context":"Bootstrap","level":"info","message":"Environment: development","service":"pagluz-api","timestamp":"2026-02-17 17:14:17"}
+{"context":"Bootstrap","level":"info","message":"Swagger documentation: http://0.0.0.0:3000/api","service":"pagluz-api","timestamp":"2026-02-17 17:14:17"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:56:59"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 09:57:03"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started","service":"pagluz-api","timestamp":"2026-02-18 09:57:04"}
+{"context":"Bootstrap","level":"info","message":"Application is running on: http://0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-02-18 09:57:04"}
+{"context":"Bootstrap","level":"info","message":"Environment: development","service":"pagluz-api","timestamp":"2026-02-18 09:57:04"}
+{"context":"Bootstrap","level":"info","message":"Swagger documentation: http://0.0.0.0:3000/api","service":"pagluz-api","timestamp":"2026-02-18 09:57:04"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:35"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:38"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started","service":"pagluz-api","timestamp":"2026-02-18 10:16:39"}
+{"context":"Bootstrap","level":"info","message":"Application is running on: http://0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-02-18 10:16:39"}
+{"context":"Bootstrap","level":"info","message":"Environment: development","service":"pagluz-api","timestamp":"2026-02-18 10:16:39"}
+{"context":"Bootstrap","level":"info","message":"Swagger documentation: http://0.0.0.0:3000/api","service":"pagluz-api","timestamp":"2026-02-18 10:16:39"}
+{"context":"RoutesResolver","level":"info","message":"AppController {/}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/ready, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health/live, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"MetricsController {/metrics}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/metrics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"ConsumersController {/consumers}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/my-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/allocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/deallocate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/filtered, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/change-requests, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/stats/overview, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/activity-history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/generate-commissions-all, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/eligible-consumers-public, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/create-test-consumer, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/generate-commissions, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/simulate-attach-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/generate-commission, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/debug/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/representative/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/:id/invoice, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/approve, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/consumers/change-requests/:id/reject, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/login-representative, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/logout, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/create-admin, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/force-logout/:userId, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"GeneratorsController {/generators}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-state, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/by-source-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/generators/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"DashboardController {/dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/generators-by-source, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/dashboard/consumers-by-type, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativeDashboardController {/representative-dashboard}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representative-dashboard/materials, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"RepresentativesController {/representatives}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/:id, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/representatives/dashboard/profile, PATCH} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"AuditController {/audit}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/logs, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/statistics, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/audit/user/:userId, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"CommissionsController {/commissions}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/my-commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/by-period, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/representative/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/pending, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/mark-paid, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/:id/payment-proof, DELETE} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/commissions/admin/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"SettingsController {/settings}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/kwh-price/history, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/settings/stats, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RoutesResolver","level":"info","message":"ContractsController {/contracts}:","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generators, GET} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/contracts/generate, POST} route","service":"pagluz-api","timestamp":"2026-02-18 10:16:45"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started","service":"pagluz-api","timestamp":"2026-02-18 10:16:46"}
+{"context":"Bootstrap","level":"info","message":"Application is running on: http://0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-02-18 10:16:46"}
+{"context":"Bootstrap","level":"info","message":"Environment: development","service":"pagluz-api","timestamp":"2026-02-18 10:16:46"}
+{"context":"Bootstrap","level":"info","message":"Swagger documentation: http://0.0.0.0:3000/api","service":"pagluz-api","timestamp":"2026-02-18 10:16:46"}

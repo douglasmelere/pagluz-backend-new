@@ -49,6 +49,7 @@ export declare class GenerateContractDto {
     cpfRepresentanteContratante?: string;
     tipoEnergia?: string;
     prazoMinimoMulta?: string;
+    emailComunicacoes?: string;
     procuracaoType?: string;
     razaoSocialOutorgante?: string;
     cnpjOutorgante?: string;

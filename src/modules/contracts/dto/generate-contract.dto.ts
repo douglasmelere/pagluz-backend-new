@@ -189,6 +189,10 @@ export class GenerateContractDto {
   @IsString()
   prazoMinimoMulta?: string;
 
+  @IsOptional()
+  @IsString()
+  emailComunicacoes?: string;
+
   // Campos para Procuração
   @IsOptional()
   @IsString()
