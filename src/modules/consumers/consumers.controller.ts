@@ -41,7 +41,7 @@ export class ConsumersController {
   constructor(
     private readonly consumersService: ConsumersService,
     private readonly changeRequestsService: ConsumerChangeRequestsService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Criar novo consumidor' })
   @ApiResponse({ status: 201, description: 'Consumidor criado com sucesso' })
@@ -237,12 +237,12 @@ export class ConsumersController {
     return this.consumersService.findRepresentativeConsumer(representativeId, consumerId);
   }
 
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Atualizar consumidor (Representante)',
     description: 'Campos críticos (kWh, desconto, UC, concessionária, tipo, fase) requerem aprovação. Campos não críticos (contato, endereço, observações) são atualizados diretamente.'
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Consumidor atualizado. Campos críticos aguardam aprovação se houver.',
     schema: {
       type: 'object',
@@ -319,12 +319,15 @@ export class ConsumersController {
     return this.consumersService.rejectConsumer(consumerId, userId, body?.reason);
   }
 
-  @ApiOperation({ summary: 'Gerar comissões para consumidores aprovados e alocados sem comissão (Admin)' })
-  @ApiResponse({ status: 200, description: 'Comissões geradas com sucesso' })
+  @ApiOperation({ summary: 'Gerar comissões para consumidores aprovados. Se consumerId for fornecido no body, gera apenas para aquele consumidor.' })
+  @ApiResponse({ status: 201, description: 'Comissões geradas com sucesso' })
   @UseGuards(JwtAuthGuard, HierarchyAuthGuard)
   @RequireHierarchy('ADMIN')
   @Post('generate-commissions')
-  generateCommissionsForApprovedConsumers() {
+  generateCommissionsForApprovedConsumers(@Body() body?: { consumerId?: string }) {
+    if (body?.consumerId) {
+      return this.consumersService.generateCommissionForConsumer(body.consumerId);
+    }
     return this.consumersService.generateCommissionsForApprovedConsumers();
   }
 

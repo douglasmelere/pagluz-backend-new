@@ -13,6 +13,17 @@ export declare class SettingsController {
         createdAt: Date;
         updatedAt: Date;
     }[]>;
+    getCurrentFioBPercentage(): Promise<number>;
+    setFioBPercentage(body: {
+        percentage: number;
+    }, req: any): Promise<any>;
+    getFioBPercentageHistory(): Promise<{
+        id: string;
+        value: number;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
     getAllSettings(): Promise<{
         id: string;
         key: string;
@@ -38,6 +49,7 @@ export declare class SettingsController {
         totalCommissions: number;
         totalCommissionsValue: number;
         currentKwhPrice: number;
+        currentFioBPercentage: number;
         lastUpdated: Date;
     }>;
 }

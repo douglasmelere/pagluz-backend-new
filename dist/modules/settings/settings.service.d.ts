@@ -5,8 +5,17 @@ export declare class SettingsService {
     private auditService;
     constructor(prisma: PrismaService, auditService: AuditService);
     getCurrentKwhPrice(): Promise<number>;
+    getCurrentFioBPercentage(): Promise<number>;
     setKwhPrice(price: number, userId: string): Promise<any>;
+    setFioBPercentage(percentage: number, userId: string): Promise<any>;
     getKwhPriceHistory(): Promise<{
+        id: string;
+        value: number;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
+    getFioBPercentageHistory(): Promise<{
         id: string;
         value: number;
         isActive: boolean;
@@ -34,6 +43,7 @@ export declare class SettingsService {
         totalCommissions: number;
         totalCommissionsValue: number;
         currentKwhPrice: number;
+        currentFioBPercentage: number;
         lastUpdated: Date;
     }>;
 }

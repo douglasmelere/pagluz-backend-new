@@ -95,6 +95,8 @@ O backend foi atualizado com **novos campos para consumidores** e **sistema de c
 **Funcionalidades:**
 - ✅ **Definir valor do kWh** (campo numérico)
 - ✅ **Ver valor atual** do kWh
+- ✅ **Definir porcentagem do fio B** (campo numérico de 0‑100)
+- ✅ **Ver porcentagem atual do fio B**
 - ✅ **Histórico de alterações** (tabela com datas)
 - ✅ **Estatísticas gerais** do sistema
 
@@ -172,6 +174,11 @@ O backend foi atualizado com **novos campos para consumidores** e **sistema de c
 GET /settings/kwh-price              - Obter valor atual
 POST /settings/kwh-price             - Definir novo valor
 GET /settings/kwh-price/history      - Histórico de alterações
+
+GET /settings/fio-b-percentage        - Obter porcentagem atual do fio B
+POST /settings/fio-b-percentage       - Definir nova porcentagem do fio B
+GET /settings/fio-b-percentage/history - Histórico de alterações do fio B
+
 GET /settings/stats                  - Estatísticas do sistema
 ```
 
@@ -308,6 +315,14 @@ interface ConsumerFormProps {
 POST /settings/kwh-price
 {
   "price": 0.95
+}
+```
+
+### 📤 **Definir Porcentagem do fio B**
+```json
+POST /settings/fio-b-percentage
+{
+  "percentage": 42.5
 }
 ```
 

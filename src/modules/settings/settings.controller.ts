@@ -51,6 +51,35 @@ export class SettingsController {
     return this.settingsService.getKwhPriceHistory();
   }
 
+  @ApiOperation({ summary: 'Obter valor atual da porcentagem do fio B' })
+  @ApiResponse({ status: 200, description: 'Porcentagem atual do fio B' })
+  @Get('fio-b-percentage')
+  getCurrentFioBPercentage() {
+    return this.settingsService.getCurrentFioBPercentage();
+  }
+
+  @ApiOperation({ summary: 'Definir porcentagem do fio B (Admin)' })
+  @ApiResponse({ status: 200, description: 'Porcentagem do fio B atualizada com sucesso' })
+  @Post('fio-b-percentage')
+  @UseGuards(JwtAuthGuard, HierarchyAuthGuard)
+  @RequireHierarchy('ADMIN')
+  setFioBPercentage(
+    @Body() body: { percentage: number },
+    @Request() req: any,
+  ) {
+    const userId = req.user.id;
+    return this.settingsService.setFioBPercentage(body.percentage, userId);
+  }
+
+  @ApiOperation({ summary: 'Obter histórico de alterações da porcentagem do fio B' })
+  @ApiResponse({ status: 200, description: 'Histórico de alterações' })
+  @Get('fio-b-percentage/history')
+  @UseGuards(JwtAuthGuard, HierarchyAuthGuard)
+  @RequireHierarchy('ADMIN')
+  getFioBPercentageHistory() {
+    return this.settingsService.getFioBPercentageHistory();
+  }
+
   @ApiOperation({ summary: 'Obter todas as configurações do sistema' })
   @ApiResponse({ status: 200, description: 'Lista de configurações' })
   @Get()

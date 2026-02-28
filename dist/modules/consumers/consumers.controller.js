@@ -118,7 +118,10 @@ let ConsumersController = class ConsumersController {
         const userId = req.user.id;
         return this.consumersService.rejectConsumer(consumerId, userId, body?.reason);
     }
-    generateCommissionsForApprovedConsumers() {
+    generateCommissionsForApprovedConsumers(body) {
+        if (body?.consumerId) {
+            return this.consumersService.generateCommissionForConsumer(body.consumerId);
+        }
         return this.consumersService.generateCommissionsForApprovedConsumers();
     }
     generateCommissionsForApprovedConsumersWithoutAllocation() {
@@ -460,13 +463,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ConsumersController.prototype, "rejectConsumer", null);
 __decorate([
-    (0, swagger_1.ApiOperation)({ summary: 'Gerar comissões para consumidores aprovados e alocados sem comissão (Admin)' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Comissões geradas com sucesso' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Gerar comissões para consumidores aprovados. Se consumerId for fornecido no body, gera apenas para aquele consumidor.' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Comissões geradas com sucesso' }),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
     (0, hierarchy_auth_guard_1.RequireHierarchy)('ADMIN'),
     (0, common_1.Post)('generate-commissions'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ConsumersController.prototype, "generateCommissionsForApprovedConsumers", null);
 __decorate([

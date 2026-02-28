@@ -67,6 +67,11 @@ Este documento contém **todas as rotas relacionadas ao sistema de comissionamen
 - **Autenticação:** Nenhuma (público)
 - **Resposta:** `{ value: 0.90 }`
 
+#### `GET /settings/fio-b-percentage`
+- **Descrição:** Obter porcentagem atual do fio B
+- **Autenticação:** Nenhuma (público)
+- **Resposta:** `{ value: 42.5 }`
+
 #### `POST /settings/kwh-price`
 - **Descrição:** Definir valor do kWh
 - **Autenticação:** JwtAuthGuard + HierarchyAuthGuard
@@ -78,8 +83,24 @@ Este documento contém **todas as rotas relacionadas ao sistema de comissionamen
 }
 ```
 
+#### `POST /settings/fio-b-percentage`
+- **Descrição:** Definir porcentagem do fio B
+- **Autenticação:** JwtAuthGuard + HierarchyAuthGuard
+- **Permissão:** ADMIN
+- **Body:** 
+```json
+{
+  "percentage": 42.5
+}
+```
+
 #### `GET /settings/kwh-price/history`
 - **Descrição:** Histórico de alterações do preço
+- **Autenticação:** JwtAuthGuard + HierarchyAuthGuard
+- **Permissão:** ADMIN
+
+#### `GET /settings/fio-b-percentage/history`
+- **Descrição:** Histórico de alterações da porcentagem do fio B
 - **Autenticação:** JwtAuthGuard + HierarchyAuthGuard
 - **Permissão:** ADMIN
 

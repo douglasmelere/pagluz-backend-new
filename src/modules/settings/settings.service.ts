@@ -29,6 +29,25 @@ export class SettingsService {
   }
 
   /**
+   * Obtém a porcentagem atual do fio B utilizada nas propostas comerciais
+   */
+  async getCurrentFioBPercentage(): Promise<number> {
+    const setting = await this.prisma.systemSettings.findFirst({
+      where: {
+        key: 'FIO_B_PERCENTAGE',
+        isActive: true,
+      },
+    });
+
+    if (!setting) {
+      // padrão quando não configurado
+      return 0;
+    }
+
+    return parseFloat(setting.value);
+  }
+
+  /**
    * Define o valor do kWh
    */
   async setKwhPrice(price: number, userId: string): Promise<any> {
@@ -90,12 +109,88 @@ export class SettingsService {
   }
 
   /**
+   * Define a nova porcentagem do fio B
+   */
+  async setFioBPercentage(percentage: number, userId: string): Promise<any> {
+    if (percentage < 0 || percentage > 100) {
+      throw new BadRequestException('Porcentagem do fio B deve estar entre 0 e 100');
+    }
+
+    const existingSetting = await this.prisma.systemSettings.findFirst({
+      where: {
+        key: 'FIO_B_PERCENTAGE',
+        isActive: true,
+      },
+    });
+
+    let setting;
+
+    if (existingSetting) {
+      setting = await this.prisma.systemSettings.update({
+        where: { id: existingSetting.id },
+        data: {
+          value: percentage.toString(),
+          updatedAt: new Date(),
+        },
+      });
+    } else {
+      setting = await this.prisma.systemSettings.create({
+        data: {
+          key: 'FIO_B_PERCENTAGE',
+          value: percentage.toString(),
+          description: 'Porcentagem do fio B para cálculo de propostas comerciais',
+          isActive: true,
+        },
+      });
+    }
+
+    await this.auditService.log({
+      userId,
+      action: 'SETTINGS_UPDATE',
+      entityType: 'SystemSettings',
+      entityId: setting.id,
+      newValues: {
+        key: 'FIO_B_PERCENTAGE',
+        value: percentage.toString(),
+        description: 'Porcentagem do fio B atualizada',
+      },
+    });
+
+    return {
+      id: setting.id,
+      key: setting.key,
+      value: parseFloat(setting.value),
+      description: setting.description,
+      updatedAt: setting.updatedAt,
+    };
+  }
+
+  /**
    * Obtém histórico de alterações do preço do kWh
    */
   async getKwhPriceHistory() {
     const settings = await this.prisma.systemSettings.findMany({
       where: {
         key: 'KWH_PRICE',
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    return settings.map(setting => ({
+      id: setting.id,
+      value: parseFloat(setting.value),
+      isActive: setting.isActive,
+      createdAt: setting.createdAt,
+      updatedAt: setting.updatedAt,
+    }));
+  }
+
+  async getFioBPercentageHistory() {
+    const settings = await this.prisma.systemSettings.findMany({
+      where: {
+        key: 'FIO_B_PERCENTAGE',
       },
       orderBy: {
         updatedAt: 'desc',
@@ -210,6 +305,7 @@ export class SettingsService {
     });
 
     const currentKwhPrice = await this.getCurrentKwhPrice();
+    const currentFioBPercentage = await this.getCurrentFioBPercentage();
 
     return {
       totalConsumers,
@@ -217,6 +313,7 @@ export class SettingsService {
       totalCommissions,
       totalCommissionsValue: totalCommissionsValue._sum.commissionValue || 0,
       currentKwhPrice,
+      currentFioBPercentage,
       lastUpdated: new Date(),
     };
   }

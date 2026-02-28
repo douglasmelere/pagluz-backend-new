@@ -863,7 +863,47 @@ export declare class ConsumersController {
         invoiceUploadedAt: Date | null;
         invoiceScannedData: import("@prisma/client/runtime/library").JsonValue | null;
     }>;
-    generateCommissionsForApprovedConsumers(): Promise<{
+    generateCommissionsForApprovedConsumers(body?: {
+        consumerId?: string;
+    }): Promise<{
+        totalProcessed: number;
+        successful: number;
+        errors: number;
+        results: {
+            consumerId: string;
+            consumerName: string;
+            representativeId: string | null;
+            representativeName: string;
+            commissionValue: number;
+            status: string;
+            error: string;
+        }[];
+    } | {
+        totalProcessed: number;
+        successful: number;
+        errors: number;
+        results: {
+            consumerId: string;
+            consumerName: string;
+            representativeId: string | null;
+            representativeName: string;
+            commissionValue: number;
+            status: string;
+        }[];
+    } | {
+        totalProcessed: number;
+        successful: number;
+        errors: number;
+        results: {
+            consumerId: string;
+            consumerName: string;
+            representativeId: null;
+            representativeName: string;
+            commissionValue: number;
+            status: string;
+            error: any;
+        }[];
+    }> | Promise<{
         totalProcessed: number;
         successful: number;
         errors: number;

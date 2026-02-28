@@ -33,6 +33,16 @@ let SettingsController = class SettingsController {
     getKwhPriceHistory() {
         return this.settingsService.getKwhPriceHistory();
     }
+    getCurrentFioBPercentage() {
+        return this.settingsService.getCurrentFioBPercentage();
+    }
+    setFioBPercentage(body, req) {
+        const userId = req.user.id;
+        return this.settingsService.setFioBPercentage(body.percentage, userId);
+    }
+    getFioBPercentageHistory() {
+        return this.settingsService.getFioBPercentageHistory();
+    }
     getAllSettings() {
         return this.settingsService.getAllSettings();
     }
@@ -75,6 +85,36 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SettingsController.prototype, "getKwhPriceHistory", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Obter valor atual da porcentagem do fio B' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Porcentagem atual do fio B' }),
+    (0, common_1.Get)('fio-b-percentage'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SettingsController.prototype, "getCurrentFioBPercentage", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Definir porcentagem do fio B (Admin)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Porcentagem do fio B atualizada com sucesso' }),
+    (0, common_1.Post)('fio-b-percentage'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('ADMIN'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], SettingsController.prototype, "setFioBPercentage", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Obter histórico de alterações da porcentagem do fio B' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Histórico de alterações' }),
+    (0, common_1.Get)('fio-b-percentage/history'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('ADMIN'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SettingsController.prototype, "getFioBPercentageHistory", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Obter todas as configurações do sistema' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de configurações' }),
