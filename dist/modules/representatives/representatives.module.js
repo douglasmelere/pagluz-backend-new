@@ -12,6 +12,7 @@ const representatives_service_1 = require("./representatives.service");
 const representatives_controller_1 = require("./representatives.controller");
 const prisma_service_1 = require("../../config/prisma.service");
 const auth_module_1 = require("../auth/auth.module");
+const avatar_storage_service_1 = require("../../common/services/avatar-storage.service");
 let RepresentativesModule = class RepresentativesModule {
 };
 exports.RepresentativesModule = RepresentativesModule;
@@ -19,7 +20,7 @@ exports.RepresentativesModule = RepresentativesModule = __decorate([
     (0, common_1.Module)({
         imports: [auth_module_1.AuthModule],
         controllers: [representatives_controller_1.RepresentativesController],
-        providers: [representatives_service_1.RepresentativesService, prisma_service_1.PrismaService],
+        providers: [representatives_service_1.RepresentativesService, prisma_service_1.PrismaService, avatar_storage_service_1.AvatarStorageService],
         exports: [representatives_service_1.RepresentativesService],
     })
 ], RepresentativesModule);

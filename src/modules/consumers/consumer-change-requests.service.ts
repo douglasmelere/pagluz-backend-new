@@ -7,13 +7,15 @@ import {
 import { PrismaService } from '../../config/prisma.service';
 import { ChangeRequestStatus } from '../../common/enums';
 import { AuditService } from '../../common/services/audit.service';
+import { WebhookService } from '../../common/services/webhook.service';
 
 @Injectable()
 export class ConsumerChangeRequestsService {
   constructor(
     private prisma: PrismaService,
     private auditService: AuditService,
-  ) {}
+    private webhookService: WebhookService,
+  ) { }
 
   /**
    * Cria uma solicitação de mudança para um consumidor
@@ -90,6 +92,14 @@ export class ConsumerChangeRequestsService {
         },
       });
     }
+
+    // Envia notificação por webhook
+    await this.webhookService.sendNotification('ALTERACAO_SOLICITADA', {
+      requestId: changeRequest.id,
+      consumerName: changeRequest.consumer.name,
+      representativeName: changeRequest.representative.name,
+      changedFields,
+    });
 
     return changeRequest;
   }

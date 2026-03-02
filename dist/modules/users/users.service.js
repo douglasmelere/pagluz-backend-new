@@ -44,6 +44,7 @@ let UsersService = class UsersService {
                 email: true,
                 name: true,
                 role: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
             },
@@ -58,6 +59,7 @@ let UsersService = class UsersService {
                 email: true,
                 name: true,
                 role: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
             },
@@ -81,11 +83,28 @@ let UsersService = class UsersService {
                 email: true,
                 name: true,
                 role: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
             },
         });
         return user;
+    }
+    async updateAvatar(id, avatarUrl) {
+        await this.findOne(id);
+        return this.prisma.user.update({
+            where: { id },
+            data: { avatarUrl },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                avatarUrl: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
     }
     async remove(id) {
         await this.findOne(id);

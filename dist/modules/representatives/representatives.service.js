@@ -50,6 +50,7 @@ let RepresentativesService = class RepresentativesService {
                 specializations: true,
                 status: true,
                 notes: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
                 lastLoginAt: true,
@@ -70,6 +71,7 @@ let RepresentativesService = class RepresentativesService {
                 specializations: true,
                 status: true,
                 notes: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
                 lastLoginAt: true,
@@ -99,6 +101,7 @@ let RepresentativesService = class RepresentativesService {
                 specializations: true,
                 status: true,
                 notes: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
                 lastLoginAt: true,
@@ -175,10 +178,27 @@ let RepresentativesService = class RepresentativesService {
                 specializations: true,
                 status: true,
                 notes: true,
+                avatarUrl: true,
                 createdAt: true,
                 updatedAt: true,
                 lastLoginAt: true,
                 loginCount: true,
+            },
+        });
+    }
+    async updateAvatar(id, avatarUrl) {
+        const existing = await this.prisma.representative.findUnique({ where: { id } });
+        if (!existing) {
+            throw new common_1.NotFoundException('Representante não encontrado');
+        }
+        return this.prisma.representative.update({
+            where: { id },
+            data: { avatarUrl },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true,
             },
         });
     }
@@ -252,6 +272,7 @@ let RepresentativesService = class RepresentativesService {
                 email: representative.email,
                 status: representative.status,
                 specializations: representative.specializations,
+                avatarUrl: representative.avatarUrl,
             },
             stats: {
                 totalConsumers,
@@ -288,6 +309,7 @@ let RepresentativesService = class RepresentativesService {
                     email: true,
                     city: true,
                     state: true,
+                    avatarUrl: true,
                     _count: {
                         select: {
                             Consumer: true,
@@ -319,6 +341,7 @@ let RepresentativesService = class RepresentativesService {
                 email: rep.email,
                 city: rep.city,
                 state: rep.state,
+                avatarUrl: rep.avatarUrl,
                 consumerCount: rep._count.Consumer,
             })),
             lastUpdated: new Date().toISOString(),

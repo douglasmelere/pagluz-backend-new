@@ -6,7 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
     const { email, password, ...userData } = createUserDto;
@@ -43,6 +43,7 @@ export class UsersService {
         email: true,
         name: true,
         role: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -59,6 +60,7 @@ export class UsersService {
         email: true,
         name: true,
         role: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -90,12 +92,32 @@ export class UsersService {
         email: true,
         name: true,
         role: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
       },
     });
 
     return user;
+  }
+
+  async updateAvatar(id: string, avatarUrl: string | null) {
+    // Verifica se o usuário existe
+    await this.findOne(id);
+
+    return this.prisma.user.update({
+      where: { id },
+      data: { avatarUrl },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   async remove(id: string) {

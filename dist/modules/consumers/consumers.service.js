@@ -18,6 +18,7 @@ const commissions_service_1 = require("../commissions/commissions.service");
 const supabase_storage_service_1 = require("../../common/services/supabase-storage.service");
 const ocr_service_1 = require("../../common/services/ocr.service");
 const consumer_change_requests_service_1 = require("./consumer-change-requests.service");
+const webhook_service_1 = require("../../common/services/webhook.service");
 let ConsumersService = class ConsumersService {
     prisma;
     auditService;
@@ -25,13 +26,15 @@ let ConsumersService = class ConsumersService {
     supabaseStorage;
     ocrService;
     changeRequestsService;
-    constructor(prisma, auditService, commissionsService, supabaseStorage, ocrService, changeRequestsService) {
+    webhookService;
+    constructor(prisma, auditService, commissionsService, supabaseStorage, ocrService, changeRequestsService, webhookService) {
         this.prisma = prisma;
         this.auditService = auditService;
         this.commissionsService = commissionsService;
         this.supabaseStorage = supabaseStorage;
         this.ocrService = ocrService;
         this.changeRequestsService = changeRequestsService;
+        this.webhookService = webhookService;
     }
     async create(createConsumerDto) {
         const { cpfCnpj, generatorId, birthDate, arrivalDate, ...consumerData } = createConsumerDto;
@@ -106,6 +109,14 @@ let ConsumersService = class ConsumersService {
             status: consumer.status,
             averageMonthlyConsumption: consumer.averageMonthlyConsumption,
             discountOffered: consumer.discountOffered,
+        });
+        await this.webhookService.sendNotification('NOVO_CLIENTE', {
+            consumerId: consumer.id,
+            consumerName: consumer.name,
+            representativeName: representative.name,
+            city: consumer.city,
+            state: consumer.state,
+            averageMonthlyConsumption: consumer.averageMonthlyConsumption,
         });
         return {
             ...consumer,
@@ -1503,6 +1514,7 @@ exports.ConsumersService = ConsumersService = __decorate([
         commissions_service_1.CommissionsService,
         supabase_storage_service_1.SupabaseStorageService,
         ocr_service_1.OcrService,
-        consumer_change_requests_service_1.ConsumerChangeRequestsService])
+        consumer_change_requests_service_1.ConsumerChangeRequestsService,
+        webhook_service_1.WebhookService])
 ], ConsumersService);
 //# sourceMappingURL=consumers.service.js.map

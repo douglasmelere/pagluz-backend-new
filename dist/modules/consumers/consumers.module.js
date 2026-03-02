@@ -16,6 +16,7 @@ const audit_service_1 = require("../../common/services/audit.service");
 const supabase_storage_service_1 = require("../../common/services/supabase-storage.service");
 const payment_proof_storage_service_1 = require("../../common/services/payment-proof-storage.service");
 const ocr_service_1 = require("../../common/services/ocr.service");
+const webhook_service_1 = require("../../common/services/webhook.service");
 const auth_module_1 = require("../auth/auth.module");
 const commissions_service_1 = require("../commissions/commissions.service");
 const settings_service_1 = require("../settings/settings.service");
@@ -36,6 +37,7 @@ exports.ConsumersModule = ConsumersModule = __decorate([
             supabase_storage_service_1.SupabaseStorageService,
             payment_proof_storage_service_1.PaymentProofStorageService,
             ocr_service_1.OcrService,
+            webhook_service_1.WebhookService,
         ],
         exports: [consumers_service_1.ConsumersService, consumer_change_requests_service_1.ConsumerChangeRequestsService],
     })

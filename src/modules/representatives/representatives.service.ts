@@ -8,7 +8,7 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class RepresentativesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(createRepresentativeDto: CreateRepresentativeDto) {
     // Verifica se já existe representante com o mesmo email ou CPF/CNPJ
@@ -49,6 +49,7 @@ export class RepresentativesService {
         specializations: true,
         status: true,
         notes: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
         lastLoginAt: true,
@@ -70,6 +71,7 @@ export class RepresentativesService {
         specializations: true,
         status: true,
         notes: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
         lastLoginAt: true,
@@ -100,6 +102,7 @@ export class RepresentativesService {
         specializations: true,
         status: true,
         notes: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
         lastLoginAt: true,
@@ -191,10 +194,29 @@ export class RepresentativesService {
         specializations: true,
         status: true,
         notes: true,
+        avatarUrl: true,
         createdAt: true,
         updatedAt: true,
         lastLoginAt: true,
         loginCount: true,
+      },
+    });
+  }
+
+  async updateAvatar(id: string, avatarUrl: string | null) {
+    const existing = await this.prisma.representative.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException('Representante não encontrado');
+    }
+
+    return this.prisma.representative.update({
+      where: { id },
+      data: { avatarUrl },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
       },
     });
   }
@@ -289,6 +311,7 @@ export class RepresentativesService {
         email: representative.email,
         status: representative.status,
         specializations: representative.specializations,
+        avatarUrl: representative.avatarUrl,
       },
       stats: {
         totalConsumers,
@@ -313,18 +336,18 @@ export class RepresentativesService {
     ] = await Promise.all([
       // Total de representantes
       this.prisma.representative.count(),
-      
+
       // Representantes ativos
       this.prisma.representative.count({
         where: { status: 'ACTIVE' },
       }),
-      
+
       // Representantes por status
       this.prisma.representative.groupBy({
         by: ['status'],
         _count: { status: true },
       }),
-      
+
       // Representantes por estado
       this.prisma.representative.groupBy({
         by: ['state'],
@@ -332,7 +355,7 @@ export class RepresentativesService {
         orderBy: { _count: { state: 'desc' } },
         take: 10,
       }),
-      
+
       // Top representantes por número de consumidores
       this.prisma.representative.findMany({
         select: {
@@ -341,6 +364,7 @@ export class RepresentativesService {
           email: true,
           city: true,
           state: true,
+          avatarUrl: true,
           _count: {
             select: {
               Consumer: true,
@@ -373,6 +397,7 @@ export class RepresentativesService {
         email: rep.email,
         city: rep.city,
         state: rep.state,
+        avatarUrl: rep.avatarUrl,
         consumerCount: rep._count.Consumer,
       })),
       lastUpdated: new Date().toISOString(),

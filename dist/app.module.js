@@ -24,10 +24,13 @@ const audit_module_1 = require("./modules/audit/audit.module");
 const commissions_module_1 = require("./modules/commissions/commissions.module");
 const settings_module_1 = require("./modules/settings/settings.module");
 const contracts_module_1 = require("./modules/contracts/contracts.module");
+const admin_notifications_module_1 = require("./modules/admin-notifications/admin-notifications.module");
+const proposal_requests_module_1 = require("./modules/proposal-requests/proposal-requests.module");
 const prisma_service_1 = require("./config/prisma.service");
 const audit_service_1 = require("./common/services/audit.service");
 const logout_service_1 = require("./common/services/logout.service");
 const logger_service_1 = require("./common/services/logger.service");
+const webhook_service_1 = require("./common/services/webhook.service");
 const hierarchy_auth_guard_1 = require("./common/guards/hierarchy-auth.guard");
 const throttler_config_1 = require("./common/config/throttler.config");
 const health_controller_1 = require("./common/controllers/health.controller");
@@ -54,6 +57,8 @@ exports.AppModule = AppModule = __decorate([
             commissions_module_1.CommissionsModule,
             settings_module_1.SettingsModule,
             contracts_module_1.ContractsModule,
+            admin_notifications_module_1.AdminNotificationsModule,
+            proposal_requests_module_1.ProposalRequestsModule,
         ],
         controllers: [app_controller_1.AppController, health_controller_1.HealthController, metrics_controller_1.MetricsController],
         providers: [
@@ -62,13 +67,14 @@ exports.AppModule = AppModule = __decorate([
             audit_service_1.AuditService,
             logout_service_1.LogoutService,
             logger_service_1.LoggerServiceImpl,
+            webhook_service_1.WebhookService,
             hierarchy_auth_guard_1.HierarchyAuthGuard,
             {
                 provide: core_1.APP_GUARD,
                 useClass: throttler_config_1.CustomThrottlerGuard,
             },
         ],
-        exports: [audit_service_1.AuditService, logout_service_1.LogoutService, logger_service_1.LoggerServiceImpl],
+        exports: [audit_service_1.AuditService, logout_service_1.LogoutService, logger_service_1.LoggerServiceImpl, webhook_service_1.WebhookService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

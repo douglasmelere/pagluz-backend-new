@@ -8,6 +8,7 @@ import { CommissionsService } from "../commissions/commissions.service";
 import { SupabaseStorageService } from "../../common/services/supabase-storage.service";
 import { OcrService } from "../../common/services/ocr.service";
 import { ConsumerChangeRequestsService } from "./consumer-change-requests.service";
+import { WebhookService } from "../../common/services/webhook.service";
 export declare class ConsumersService {
     private prisma;
     private auditService;
@@ -15,7 +16,8 @@ export declare class ConsumersService {
     private supabaseStorage;
     private ocrService;
     private changeRequestsService;
-    constructor(prisma: PrismaService, auditService: AuditService, commissionsService: CommissionsService, supabaseStorage: SupabaseStorageService, ocrService: OcrService, changeRequestsService: ConsumerChangeRequestsService);
+    private webhookService;
+    constructor(prisma: PrismaService, auditService: AuditService, commissionsService: CommissionsService, supabaseStorage: SupabaseStorageService, ocrService: OcrService, changeRequestsService: ConsumerChangeRequestsService, webhookService: WebhookService);
     create(createConsumerDto: CreateConsumerDto): Promise<{
         generator: {
             id: string;

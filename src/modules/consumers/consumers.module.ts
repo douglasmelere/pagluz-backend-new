@@ -7,6 +7,7 @@ import { AuditService } from '../../common/services/audit.service';
 import { SupabaseStorageService } from '../../common/services/supabase-storage.service';
 import { PaymentProofStorageService } from '../../common/services/payment-proof-storage.service';
 import { OcrService } from '../../common/services/ocr.service';
+import { WebhookService } from '../../common/services/webhook.service';
 import { AuthModule } from '../auth/auth.module';
 import { CommissionsService } from '../commissions/commissions.service';
 import { SettingsService } from '../settings/settings.service';
@@ -24,6 +25,7 @@ import { SettingsService } from '../settings/settings.service';
     SupabaseStorageService,
     PaymentProofStorageService,
     OcrService,
+    WebhookService,
   ],
   exports: [ConsumersService, ConsumerChangeRequestsService],
 })

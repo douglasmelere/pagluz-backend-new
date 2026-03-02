@@ -14,12 +14,15 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
 const enums_1 = require("../../common/enums");
 const audit_service_1 = require("../../common/services/audit.service");
+const webhook_service_1 = require("../../common/services/webhook.service");
 let ConsumerChangeRequestsService = class ConsumerChangeRequestsService {
     prisma;
     auditService;
-    constructor(prisma, auditService) {
+    webhookService;
+    constructor(prisma, auditService, webhookService) {
         this.prisma = prisma;
         this.auditService = auditService;
+        this.webhookService = webhookService;
     }
     async createChangeRequest(consumerId, representativeId, newValues, userId) {
         const consumer = await this.prisma.consumer.findUnique({
@@ -74,6 +77,12 @@ let ConsumerChangeRequestsService = class ConsumerChangeRequestsService {
                 },
             });
         }
+        await this.webhookService.sendNotification('ALTERACAO_SOLICITADA', {
+            requestId: changeRequest.id,
+            consumerName: changeRequest.consumer.name,
+            representativeName: changeRequest.representative.name,
+            changedFields,
+        });
         return changeRequest;
     }
     async approveChangeRequest(changeRequestId, adminUserId, rejectionReason) {
@@ -243,6 +252,7 @@ exports.ConsumerChangeRequestsService = ConsumerChangeRequestsService;
 exports.ConsumerChangeRequestsService = ConsumerChangeRequestsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        audit_service_1.AuditService])
+        audit_service_1.AuditService,
+        webhook_service_1.WebhookService])
 ], ConsumerChangeRequestsService);
 //# sourceMappingURL=consumer-change-requests.service.js.map

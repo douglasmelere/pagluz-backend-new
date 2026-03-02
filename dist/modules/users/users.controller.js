@@ -14,15 +14,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 const swagger_1 = require("@nestjs/swagger");
 const users_service_1 = require("./users.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
+const avatar_storage_service_1 = require("../../common/services/avatar-storage.service");
 let UsersController = class UsersController {
     usersService;
-    constructor(usersService) {
+    avatarStorageService;
+    constructor(usersService, avatarStorageService) {
         this.usersService = usersService;
+        this.avatarStorageService = avatarStorageService;
     }
     create(createUserDto) {
         return this.usersService.create(createUserDto);
@@ -38,6 +43,28 @@ let UsersController = class UsersController {
     }
     remove(id) {
         return this.usersService.remove(id);
+    }
+    async uploadMyAvatar(req, file) {
+        const userId = req.user.id;
+        const avatarUrl = await this.avatarStorageService.uploadAvatar(file, 'users', userId);
+        const updated = await this.usersService.updateAvatar(userId, avatarUrl);
+        return { message: 'Foto de perfil atualizada com sucesso', avatarUrl: updated.avatarUrl };
+    }
+    async removeMyAvatar(req) {
+        const userId = req.user.id;
+        await this.avatarStorageService.deleteAvatar('users', userId);
+        await this.usersService.updateAvatar(userId, null);
+        return { message: 'Foto de perfil removida com sucesso' };
+    }
+    async uploadAvatar(id, file) {
+        const avatarUrl = await this.avatarStorageService.uploadAvatar(file, 'users', id);
+        const updated = await this.usersService.updateAvatar(id, avatarUrl);
+        return { message: 'Foto de perfil atualizada com sucesso', avatarUrl: updated.avatarUrl };
+    }
+    async removeAvatar(id) {
+        await this.avatarStorageService.deleteAvatar('users', id);
+        await this.usersService.updateAvatar(id, null);
+        return { message: 'Foto de perfil removida com sucesso' };
     }
 };
 exports.UsersController = UsersController;
@@ -90,11 +117,85 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "remove", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Fazer upload da foto de perfil do usuário autenticado' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Imagem de perfil (JPEG, PNG ou WebP, máx. 5MB)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil atualizada com sucesso' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Arquivo inválido (tipo ou tamanho)' }),
+    (0, common_1.Post)('me/avatar'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', {
+        storage: (0, multer_1.memoryStorage)(),
+    })),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "uploadMyAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Remover foto de perfil do usuário autenticado' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil removida com sucesso' }),
+    (0, common_1.Delete)('me/avatar'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "removeMyAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Admin: fazer upload da foto de perfil de qualquer usuário' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Imagem de perfil (JPEG, PNG ou WebP, máx. 5MB)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil atualizada com sucesso' }),
+    (0, common_1.Post)(':id/avatar'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', {
+        storage: (0, multer_1.memoryStorage)(),
+    })),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "uploadAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Admin: remover foto de perfil de qualquer usuário' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil removida com sucesso' }),
+    (0, common_1.Delete)(':id/avatar'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "removeAvatar", null);
 exports.UsersController = UsersController = __decorate([
     (0, swagger_1.ApiTags)('Usuários'),
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        avatar_storage_service_1.AvatarStorageService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

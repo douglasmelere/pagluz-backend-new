@@ -1,13 +1,16 @@
 import { RepresentativesService } from './representatives.service';
 import { CreateRepresentativeDto } from './dto/create-representative.dto';
 import { UpdateRepresentativeDto } from './dto/update-representative.dto';
+import { AvatarStorageService } from '../../common/services/avatar-storage.service';
 export declare class RepresentativesController {
     private readonly representativesService;
-    constructor(representativesService: RepresentativesService);
+    private readonly avatarStorageService;
+    constructor(representativesService: RepresentativesService, avatarStorageService: AvatarStorageService);
     create(createRepresentativeDto: CreateRepresentativeDto): Promise<{
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -24,6 +27,7 @@ export declare class RepresentativesController {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -56,6 +60,7 @@ export declare class RepresentativesController {
             email: string;
             city: string;
             state: string;
+            avatarUrl: string | null;
             consumerCount: number;
         }[];
         lastUpdated: string;
@@ -64,6 +69,7 @@ export declare class RepresentativesController {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -92,6 +98,7 @@ export declare class RepresentativesController {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -109,6 +116,7 @@ export declare class RepresentativesController {
         password: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -128,6 +136,7 @@ export declare class RepresentativesController {
             email: string;
             status: import(".prisma/client").$Enums.RepresentativeStatus;
             specializations: string[];
+            avatarUrl: string | null;
         };
         stats: {
             totalConsumers: number;
@@ -149,6 +158,7 @@ export declare class RepresentativesController {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -177,6 +187,7 @@ export declare class RepresentativesController {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -188,5 +199,19 @@ export declare class RepresentativesController {
         status: import(".prisma/client").$Enums.RepresentativeStatus;
         specializations: string[];
         notes: string | null;
+    }>;
+    uploadMyAvatar(req: any, file: Express.Multer.File): Promise<{
+        message: string;
+        avatarUrl: string | null;
+    }>;
+    removeMyAvatar(req: any): Promise<{
+        message: string;
+    }>;
+    uploadAvatar(id: string, file: Express.Multer.File): Promise<{
+        message: string;
+        avatarUrl: string | null;
+    }>;
+    removeAvatar(id: string): Promise<{
+        message: string;
     }>;
 }

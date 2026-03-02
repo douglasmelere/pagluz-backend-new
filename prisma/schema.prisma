@@ -17,6 +17,7 @@ model User {
   name                 String?
   role                 UserRole  @default(ADMIN)
   isActive             Boolean   @default(true)
+  avatarUrl            String?   // URL da foto de perfil no Supabase Storage
   lastLoginAt          DateTime?
   loginCount           Int       @default(0)
   failedLoginAttempts  Int       @default(0) // Contador de tentativas de login falhadas
@@ -75,6 +76,7 @@ model Representative {
   specializations String[]             @default([])
   status          RepresentativeStatus @default(PENDING_APPROVAL)
   notes           String?
+  avatarUrl       String?              // URL da foto de perfil no Supabase Storage
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
   lastLoginAt     DateTime?
@@ -85,6 +87,7 @@ model Representative {
   Consumer              Consumer[]
   commissions           Commission[]
   changeRequests        ConsumerChangeRequest[]
+  proposalRequests      ProposalRequest[]
 
   @@map("commercial_representatives")
 }
@@ -315,4 +318,39 @@ enum ChangeRequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model ProposalRequest {
+  id               String               @id @default(cuid())
+  representativeId String
+  clientName       String
+  invoiceAmount    Float
+  phaseType        PhaseType
+  kwhValue         Float
+  status           ProposalRequestStatus @default(PENDING)
+  documentUrl      String?
+  documentFileName String?
+  documentUploadedAt DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  representative   Representative       @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  @@map("proposal_requests")
+}
+
+model AdminNotification {
+  id          String   @id @default(cuid())
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("admin_notifications")
+}
+
+enum ProposalRequestStatus {
+  PENDING
+  GENERATED
 }

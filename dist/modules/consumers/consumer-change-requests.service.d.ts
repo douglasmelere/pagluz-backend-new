@@ -1,9 +1,11 @@
 import { PrismaService } from '../../config/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
+import { WebhookService } from '../../common/services/webhook.service';
 export declare class ConsumerChangeRequestsService {
     private prisma;
     private auditService;
-    constructor(prisma: PrismaService, auditService: AuditService);
+    private webhookService;
+    constructor(prisma: PrismaService, auditService: AuditService, webhookService: WebhookService);
     createChangeRequest(consumerId: string, representativeId: string, newValues: any, userId?: string): Promise<{
         representative: {
             email: string;

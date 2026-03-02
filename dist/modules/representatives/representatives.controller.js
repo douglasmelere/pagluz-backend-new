@@ -14,16 +14,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RepresentativesController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const swagger_1 = require("@nestjs/swagger");
 const representatives_service_1 = require("./representatives.service");
 const create_representative_dto_1 = require("./dto/create-representative.dto");
 const update_representative_dto_1 = require("./dto/update-representative.dto");
 const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const representative_auth_guard_1 = require("../../common/guards/representative-auth.guard");
 const hierarchy_auth_guard_1 = require("../../common/guards/hierarchy-auth.guard");
+const avatar_storage_service_1 = require("../../common/services/avatar-storage.service");
 let RepresentativesController = class RepresentativesController {
     representativesService;
-    constructor(representativesService) {
+    avatarStorageService;
+    constructor(representativesService, avatarStorageService) {
         this.representativesService = representativesService;
+        this.avatarStorageService = avatarStorageService;
     }
     create(createRepresentativeDto) {
         return this.representativesService.create(createRepresentativeDto);
@@ -51,6 +57,28 @@ let RepresentativesController = class RepresentativesController {
     }
     updateRepresentativeProfile(req, updateRepresentativeDto) {
         return this.representativesService.update(req.user.id, updateRepresentativeDto);
+    }
+    async uploadMyAvatar(req, file) {
+        const representativeId = req.user.id;
+        const avatarUrl = await this.avatarStorageService.uploadAvatar(file, 'representatives', representativeId);
+        const updated = await this.representativesService.updateAvatar(representativeId, avatarUrl);
+        return { message: 'Foto de perfil atualizada com sucesso', avatarUrl: updated.avatarUrl };
+    }
+    async removeMyAvatar(req) {
+        const representativeId = req.user.id;
+        await this.avatarStorageService.deleteAvatar('representatives', representativeId);
+        await this.representativesService.updateAvatar(representativeId, null);
+        return { message: 'Foto de perfil removida com sucesso' };
+    }
+    async uploadAvatar(id, file) {
+        const avatarUrl = await this.avatarStorageService.uploadAvatar(file, 'representatives', id);
+        const updated = await this.representativesService.updateAvatar(id, avatarUrl);
+        return { message: 'Foto de perfil atualizada com sucesso', avatarUrl: updated.avatarUrl };
+    }
+    async removeAvatar(id) {
+        await this.avatarStorageService.deleteAvatar('representatives', id);
+        await this.representativesService.updateAvatar(id, null);
+        return { message: 'Foto de perfil removida com sucesso' };
     }
 };
 exports.RepresentativesController = RepresentativesController;
@@ -133,8 +161,83 @@ __decorate([
     __metadata("design:paramtypes", [Object, update_representative_dto_1.UpdateRepresentativeDto]),
     __metadata("design:returntype", void 0)
 ], RepresentativesController.prototype, "updateRepresentativeProfile", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Representante: fazer upload da própria foto de perfil' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Imagem de perfil (JPEG, PNG ou WebP, máx. 5MB)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil atualizada com sucesso' }),
+    (0, common_1.Post)('dashboard/avatar'),
+    (0, common_1.UseGuards)(representative_auth_guard_1.RepresentativeAuthGuard),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', { storage: (0, multer_1.memoryStorage)() })),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], RepresentativesController.prototype, "uploadMyAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Representante: remover a própria foto de perfil' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil removida com sucesso' }),
+    (0, common_1.Delete)('dashboard/avatar'),
+    (0, common_1.UseGuards)(representative_auth_guard_1.RepresentativeAuthGuard),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RepresentativesController.prototype, "removeMyAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Admin: fazer upload da foto de perfil de um representante' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                avatar: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Imagem de perfil (JPEG, PNG ou WebP, máx. 5MB)',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil atualizada com sucesso' }),
+    (0, common_1.Post)(':id/avatar'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('ADMIN'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', { storage: (0, multer_1.memoryStorage)() })),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], RepresentativesController.prototype, "uploadAvatar", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Admin: remover foto de perfil de um representante' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Foto de perfil removida com sucesso' }),
+    (0, common_1.Delete)(':id/avatar'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, hierarchy_auth_guard_1.HierarchyAuthGuard),
+    (0, hierarchy_auth_guard_1.RequireHierarchy)('ADMIN'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RepresentativesController.prototype, "removeAvatar", null);
 exports.RepresentativesController = RepresentativesController = __decorate([
     (0, common_1.Controller)('representatives'),
-    __metadata("design:paramtypes", [representatives_service_1.RepresentativesService])
+    __metadata("design:paramtypes", [representatives_service_1.RepresentativesService,
+        avatar_storage_service_1.AvatarStorageService])
 ], RepresentativesController);
 //# sourceMappingURL=representatives.controller.js.map

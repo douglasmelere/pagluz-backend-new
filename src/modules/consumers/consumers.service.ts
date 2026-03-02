@@ -15,6 +15,7 @@ import { CommissionsService } from "../commissions/commissions.service";
 import { SupabaseStorageService } from "../../common/services/supabase-storage.service";
 import { OcrService } from "../../common/services/ocr.service";
 import { ConsumerChangeRequestsService } from "./consumer-change-requests.service";
+import { WebhookService } from "../../common/services/webhook.service";
 
 @Injectable()
 export class ConsumersService {
@@ -25,7 +26,8 @@ export class ConsumersService {
     private supabaseStorage: SupabaseStorageService,
     private ocrService: OcrService,
     private changeRequestsService: ConsumerChangeRequestsService,
-  ) {}
+    private webhookService: WebhookService,
+  ) { }
 
   async create(createConsumerDto: CreateConsumerDto) {
     const { cpfCnpj, generatorId, birthDate, arrivalDate, ...consumerData } =
@@ -129,6 +131,16 @@ export class ConsumersService {
         discountOffered: consumer.discountOffered,
       },
     );
+
+    // Envia notificação por webhook
+    await this.webhookService.sendNotification('NOVO_CLIENTE', {
+      consumerId: consumer.id,
+      consumerName: consumer.name,
+      representativeName: representative.name,
+      city: consumer.city,
+      state: consumer.state,
+      averageMonthlyConsumption: consumer.averageMonthlyConsumption,
+    });
 
     return {
       ...consumer,
@@ -882,7 +894,7 @@ export class ConsumersService {
       changeRequest,
       message:
         Object.keys(nonCriticalUpdates).length > 0 &&
-        Object.keys(criticalUpdates).length > 0
+          Object.keys(criticalUpdates).length > 0
           ? "Campos não críticos atualizados. Campos críticos aguardam aprovação."
           : Object.keys(criticalUpdates).length > 0
             ? "Solicitação de alteração criada. Aguarde aprovação do administrador."
@@ -1448,11 +1460,11 @@ export class ConsumersService {
         timestamp: log.createdAt,
         user: log.user
           ? {
-              id: log.user.id,
-              name: log.user.name,
-              email: log.user.email,
-              role: log.user.role,
-            }
+            id: log.user.id,
+            name: log.user.name,
+            email: log.user.email,
+            role: log.user.role,
+          }
           : null,
         oldValues: log.oldValues,
         newValues: log.newValues,

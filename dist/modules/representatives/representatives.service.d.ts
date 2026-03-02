@@ -8,6 +8,7 @@ export declare class RepresentativesService {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -24,6 +25,7 @@ export declare class RepresentativesService {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -43,6 +45,7 @@ export declare class RepresentativesService {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -72,6 +75,7 @@ export declare class RepresentativesService {
         password: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -88,6 +92,7 @@ export declare class RepresentativesService {
         email: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -100,11 +105,18 @@ export declare class RepresentativesService {
         specializations: string[];
         notes: string | null;
     }>;
+    updateAvatar(id: string, avatarUrl: string | null): Promise<{
+        email: string;
+        name: string;
+        id: string;
+        avatarUrl: string | null;
+    }>;
     remove(id: string): Promise<{
         email: string;
         password: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -122,6 +134,7 @@ export declare class RepresentativesService {
         password: string;
         name: string;
         id: string;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         createdAt: Date;
@@ -141,6 +154,7 @@ export declare class RepresentativesService {
             email: string;
             status: import(".prisma/client").$Enums.RepresentativeStatus;
             specializations: string[];
+            avatarUrl: string | null;
         };
         stats: {
             totalConsumers: number;
@@ -175,6 +189,7 @@ export declare class RepresentativesService {
             email: string;
             city: string;
             state: string;
+            avatarUrl: string | null;
             consumerCount: number;
         }[];
         lastUpdated: string;

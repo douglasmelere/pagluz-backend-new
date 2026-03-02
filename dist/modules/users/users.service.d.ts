@@ -10,6 +10,7 @@ export declare class UsersService {
         role: import(".prisma/client").$Enums.UserRole;
         id: string;
         isActive: boolean;
+        avatarUrl: string | null;
         lastLoginAt: Date | null;
         loginCount: number;
         failedLoginAttempts: number;
@@ -26,6 +27,7 @@ export declare class UsersService {
         name: string | null;
         role: import(".prisma/client").$Enums.UserRole;
         id: string;
+        avatarUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
@@ -34,6 +36,7 @@ export declare class UsersService {
         name: string | null;
         role: import(".prisma/client").$Enums.UserRole;
         id: string;
+        avatarUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -42,6 +45,16 @@ export declare class UsersService {
         name: string | null;
         role: import(".prisma/client").$Enums.UserRole;
         id: string;
+        avatarUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
+    updateAvatar(id: string, avatarUrl: string | null): Promise<{
+        email: string;
+        name: string | null;
+        role: import(".prisma/client").$Enums.UserRole;
+        id: string;
+        avatarUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

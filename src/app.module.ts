@@ -15,10 +15,13 @@ import { AuditModule } from "./modules/audit/audit.module";
 import { CommissionsModule } from "./modules/commissions/commissions.module";
 import { SettingsModule } from "./modules/settings/settings.module";
 import { ContractsModule } from "./modules/contracts/contracts.module";
+import { AdminNotificationsModule } from "./modules/admin-notifications/admin-notifications.module";
+import { ProposalRequestsModule } from "./modules/proposal-requests/proposal-requests.module";
 import { PrismaService } from "./config/prisma.service";
 import { AuditService } from "./common/services/audit.service";
 import { LogoutService } from "./common/services/logout.service";
 import { LoggerServiceImpl } from "./common/services/logger.service";
+import { WebhookService } from "./common/services/webhook.service";
 import { HierarchyAuthGuard } from "./common/guards/hierarchy-auth.guard";
 import {
   CustomThrottlerGuard,
@@ -45,6 +48,8 @@ import { MetricsController } from "./common/controllers/metrics.controller";
     CommissionsModule,
     SettingsModule,
     ContractsModule,
+    AdminNotificationsModule,
+    ProposalRequestsModule,
   ],
   controllers: [AppController, HealthController, MetricsController],
   providers: [
@@ -53,12 +58,13 @@ import { MetricsController } from "./common/controllers/metrics.controller";
     AuditService,
     LogoutService,
     LoggerServiceImpl,
+    WebhookService,
     HierarchyAuthGuard,
     {
       provide: APP_GUARD,
       useClass: CustomThrottlerGuard,
     },
   ],
-  exports: [AuditService, LogoutService, LoggerServiceImpl],
+  exports: [AuditService, LogoutService, LoggerServiceImpl, WebhookService],
 })
-export class AppModule {}
+export class AppModule { }
