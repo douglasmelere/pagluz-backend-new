@@ -926,6 +926,7 @@ export class ConsumersService {
         status: true,
         averageMonthlyConsumption: true,
         allocatedPercentage: true,
+        generatorId: true,
         consumerType: true,
         state: true,
         city: true,
@@ -955,21 +956,34 @@ export class ConsumersService {
     }
 
     const totalKwh = consumers.reduce(
-      (sum, c) => sum + c.averageMonthlyConsumption,
+      (sum, c) => sum + (Number(c.averageMonthlyConsumption) || 0),
       0,
     );
     const allocatedKwh = consumers
-      .filter((c) => c.status === "ALLOCATED" && c.allocatedPercentage)
+      // Considera "alocado" tanto ALLOCATED quanto CONVERTED (pós-conversão)
+      .filter((c) => {
+        const status = String(c.status).toUpperCase();
+        const isAllocatedLike = status === "ALLOCATED" || status === "CONVERTED";
+        const hasAllocation =
+          (Number(c.allocatedPercentage) || 0) > 0 && Boolean(c.generatorId);
+        return isAllocatedLike && hasAllocation;
+      })
       .reduce(
         (sum, c) =>
           sum +
-          (c.averageMonthlyConsumption * (c.allocatedPercentage || 0)) / 100,
+          ((Number(c.averageMonthlyConsumption) || 0) * (Number(c.allocatedPercentage) || 0)) / 100,
         0,
       );
 
-    const averageDiscount =
-      consumers.reduce((sum, c) => sum + c.discountOffered, 0) /
-      consumers.length;
+    let totalDiscount = 0;
+    let consumersWithDiscount = 0;
+    consumers.forEach(c => {
+      if (typeof c.discountOffered === 'number' && c.discountOffered > 0) {
+        totalDiscount += c.discountOffered;
+        consumersWithDiscount++;
+      }
+    });
+    const averageDiscount = consumersWithDiscount > 0 ? totalDiscount / consumersWithDiscount : 0;
 
     // Agrupa por status
     const statusBreakdown = consumers.reduce((acc, c) => {

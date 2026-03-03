@@ -265,10 +265,11 @@ export class RepresentativesService {
       include: {
         Consumer: {
           select: {
-            id: true,
             status: true,
             averageMonthlyConsumption: true,
             allocatedPercentage: true,
+            discountOffered: true,
+            generatorId: true,
           },
         },
       },
@@ -284,17 +285,32 @@ export class RepresentativesService {
       0,
     );
 
-    // Calcula kWh alocados e pendentes
     let allocatedKwh = 0;
     let pendingKwh = 0;
+    let totalDiscount = 0;
+    let consumersWithDiscount = 0;
 
     representative.Consumer.forEach(consumer => {
-      if (consumer.status === 'ALLOCATED' && consumer.allocatedPercentage) {
-        allocatedKwh += (consumer.averageMonthlyConsumption * consumer.allocatedPercentage) / 100;
+      // Considera "alocado" tanto ALLOCATED quanto CONVERTED (pós-conversão)
+      const status = String(consumer.status).toUpperCase();
+      const isAllocatedLike = status === 'ALLOCATED' || status === 'CONVERTED';
+      const hasAllocation =
+        (Number(consumer.allocatedPercentage) || 0) > 0 && Boolean(consumer.generatorId);
+
+      if (isAllocatedLike && hasAllocation) {
+        allocatedKwh +=
+          (Number(consumer.averageMonthlyConsumption) * Number(consumer.allocatedPercentage)) / 100;
       } else {
-        pendingKwh += consumer.averageMonthlyConsumption;
+        pendingKwh += Number(consumer.averageMonthlyConsumption);
+      }
+
+      if (consumer.discountOffered > 0) {
+        totalDiscount += consumer.discountOffered;
+        consumersWithDiscount++;
       }
     });
+
+    const averageDiscount = consumersWithDiscount > 0 ? totalDiscount / consumersWithDiscount : 0;
 
     // Conta consumidores por status
     const consumersByStatus = {
@@ -319,6 +335,7 @@ export class RepresentativesService {
         allocatedKwh: Math.round(allocatedKwh * 100) / 100,
         pendingKwh: Math.round(pendingKwh * 100) / 100,
         allocationRate: totalKwh > 0 ? Math.round((allocatedKwh / totalKwh) * 100 * 100) / 100 : 0,
+        averageDiscount: Math.round(averageDiscount * 100) / 100,
         loginCount: representative.loginCount,
         lastLogin: representative.lastLoginAt,
       },

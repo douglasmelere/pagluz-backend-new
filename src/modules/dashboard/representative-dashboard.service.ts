@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service';
 import { Prisma } from '@prisma/client';
 import { ConsumerStatus } from '../../common/enums';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class RepresentativeDashboardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getRepresentativeDashboard(representativeId: string) {
     // Busca o representante com seus consumidores
@@ -48,15 +50,16 @@ export class RepresentativeDashboardService {
       throw new Error('Representante não encontrado');
     }
 
+
     // Calcula estatísticas
     const stats = this.calculateRepresentativeStats(representative.Consumer);
-    
+
     // Agrupa consumidores por status
     const consumersByStatus = this.groupConsumersByStatus(representative.Consumer);
-    
+
     // Calcula distribuição geográfica
     const geographicDistribution = this.calculateGeographicDistribution(representative.Consumer);
-    
+
     // Calcula evolução mensal
     const monthlyEvolution = await this.calculateMonthlyEvolution(representativeId);
 
@@ -81,16 +84,21 @@ export class RepresentativeDashboardService {
 
   private calculateRepresentativeStats(consumers: any[]) {
     const totalConsumers = consumers.length;
-    const totalKwh = consumers.reduce((sum, consumer) => sum + consumer.averageMonthlyConsumption, 0);
-    
-    // kWh alocados (status ALLOCATED com porcentagem alocada)
-    const allocatedConsumers = consumers.filter(c => 
-      c.status === ConsumerStatus.ALLOCATED && c.allocatedPercentage
-    );
-    
+    const totalKwh = consumers.reduce((sum, consumer) => sum + (Number(consumer.averageMonthlyConsumption) || 0), 0);
+
+    // kWh alocados (ALLOCATED ou CONVERTED, com percentual e gerador)
+    const allocatedConsumers = consumers.filter(c => {
+      const status = String(c.status).toUpperCase();
+      const isAllocatedLike = status === 'ALLOCATED' || status === 'CONVERTED';
+      const hasAllocation =
+        (Number(c.allocatedPercentage) || 0) > 0 && Boolean(c.generator?.id);
+      return isAllocatedLike && hasAllocation;
+    });
+
     let allocatedKwh = 0;
     allocatedConsumers.forEach(consumer => {
-      allocatedKwh += (consumer.averageMonthlyConsumption * consumer.allocatedPercentage) / 100;
+      allocatedKwh +=
+        ((Number(consumer.averageMonthlyConsumption) || 0) * (Number(consumer.allocatedPercentage) || 0)) / 100;
     });
 
     // kWh pendentes (todos os outros)
@@ -98,6 +106,18 @@ export class RepresentativeDashboardService {
 
     // Taxa de alocação
     const allocationRate = totalKwh > 0 ? (allocatedKwh / totalKwh) * 100 : 0;
+
+
+    // Média de desconto (baseada em todos os consumidores que possuem algum desconto definido)
+    let totalDiscount = 0;
+    let consumersWithDiscount = 0;
+    consumers.forEach(consumer => {
+      if (typeof consumer.discountOffered === 'number' && consumer.discountOffered > 0) {
+        totalDiscount += consumer.discountOffered;
+        consumersWithDiscount++;
+      }
+    });
+    const averageDiscount = consumersWithDiscount > 0 ? totalDiscount / consumersWithDiscount : 0;
 
     // Economia estimada
     let estimatedSavings = 0;
@@ -113,7 +133,8 @@ export class RepresentativeDashboardService {
       totalKwh: Math.round(totalKwh * 100) / 100,
       allocatedKwh: Math.round(allocatedKwh * 100) / 100,
       pendingKwh: Math.round(pendingKwh * 100) / 100,
-      allocationRate: Math.round(allocationRate * 100) / 100,
+      allocationRate: allocationRate === 0 ? (totalKwh === 0 ? 0.001 : (allocatedKwh === 0 ? 0.002 : 0.003)) : Math.round(allocationRate * 100) / 100,
+      averageDiscount: Math.round(averageDiscount * 100) / 100,
       estimatedMonthlySavings: Math.round(estimatedSavings * 100) / 100,
     };
   }

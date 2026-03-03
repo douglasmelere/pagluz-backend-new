@@ -17,6 +17,8 @@ import { SettingsModule } from "./modules/settings/settings.module";
 import { ContractsModule } from "./modules/contracts/contracts.module";
 import { AdminNotificationsModule } from "./modules/admin-notifications/admin-notifications.module";
 import { ProposalRequestsModule } from "./modules/proposal-requests/proposal-requests.module";
+import { CommercialMaterialsModule } from "./modules/commercial-materials/commercial-materials.module";
+import { AnnouncementsModule } from "./modules/announcements/announcements.module";
 import { PrismaService } from "./config/prisma.service";
 import { AuditService } from "./common/services/audit.service";
 import { LogoutService } from "./common/services/logout.service";
@@ -50,6 +52,8 @@ import { MetricsController } from "./common/controllers/metrics.controller";
     ContractsModule,
     AdminNotificationsModule,
     ProposalRequestsModule,
+    CommercialMaterialsModule,
+    AnnouncementsModule,
   ],
   controllers: [AppController, HealthController, MetricsController],
   providers: [

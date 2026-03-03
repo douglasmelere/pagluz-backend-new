@@ -6,7 +6,7 @@ import { RepresentativeAuthGuard } from '../../common/guards/representative-auth
 @ApiTags('Dashboard do Representante')
 @Controller('representative-dashboard')
 export class RepresentativeDashboardController {
-  constructor(private readonly representativeDashboardService: RepresentativeDashboardService) {}
+  constructor(private readonly representativeDashboardService: RepresentativeDashboardService) { }
 
   @ApiOperation({ summary: 'Obter dashboard completo do representante' })
   @ApiResponse({ status: 200, description: 'Dashboard do representante' })

@@ -28,7 +28,8 @@
     "db:cleanup:tokens": "npx ts-node -e \"require('./src/common/services/logout.service').LogoutService.prototype.cleanupExpiredTokens()\"",
     "setup:storage": "npx ts-node src/scripts/setup-storage.ts",
     "setup:storage:avatars": "npx ts-node src/scripts/setup-storage-avatars.ts",
-    "setup:storage:proposals": "npx ts-node src/scripts/setup-storage-proposals.ts"
+    "setup:storage:proposals": "npx ts-node src/scripts/setup-storage-proposals.ts",
+    "debug:db": "npx ts-node src/debug-db.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

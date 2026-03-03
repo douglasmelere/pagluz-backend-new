@@ -88,6 +88,8 @@ model Representative {
   commissions           Commission[]
   changeRequests        ConsumerChangeRequest[]
   proposalRequests      ProposalRequest[]
+  announcements         Announcement[]
+  announcementReads     AnnouncementRead[]  @relation("announcement_reads")
 
   @@map("commercial_representatives")
 }
@@ -353,4 +355,62 @@ model AdminNotification {
 enum ProposalRequestStatus {
   PENDING
   GENERATED
+}
+
+// ─── Materiais Comerciais ─────────────────────────────────────────────────────
+
+model CommercialMaterial {
+  id          String               @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String               // URL pública no Supabase Storage
+  fileName    String               // Nome original do arquivo
+  fileType    String               // MIME type (ex: application/pdf, image/png)
+  fileSize    Int?                 // Tamanho em bytes
+  category    String?              // Categoria livre (ex: "Apresentações", "Tabelas de Preço")
+  isActive    Boolean              @default(true)
+  uploadedAt  DateTime             @default(now())
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@map("commercial_materials")
+}
+
+// ─── Comunicados ──────────────────────────────────────────────────────────────
+
+model Announcement {
+  id               String             @id @default(cuid())
+  title            String
+  message          String
+  priority         AnnouncementPriority @default(NORMAL)
+  // Se null => comunicado para TODOS os representantes
+  representativeId String?
+  representative   Representative?    @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  // Controle de leitura por representante
+  reads            AnnouncementRead[]
+
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@map("announcements")
+}
+
+model AnnouncementRead {
+  id             String       @id @default(cuid())
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  representativeId String
+  representative   Representative @relation("announcement_reads", fields: [representativeId], references: [id], onDelete: Cascade)
+  readAt          DateTime     @default(now())
+
+  @@unique([announcementId, representativeId])
+  @@map("announcement_reads")
+}
+
+enum AnnouncementPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }
