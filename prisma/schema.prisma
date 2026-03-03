@@ -90,6 +90,7 @@ model Representative {
   proposalRequests      ProposalRequest[]
   announcements         Announcement[]
   announcementReads     AnnouncementRead[]  @relation("announcement_reads")
+  feedbacks             Feedback[]
 
   @@map("commercial_representatives")
 }
@@ -413,4 +414,72 @@ enum AnnouncementPriority {
   NORMAL
   HIGH
   URGENT
+}
+
+// ─── Feedback / Suporte ───────────────────────────────────────────────────────
+
+model Feedback {
+  id               String           @id @default(cuid())
+  representativeId String
+  representative   Representative   @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  type             FeedbackType
+  subject          String           // Título / assunto curto
+  description      String           // Descrição detalhada
+  category         String?          // Categoria livre (ex: "Dashboard", "Comissões", "Alocação")
+
+  status           FeedbackStatus   @default(OPEN)
+  priority         FeedbackPriority @default(MEDIUM)
+
+  // Anexo opcional (screenshot, documento)
+  attachmentUrl      String?
+  attachmentFileName String?
+
+  // Controle de resolução
+  resolvedAt       DateTime?
+  resolvedByUserId String?
+
+  // Respostas do admin (thread)
+  responses        FeedbackResponse[]
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@map("feedbacks")
+}
+
+model FeedbackResponse {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+
+  message    String   // Texto da resposta
+  authorType String   // 'ADMIN' ou 'REPRESENTATIVE'
+  authorId   String   // ID do admin (userId) ou do representante
+  authorName String   // Nome de quem respondeu
+
+  createdAt  DateTime @default(now())
+
+  @@map("feedback_responses")
+}
+
+enum FeedbackType {
+  COMPLAINT   // Reclamação
+  SUGGESTION  // Sugestão de melhoria
+  BUG         // Reporte de bug
+  PRAISE      // Elogio
+}
+
+enum FeedbackStatus {
+  OPEN        // Aberto, aguardando análise
+  IN_ANALYSIS // Em análise pelo admin
+  RESOLVED    // Resolvido
+  REJECTED    // Recusado / Não procede
+}
+
+enum FeedbackPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
 }

@@ -61,3 +61,21 @@ export declare enum ChangeRequestStatus {
     APPROVED = "APPROVED",
     REJECTED = "REJECTED"
 }
+export declare enum FeedbackType {
+    COMPLAINT = "COMPLAINT",
+    SUGGESTION = "SUGGESTION",
+    BUG = "BUG",
+    PRAISE = "PRAISE"
+}
+export declare enum FeedbackStatus {
+    OPEN = "OPEN",
+    IN_ANALYSIS = "IN_ANALYSIS",
+    RESOLVED = "RESOLVED",
+    REJECTED = "REJECTED"
+}
+export declare enum FeedbackPriority {
+    LOW = "LOW",
+    MEDIUM = "MEDIUM",
+    HIGH = "HIGH",
+    CRITICAL = "CRITICAL"
+}

@@ -28,6 +28,7 @@ const admin_notifications_module_1 = require("./modules/admin-notifications/admi
 const proposal_requests_module_1 = require("./modules/proposal-requests/proposal-requests.module");
 const commercial_materials_module_1 = require("./modules/commercial-materials/commercial-materials.module");
 const announcements_module_1 = require("./modules/announcements/announcements.module");
+const feedbacks_module_1 = require("./modules/feedbacks/feedbacks.module");
 const prisma_service_1 = require("./config/prisma.service");
 const audit_service_1 = require("./common/services/audit.service");
 const logout_service_1 = require("./common/services/logout.service");
@@ -63,6 +64,7 @@ exports.AppModule = AppModule = __decorate([
             proposal_requests_module_1.ProposalRequestsModule,
             commercial_materials_module_1.CommercialMaterialsModule,
             announcements_module_1.AnnouncementsModule,
+            feedbacks_module_1.FeedbacksModule,
         ],
         controllers: [app_controller_1.AppController, health_controller_1.HealthController, metrics_controller_1.MetricsController],
         providers: [

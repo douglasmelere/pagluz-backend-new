@@ -47,19 +47,6 @@ export declare class RepresentativeDashboardController {
         geographicDistribution: any[];
         monthlyEvolution: any[];
         recentActivity: {
-            id: string;
-            name: string;
-            cpfCnpj: string;
-            city: string;
-            state: string;
-            status: import(".prisma/client").$Enums.ConsumerStatus;
-            createdAt: Date;
-            concessionaire: string;
-            ucNumber: string;
-            consumerType: import(".prisma/client").$Enums.ConsumerType;
-            averageMonthlyConsumption: number;
-            discountOffered: number;
-            allocatedPercentage: number | null;
             generator: {
                 id: string;
                 status: import(".prisma/client").$Enums.GeneratorStatus;
@@ -67,6 +54,19 @@ export declare class RepresentativeDashboardController {
                 sourceType: import(".prisma/client").$Enums.SourceType;
                 installedPower: number;
             } | null;
+            name: string;
+            id: string;
+            createdAt: Date;
+            cpfCnpj: string;
+            concessionaire: string;
+            ucNumber: string;
+            consumerType: import(".prisma/client").$Enums.ConsumerType;
+            averageMonthlyConsumption: number;
+            discountOffered: number;
+            city: string;
+            state: string;
+            status: import(".prisma/client").$Enums.ConsumerStatus;
+            allocatedPercentage: number | null;
         }[];
     }>;
     getCommercialMaterials(): Promise<{

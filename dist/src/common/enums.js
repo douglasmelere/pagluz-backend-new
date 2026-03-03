@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChangeRequestStatus = exports.CommissionStatus = exports.DocumentType = exports.GeneratorStatus = exports.SourceType = exports.ConsumerApprovalStatus = exports.ConsumerStatus = exports.PhaseType = exports.ConsumerType = exports.RepresentativeStatus = exports.UserRole = void 0;
+exports.FeedbackPriority = exports.FeedbackStatus = exports.FeedbackType = exports.ChangeRequestStatus = exports.CommissionStatus = exports.DocumentType = exports.GeneratorStatus = exports.SourceType = exports.ConsumerApprovalStatus = exports.ConsumerStatus = exports.PhaseType = exports.ConsumerType = exports.RepresentativeStatus = exports.UserRole = void 0;
 var UserRole;
 (function (UserRole) {
     UserRole["SUPER_ADMIN"] = "SUPER_ADMIN";
@@ -75,4 +75,25 @@ var ChangeRequestStatus;
     ChangeRequestStatus["APPROVED"] = "APPROVED";
     ChangeRequestStatus["REJECTED"] = "REJECTED";
 })(ChangeRequestStatus || (exports.ChangeRequestStatus = ChangeRequestStatus = {}));
+var FeedbackType;
+(function (FeedbackType) {
+    FeedbackType["COMPLAINT"] = "COMPLAINT";
+    FeedbackType["SUGGESTION"] = "SUGGESTION";
+    FeedbackType["BUG"] = "BUG";
+    FeedbackType["PRAISE"] = "PRAISE";
+})(FeedbackType || (exports.FeedbackType = FeedbackType = {}));
+var FeedbackStatus;
+(function (FeedbackStatus) {
+    FeedbackStatus["OPEN"] = "OPEN";
+    FeedbackStatus["IN_ANALYSIS"] = "IN_ANALYSIS";
+    FeedbackStatus["RESOLVED"] = "RESOLVED";
+    FeedbackStatus["REJECTED"] = "REJECTED";
+})(FeedbackStatus || (exports.FeedbackStatus = FeedbackStatus = {}));
+var FeedbackPriority;
+(function (FeedbackPriority) {
+    FeedbackPriority["LOW"] = "LOW";
+    FeedbackPriority["MEDIUM"] = "MEDIUM";
+    FeedbackPriority["HIGH"] = "HIGH";
+    FeedbackPriority["CRITICAL"] = "CRITICAL";
+})(FeedbackPriority || (exports.FeedbackPriority = FeedbackPriority = {}));
 //# sourceMappingURL=enums.js.map
