@@ -12,16 +12,23 @@ export class PushNotificationService {
 
         let privateKey = process.env.FIREBASE_PRIVATE_KEY;
         if (privateKey) {
-          // Se tiver em Base64, descriptografa (LS0t é o prefixo de '-----' em b64)
           if (privateKey.startsWith('LS0t')) {
             privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
           } else {
-            // Limpa possíveis chaves sujas injetadas por infraestruturas de deploy
-            privateKey = privateKey
-              .replace(/\\n/g, '\n')
-              .replace(/"/g, '')
-              .replace(/'/g, '')
-              .trim();
+            privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
+
+            // Corrige plataformas de deploy que removem quebras de linha (substituindo por espaços nulos)
+            if (!privateKey.includes('\n')) {
+              const body = privateKey
+                .replace('-----BEGIN PRIVATE KEY-----', '')
+                .replace('-----END PRIVATE KEY-----', '')
+                .replace(/\s+/g, ''); // Remove espaços em branco
+
+              const chunks = body.match(/.{1,64}/g);
+              if (chunks) {
+                privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----\n`;
+              }
+            }
           }
         }
 

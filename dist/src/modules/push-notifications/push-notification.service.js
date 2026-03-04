@@ -27,11 +27,17 @@ let PushNotificationService = class PushNotificationService {
                         privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
                     }
                     else {
-                        privateKey = privateKey
-                            .replace(/\\n/g, '\n')
-                            .replace(/"/g, '')
-                            .replace(/'/g, '')
-                            .trim();
+                        privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
+                        if (!privateKey.includes('\n')) {
+                            const body = privateKey
+                                .replace('-----BEGIN PRIVATE KEY-----', '')
+                                .replace('-----END PRIVATE KEY-----', '')
+                                .replace(/\s+/g, '');
+                            const chunks = body.match(/.{1,64}/g);
+                            if (chunks) {
+                                privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----\n`;
+                            }
+                        }
                     }
                 }
                 if (projectId && clientEmail && privateKey) {
