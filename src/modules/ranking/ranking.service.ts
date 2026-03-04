@@ -9,7 +9,7 @@ export class RankingService {
 
   async getRanking(period?: string) {
     // period: 'month', 'quarter', 'year', 'all'
-    const dateFilter = this.getDateFilter(period || 'month');
+    const dateFilter = this.getDateFilter(period || 'all');
 
     const representatives = await this.prisma.representative.findMany({
       where: { status: 'ACTIVE' },
