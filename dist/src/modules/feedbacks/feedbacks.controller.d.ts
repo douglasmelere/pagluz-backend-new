@@ -7,63 +7,63 @@ export declare class FeedbacksController {
     constructor(service: FeedbacksService);
     create(req: any, dto: CreateFeedbackDto): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         responses: {
             id: string;
             createdAt: Date;
-            message: string;
             feedbackId: string;
+            message: string;
             authorType: string;
             authorId: string;
             authorName: string;
         }[];
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findMyFeedbacks(req: any): Promise<({
+        responses: {
+            id: string;
+            createdAt: Date;
+            feedbackId: string;
+            message: string;
+            authorType: string;
+            authorId: string;
+            authorName: string;
+        }[];
         _count: {
             responses: number;
         };
-        responses: {
-            id: string;
-            createdAt: Date;
-            message: string;
-            feedbackId: string;
-            authorType: string;
-            authorId: string;
-            authorName: string;
-        }[];
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     countMyFeedbacks(req: any): Promise<{
         total: number;
@@ -74,78 +74,78 @@ export declare class FeedbacksController {
     }>;
     findOneMy(id: string, req: any): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         responses: {
             id: string;
             createdAt: Date;
-            message: string;
             feedbackId: string;
+            message: string;
             authorType: string;
             authorId: string;
             authorName: string;
         }[];
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     respondAsRepresentative(id: string, req: any, dto: RespondFeedbackDto): Promise<{
         id: string;
         createdAt: Date;
-        message: string;
         feedbackId: string;
+        message: string;
         authorType: string;
         authorId: string;
         authorName: string;
     }>;
     findAll(status?: string, type?: string, priority?: string, representativeId?: string): Promise<({
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
             phone: string;
-        };
-        _count: {
-            responses: number;
         };
         responses: {
             id: string;
             createdAt: Date;
-            message: string;
             feedbackId: string;
+            message: string;
             authorType: string;
             authorId: string;
             authorName: string;
         }[];
+        _count: {
+            responses: number;
+        };
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     getMetrics(): Promise<{
         total: number;
@@ -165,9 +165,9 @@ export declare class FeedbacksController {
     }>;
     findOne(id: string): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
             phone: string;
             city: string;
             state: string;
@@ -175,82 +175,82 @@ export declare class FeedbacksController {
         responses: {
             id: string;
             createdAt: Date;
-            message: string;
             feedbackId: string;
+            message: string;
             authorType: string;
             authorId: string;
             authorName: string;
         }[];
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     updateStatus(id: string, req: any, dto: UpdateFeedbackStatusDto): Promise<{
         representative: {
-            email: string;
-            name: string;
             id: string;
+            name: string;
+            email: string;
         };
         responses: {
             id: string;
             createdAt: Date;
-            message: string;
             feedbackId: string;
+            message: string;
             authorType: string;
             authorId: string;
             authorName: string;
         }[];
     } & {
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     respondAsAdmin(id: string, req: any, dto: RespondFeedbackDto): Promise<{
         id: string;
         createdAt: Date;
-        message: string;
         feedbackId: string;
+        message: string;
         authorType: string;
         authorId: string;
         authorName: string;
     }>;
     remove(id: string): Promise<{
-        description: string;
-        type: import(".prisma/client").$Enums.FeedbackType;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.FeedbackStatus;
         representativeId: string;
+        type: import(".prisma/client").$Enums.FeedbackType;
         subject: string;
-        priority: import(".prisma/client").$Enums.FeedbackPriority;
+        description: string;
         category: string | null;
+        status: import(".prisma/client").$Enums.FeedbackStatus;
+        priority: import(".prisma/client").$Enums.FeedbackPriority;
         attachmentUrl: string | null;
         attachmentFileName: string | null;
         resolvedAt: Date | null;
         resolvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }

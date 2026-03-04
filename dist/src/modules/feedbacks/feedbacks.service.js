@@ -71,13 +71,21 @@ let FeedbacksService = class FeedbacksService {
         if (feedback.status === 'RESOLVED' || feedback.status === 'REJECTED') {
             throw new common_1.ForbiddenException('Este feedback já foi encerrado e não aceita novas respostas.');
         }
+        let authorName = representativeName;
+        if (!authorName) {
+            const rep = await this.prisma.representative.findUnique({
+                where: { id: representativeId },
+                select: { name: true },
+            });
+            authorName = rep?.name || 'Representante';
+        }
         return this.prisma.feedbackResponse.create({
             data: {
                 feedbackId,
                 message: dto.message,
                 authorType: 'REPRESENTATIVE',
                 authorId: representativeId,
-                authorName: representativeName,
+                authorName,
             },
         });
     }
@@ -168,13 +176,21 @@ let FeedbacksService = class FeedbacksService {
                 data: { status: 'IN_ANALYSIS' },
             });
         }
+        let authorName = adminName;
+        if (!authorName) {
+            const user = await this.prisma.user.findUnique({
+                where: { id: adminId },
+                select: { name: true },
+            });
+            authorName = user?.name || 'Administrador';
+        }
         return this.prisma.feedbackResponse.create({
             data: {
                 feedbackId,
                 message: dto.message,
                 authorType: 'ADMIN',
                 authorId: adminId,
-                authorName: adminName,
+                authorName,
             },
         });
     }
