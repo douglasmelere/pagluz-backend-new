@@ -9,9 +9,14 @@ import { UpdateGeneratorDto } from './dto/update-generator.dto';
 import { Prisma } from '@prisma/client';
 import { GeneratorStatus } from '../../common/enums';
 
+import { ActivityLogService } from '../activity-log/activity-log.service';
+
 @Injectable()
 export class GeneratorsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private activityLogService: ActivityLogService,
+  ) { }
 
   async create(createGeneratorDto: CreateGeneratorDto) {
     const { cpfCnpj, ...generatorData } = createGeneratorDto;
@@ -24,6 +29,14 @@ export class GeneratorsService {
       include: {
         consumers: true,
       },
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Generator',
+      entityId: generator.id,
+      action: 'CREATED',
+      description: `Gerador "${generator.ownerName}" cadastrado (UC: ${generator.ucNumber}, ${generator.installedPower} kWp)`,
+      performedByRole: 'ADMIN',
     });
 
     return this.calculateAllocationPercentages(generator);
@@ -74,6 +87,14 @@ export class GeneratorsService {
       include: {
         consumers: true,
       },
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Generator',
+      entityId: generator.id,
+      action: 'UPDATED',
+      description: `Gerador "${generator.ownerName}" teve seus dados atualizados`,
+      performedByRole: 'ADMIN',
     });
 
     return this.calculateAllocationPercentages(generator);
@@ -133,11 +154,11 @@ export class GeneratorsService {
 
   async getStatistics() {
     const total = await this.prisma.generator.count();
-    
+
     const underAnalysis = await this.prisma.generator.count({
       where: { status: GeneratorStatus.UNDER_ANALYSIS },
     });
-    
+
     const awaitingAllocation = await this.prisma.generator.count({
       where: { status: GeneratorStatus.AWAITING_ALLOCATION },
     });

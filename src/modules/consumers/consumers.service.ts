@@ -16,6 +16,7 @@ import { SupabaseStorageService } from "../../common/services/supabase-storage.s
 import { OcrService } from "../../common/services/ocr.service";
 import { ConsumerChangeRequestsService } from "./consumer-change-requests.service";
 import { WebhookService } from "../../common/services/webhook.service";
+import { ActivityLogService } from "../activity-log/activity-log.service";
 
 @Injectable()
 export class ConsumersService {
@@ -27,6 +28,7 @@ export class ConsumersService {
     private ocrService: OcrService,
     private changeRequestsService: ConsumerChangeRequestsService,
     private webhookService: WebhookService,
+    private activityLogService: ActivityLogService,
   ) { }
 
   async create(createConsumerDto: CreateConsumerDto) {
@@ -58,6 +60,14 @@ export class ConsumersService {
       include: {
         generator: true,
       },
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: consumer.id,
+      action: 'CREATED',
+      description: `Consumidor "${consumer.name}" cadastrado (origem: Painel Admin)`,
+      performedByRole: 'ADMIN',
     });
 
     return consumer;
@@ -140,6 +150,17 @@ export class ConsumersService {
       city: consumer.city,
       state: consumer.state,
       averageMonthlyConsumption: consumer.averageMonthlyConsumption,
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: consumer.id,
+      action: 'CREATED',
+      description: `Consumidor "${consumer.name}" submetido para aprovação`,
+      representativeId,
+      performedBy: representativeId,
+      performedByName: representative.name,
+      performedByRole: 'REPRESENTATIVE',
     });
 
     return {
@@ -382,6 +403,15 @@ export class ConsumersService {
       }
     }
 
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: updatedConsumer.id,
+      action: 'STATUS_CHANGED',
+      description: `Consumidor "${updatedConsumer.name}" foi alocado (${percentage}%) ao gerador`,
+      representativeId: updatedConsumer.representativeId || undefined,
+      performedByRole: 'SYSTEM',
+    });
+
     return updatedConsumer;
   }
 
@@ -403,6 +433,15 @@ export class ConsumersService {
         generatorId: null,
         allocatedPercentage: null,
       },
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: updatedConsumer.id,
+      action: 'STATUS_CHANGED',
+      description: `Consumidor "${updatedConsumer.name}" foi desalocado do gerador`,
+      representativeId: updatedConsumer.representativeId || undefined,
+      performedByRole: 'SYSTEM',
     });
 
     return updatedConsumer;
@@ -441,6 +480,16 @@ export class ConsumersService {
       newValues: approved,
     });
 
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: approved.id,
+      action: 'STATUS_CHANGED',
+      description: `Consumidor "${approved.name}" foi APROVADO`,
+      representativeId: approved.representativeId || undefined,
+      performedBy: approverUserId,
+      performedByRole: 'ADMIN',
+    });
+
     return approved;
   }
 
@@ -467,6 +516,16 @@ export class ConsumersService {
       entityId: consumerId,
       oldValues: existing,
       newValues: rejected,
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Consumer',
+      entityId: rejected.id,
+      action: 'STATUS_CHANGED',
+      description: `Consumidor "${rejected.name}" foi REJEITADO. Motivo: ${reason || "Sem motivo informado"}`,
+      representativeId: rejected.representativeId || undefined,
+      performedBy: approverUserId,
+      performedByRole: 'ADMIN',
     });
 
     return rejected;

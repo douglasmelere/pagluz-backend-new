@@ -4,6 +4,7 @@ import { CommissionStatus } from '../../common/enums';
 import { AuditService } from '../../common/services/audit.service';
 import { SettingsService } from '../settings/settings.service';
 import { PaymentProofStorageService } from '../../common/services/payment-proof-storage.service';
+import { ActivityLogService } from '../activity-log/activity-log.service';
 
 @Injectable()
 export class CommissionsService {
@@ -12,6 +13,7 @@ export class CommissionsService {
     private auditService: AuditService,
     private settingsService: SettingsService,
     private paymentProofStorage: PaymentProofStorageService,
+    private activityLogService: ActivityLogService,
   ) { }
 
   /**
@@ -140,6 +142,15 @@ export class CommissionsService {
         kwhConsumption: commission.kwhConsumption,
         kwhPrice: commission.kwhPrice,
       },
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Commission',
+      entityId: commission.id,
+      action: 'CREATED',
+      description: `Comissão de R$ ${commission.commissionValue.toFixed(2)} gerada para "${commission.representative.name}" (cliente: ${commission.consumer.name})`,
+      representativeId: commission.representativeId,
+      performedByRole: 'SYSTEM',
     });
 
     return commission;
@@ -382,6 +393,16 @@ export class CommissionsService {
       entityId: commissionId,
       oldValues: commission,
       newValues: updatedCommission,
+    });
+
+    await this.activityLogService.log({
+      entityType: 'Commission',
+      entityId: updatedCommission.id,
+      action: 'STATUS_CHANGED',
+      description: `Comissão de R$ ${updatedCommission.commissionValue.toFixed(2)} marcada como PAGA para "${updatedCommission.representative.name}"`,
+      representativeId: updatedCommission.representativeId,
+      performedBy: userId,
+      performedByRole: 'ADMIN',
     });
 
     return updatedCommission;

@@ -5,10 +5,14 @@ import { UpdateRepresentativeDto } from './dto/update-representative.dto';
 import { Prisma } from '@prisma/client';
 import { RepresentativeStatus } from '../../common/enums';
 import * as bcrypt from 'bcryptjs';
+import { ActivityLogService } from '../activity-log/activity-log.service';
 
 @Injectable()
 export class RepresentativesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private activityLogService: ActivityLogService,
+  ) { }
 
   async create(createRepresentativeDto: CreateRepresentativeDto) {
     // Verifica se já existe representante com o mesmo email ou CPF/CNPJ
@@ -31,7 +35,7 @@ export class RepresentativesService {
     // Criptografa a senha
     const hashedPassword = await bcrypt.hash(createRepresentativeDto.password, 10);
 
-    return this.prisma.representative.create({
+    const rep = await this.prisma.representative.create({
       data: {
         ...createRepresentativeDto,
         password: hashedPassword,
@@ -56,6 +60,17 @@ export class RepresentativesService {
         loginCount: true,
       },
     });
+
+    await this.activityLogService.log({
+      entityType: 'Representative',
+      entityId: rep.id,
+      action: 'CREATED',
+      description: `Representante "${rep.name}" cadastrado`,
+      representativeId: rep.id,
+      performedByRole: 'SYSTEM',
+    });
+
+    return rep;
   }
 
   async findAll() {
@@ -177,7 +192,7 @@ export class RepresentativesService {
       hashedPassword = await bcrypt.hash(updateRepresentativeDto.password, 10);
     }
 
-    return this.prisma.representative.update({
+    const updatedRep = await this.prisma.representative.update({
       where: { id },
       data: {
         ...updateRepresentativeDto,
@@ -201,6 +216,25 @@ export class RepresentativesService {
         loginCount: true,
       },
     });
+
+    if (existingRepresentative.status !== updatedRep.status) {
+      const statusLabels: Record<string, string> = {
+        ACTIVE: 'ATIVO',
+        INACTIVE: 'INATIVO',
+        PENDING_APPROVAL: 'PENDENTE DE APROVAÇÃO',
+        REJECTED: 'REJEITADO',
+      };
+      await this.activityLogService.log({
+        entityType: 'Representative',
+        entityId: updatedRep.id,
+        action: 'STATUS_CHANGED',
+        description: `Representante "${updatedRep.name}" mudou status para ${statusLabels[updatedRep.status as string] || updatedRep.status}`,
+        representativeId: updatedRep.id,
+        performedByRole: 'ADMIN',
+      });
+    }
+
+    return updatedRep;
   }
 
   async updateAvatar(id: string, avatarUrl: string | null) {
