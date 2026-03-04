@@ -5,6 +5,7 @@ import { AuditService } from '../../common/services/audit.service';
 import { SettingsService } from '../settings/settings.service';
 import { PaymentProofStorageService } from '../../common/services/payment-proof-storage.service';
 import { ActivityLogService } from '../activity-log/activity-log.service';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class CommissionsService {
@@ -14,6 +15,7 @@ export class CommissionsService {
     private settingsService: SettingsService,
     private paymentProofStorage: PaymentProofStorageService,
     private activityLogService: ActivityLogService,
+    private pushNotificationService: PushNotificationService,
   ) { }
 
   /**
@@ -151,6 +153,12 @@ export class CommissionsService {
       description: `Comissão de R$ ${commission.commissionValue.toFixed(2)} gerada para "${commission.representative.name}" (cliente: ${commission.consumer.name})`,
       representativeId: commission.representativeId,
       performedByRole: 'SYSTEM',
+    });
+
+    await this.pushNotificationService.sendToRepresentative(commission.representativeId, {
+      title: 'Nova Comissão Gerada! 💰',
+      body: `Você acabou de ganhar uma comissão de R$ ${commission.commissionValue.toFixed(2)} pelo cliente ${commission.consumer.name}!`,
+      data: { type: 'commission', id: commission.id },
     });
 
     return commission;
@@ -403,6 +411,12 @@ export class CommissionsService {
       representativeId: updatedCommission.representativeId,
       performedBy: userId,
       performedByRole: 'ADMIN',
+    });
+
+    await this.pushNotificationService.sendToRepresentative(updatedCommission.representativeId, {
+      title: 'Comissão Paga! 💸',
+      body: `Sua comissão de R$ ${updatedCommission.commissionValue.toFixed(2)} foi marcada como paga pela Pagluz.`,
+      data: { type: 'commission', id: updatedCommission.id },
     });
 
     return updatedCommission;

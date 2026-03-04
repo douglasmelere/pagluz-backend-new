@@ -12,6 +12,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PushNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
+const admin = require("firebase-admin");
+try {
+    if (admin.apps.length === 0) {
+        const projectId = process.env.FIREBASE_PROJECT_ID;
+        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+        const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+        if (projectId && clientEmail && privateKey) {
+            admin.initializeApp({
+                credential: admin.credential.cert({
+                    projectId,
+                    clientEmail,
+                    privateKey,
+                }),
+            });
+            console.log('✅ Firebase Admin SDK inicializado');
+        }
+        else {
+            console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
+        }
+    }
+}
+catch (e) {
+    console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
+}
 let PushNotificationService = class PushNotificationService {
     prisma;
     constructor(prisma) {
@@ -57,25 +81,78 @@ let PushNotificationService = class PushNotificationService {
         if (tokens.length === 0) {
             return { sent: false, reason: 'Nenhum token registrado', tokens: 0 };
         }
-        return {
-            sent: true,
-            tokens: tokens.length,
-            notification,
-            message: 'Notificação enfileirada. Integre com FCM para envio real.',
-        };
+        try {
+            const messages = tokens.map(t => ({
+                token: t.token,
+                notification: { title: notification.title, body: notification.body },
+                data: notification.data || {},
+            }));
+            const response = await admin.messaging().sendEach(messages);
+            if (response.failureCount > 0) {
+                response.responses.forEach(async (resp, idx) => {
+                    if (!resp.success && resp.error?.code === 'messaging/registration-token-not-registered') {
+                        await this.removeToken(messages[idx].token);
+                    }
+                });
+            }
+            return {
+                sent: true,
+                tokens: tokens.length,
+                notification,
+                successCount: response.successCount,
+                failureCount: response.failureCount,
+                message: 'Notificação enviada com sucesso.',
+            };
+        }
+        catch (e) {
+            console.error('Erro ao enviar push notification:', e);
+            return { sent: false, reason: e.message, tokens: tokens.length };
+        }
     }
     async sendToAll(notification) {
         const allTokens = await this.prisma.pushToken.findMany({
             where: { isActive: true },
             select: { token: true, representativeId: true },
         });
-        return {
-            sent: true,
-            totalTokens: allTokens.length,
-            uniqueRepresentatives: new Set(allTokens.map(t => t.representativeId)).size,
-            notification,
-            message: 'Notificação em massa enfileirada. Integre com FCM para envio real.',
-        };
+        if (allTokens.length === 0) {
+            return { sent: false, reason: 'Nenhum token registrado no sistema', totalTokens: 0 };
+        }
+        try {
+            const messages = allTokens.map(t => ({
+                token: t.token,
+                notification: { title: notification.title, body: notification.body },
+                data: notification.data || {},
+            }));
+            const chunkSize = 500;
+            let successCount = 0;
+            let failureCount = 0;
+            for (let i = 0; i < messages.length; i += chunkSize) {
+                const chunk = messages.slice(i, i + chunkSize);
+                const response = await admin.messaging().sendEach(chunk);
+                successCount += response.successCount;
+                failureCount += response.failureCount;
+                if (response.failureCount > 0) {
+                    response.responses.forEach(async (resp, idx) => {
+                        if (!resp.success && resp.error?.code === 'messaging/registration-token-not-registered') {
+                            await this.removeToken(chunk[idx].token);
+                        }
+                    });
+                }
+            }
+            return {
+                sent: true,
+                totalTokens: allTokens.length,
+                uniqueRepresentatives: new Set(allTokens.map(t => t.representativeId)).size,
+                notification,
+                successCount,
+                failureCount,
+                message: 'Notificação em massa enviada com sucesso.',
+            };
+        }
+        catch (e) {
+            console.error('Erro ao enviar push notification list:', e);
+            return { sent: false, reason: e.message, totalTokens: allTokens.length };
+        }
     }
     async getTokenStats() {
         const [total, active, byPlatform] = await Promise.all([

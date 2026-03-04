@@ -2,9 +2,11 @@ import { PrismaService } from '../../config/prisma.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { RespondFeedbackDto } from './dto/respond-feedback.dto';
 import { UpdateFeedbackStatusDto } from './dto/update-feedback-status.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 export declare class FeedbacksService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private pushNotificationService;
+    constructor(prisma: PrismaService, pushNotificationService: PushNotificationService);
     create(representativeId: string, dto: CreateFeedbackDto): Promise<{
         representative: {
             email: string;

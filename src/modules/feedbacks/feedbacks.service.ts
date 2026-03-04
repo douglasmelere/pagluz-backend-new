@@ -7,10 +7,14 @@ import { PrismaService } from '../../config/prisma.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { RespondFeedbackDto } from './dto/respond-feedback.dto';
 import { UpdateFeedbackStatusDto } from './dto/update-feedback-status.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class FeedbacksService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private pushNotificationService: PushNotificationService,
+  ) { }
 
   // ────────────────────────────────────────────────────────────────────────────
   // Representante: Criar feedback
@@ -262,7 +266,7 @@ export class FeedbacksService {
       authorName = user?.name || 'Administrador';
     }
 
-    return this.prisma.feedbackResponse.create({
+    const response = await this.prisma.feedbackResponse.create({
       data: {
         feedbackId,
         message: dto.message,
@@ -271,6 +275,16 @@ export class FeedbacksService {
         authorName,
       },
     });
+
+    if (feedback?.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(feedback.representativeId, {
+        title: 'Nova Resposta no seu Feedback 💬',
+        body: `A Pagluz respondeu ao seu ticket: "${dto.message.substring(0, 40)}..."`,
+        data: { type: 'feedback', id: feedbackId },
+      });
+    }
+
+    return response;
   }
 
   // ────────────────────────────────────────────────────────────────────────────

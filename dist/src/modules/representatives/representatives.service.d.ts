@@ -1,9 +1,11 @@
 import { PrismaService } from '../../config/prisma.service';
 import { CreateRepresentativeDto } from './dto/create-representative.dto';
 import { UpdateRepresentativeDto } from './dto/update-representative.dto';
+import { ActivityLogService } from '../activity-log/activity-log.service';
 export declare class RepresentativesService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private activityLogService;
+    constructor(prisma: PrismaService, activityLogService: ActivityLogService);
     create(createRepresentativeDto: CreateRepresentativeDto): Promise<{
         email: string;
         name: string;

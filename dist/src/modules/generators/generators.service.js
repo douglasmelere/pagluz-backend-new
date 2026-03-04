@@ -13,10 +13,13 @@ exports.GeneratorsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
 const enums_1 = require("../../common/enums");
+const activity_log_service_1 = require("../activity-log/activity-log.service");
 let GeneratorsService = class GeneratorsService {
     prisma;
-    constructor(prisma) {
+    activityLogService;
+    constructor(prisma, activityLogService) {
         this.prisma = prisma;
+        this.activityLogService = activityLogService;
     }
     async create(createGeneratorDto) {
         const { cpfCnpj, ...generatorData } = createGeneratorDto;
@@ -28,6 +31,13 @@ let GeneratorsService = class GeneratorsService {
             include: {
                 consumers: true,
             },
+        });
+        await this.activityLogService.log({
+            entityType: 'Generator',
+            entityId: generator.id,
+            action: 'CREATED',
+            description: `Gerador "${generator.ownerName}" cadastrado (UC: ${generator.ucNumber}, ${generator.installedPower} kWp)`,
+            performedByRole: 'ADMIN',
         });
         return this.calculateAllocationPercentages(generator);
     }
@@ -69,6 +79,13 @@ let GeneratorsService = class GeneratorsService {
             include: {
                 consumers: true,
             },
+        });
+        await this.activityLogService.log({
+            entityType: 'Generator',
+            entityId: generator.id,
+            action: 'UPDATED',
+            description: `Gerador "${generator.ownerName}" teve seus dados atualizados`,
+            performedByRole: 'ADMIN',
         });
         return this.calculateAllocationPercentages(generator);
     }
@@ -197,6 +214,7 @@ let GeneratorsService = class GeneratorsService {
 exports.GeneratorsService = GeneratorsService;
 exports.GeneratorsService = GeneratorsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        activity_log_service_1.ActivityLogService])
 ], GeneratorsService);
 //# sourceMappingURL=generators.service.js.map

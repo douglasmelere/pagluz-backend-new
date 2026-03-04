@@ -16,16 +16,22 @@ const enums_1 = require("../../common/enums");
 const audit_service_1 = require("../../common/services/audit.service");
 const settings_service_1 = require("../settings/settings.service");
 const payment_proof_storage_service_1 = require("../../common/services/payment-proof-storage.service");
+const activity_log_service_1 = require("../activity-log/activity-log.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let CommissionsService = class CommissionsService {
     prisma;
     auditService;
     settingsService;
     paymentProofStorage;
-    constructor(prisma, auditService, settingsService, paymentProofStorage) {
+    activityLogService;
+    pushNotificationService;
+    constructor(prisma, auditService, settingsService, paymentProofStorage, activityLogService, pushNotificationService) {
         this.prisma = prisma;
         this.auditService = auditService;
         this.settingsService = settingsService;
         this.paymentProofStorage = paymentProofStorage;
+        this.activityLogService = activityLogService;
+        this.pushNotificationService = pushNotificationService;
     }
     calculateCommission(kwhConsumption, kwhPrice) {
         const invoiceValue = kwhConsumption * kwhPrice;
@@ -117,6 +123,19 @@ let CommissionsService = class CommissionsService {
                 kwhConsumption: commission.kwhConsumption,
                 kwhPrice: commission.kwhPrice,
             },
+        });
+        await this.activityLogService.log({
+            entityType: 'Commission',
+            entityId: commission.id,
+            action: 'CREATED',
+            description: `Comissão de R$ ${commission.commissionValue.toFixed(2)} gerada para "${commission.representative.name}" (cliente: ${commission.consumer.name})`,
+            representativeId: commission.representativeId,
+            performedByRole: 'SYSTEM',
+        });
+        await this.pushNotificationService.sendToRepresentative(commission.representativeId, {
+            title: 'Nova Comissão Gerada! 💰',
+            body: `Você acabou de ganhar uma comissão de R$ ${commission.commissionValue.toFixed(2)} pelo cliente ${commission.consumer.name}!`,
+            data: { type: 'commission', id: commission.id },
         });
         return commission;
     }
@@ -316,6 +335,20 @@ let CommissionsService = class CommissionsService {
             oldValues: commission,
             newValues: updatedCommission,
         });
+        await this.activityLogService.log({
+            entityType: 'Commission',
+            entityId: updatedCommission.id,
+            action: 'STATUS_CHANGED',
+            description: `Comissão de R$ ${updatedCommission.commissionValue.toFixed(2)} marcada como PAGA para "${updatedCommission.representative.name}"`,
+            representativeId: updatedCommission.representativeId,
+            performedBy: userId,
+            performedByRole: 'ADMIN',
+        });
+        await this.pushNotificationService.sendToRepresentative(updatedCommission.representativeId, {
+            title: 'Comissão Paga! 💸',
+            body: `Sua comissão de R$ ${updatedCommission.commissionValue.toFixed(2)} foi marcada como paga pela Pagluz.`,
+            data: { type: 'commission', id: updatedCommission.id },
+        });
         return updatedCommission;
     }
     async getCommissionsByPeriod(representativeId, startDate, endDate) {
@@ -507,6 +540,8 @@ exports.CommissionsService = CommissionsService = __decorate([
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         audit_service_1.AuditService,
         settings_service_1.SettingsService,
-        payment_proof_storage_service_1.PaymentProofStorageService])
+        payment_proof_storage_service_1.PaymentProofStorageService,
+        activity_log_service_1.ActivityLogService,
+        push_notification_service_1.PushNotificationService])
 ], CommissionsService);
 //# sourceMappingURL=commissions.service.js.map

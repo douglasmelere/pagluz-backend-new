@@ -12,10 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeedbacksService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let FeedbacksService = class FeedbacksService {
     prisma;
-    constructor(prisma) {
+    pushNotificationService;
+    constructor(prisma, pushNotificationService) {
         this.prisma = prisma;
+        this.pushNotificationService = pushNotificationService;
     }
     async create(representativeId, dto) {
         return this.prisma.feedback.create({
@@ -184,7 +187,7 @@ let FeedbacksService = class FeedbacksService {
             });
             authorName = user?.name || 'Administrador';
         }
-        return this.prisma.feedbackResponse.create({
+        const response = await this.prisma.feedbackResponse.create({
             data: {
                 feedbackId,
                 message: dto.message,
@@ -193,6 +196,14 @@ let FeedbacksService = class FeedbacksService {
                 authorName,
             },
         });
+        if (feedback?.representativeId) {
+            await this.pushNotificationService.sendToRepresentative(feedback.representativeId, {
+                title: 'Nova Resposta no seu Feedback 💬',
+                body: `A Pagluz respondeu ao seu ticket: "${dto.message.substring(0, 40)}..."`,
+                data: { type: 'feedback', id: feedbackId },
+            });
+        }
+        return response;
     }
     async remove(feedbackId) {
         await this.findOne(feedbackId);
@@ -241,6 +252,7 @@ let FeedbacksService = class FeedbacksService {
 exports.FeedbacksService = FeedbacksService;
 exports.FeedbacksService = FeedbacksService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        push_notification_service_1.PushNotificationService])
 ], FeedbacksService);
 //# sourceMappingURL=feedbacks.service.js.map

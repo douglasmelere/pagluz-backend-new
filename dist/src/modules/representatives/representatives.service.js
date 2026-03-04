@@ -13,10 +13,13 @@ exports.RepresentativesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
 const bcrypt = require("bcryptjs");
+const activity_log_service_1 = require("../activity-log/activity-log.service");
 let RepresentativesService = class RepresentativesService {
     prisma;
-    constructor(prisma) {
+    activityLogService;
+    constructor(prisma, activityLogService) {
         this.prisma = prisma;
+        this.activityLogService = activityLogService;
     }
     async create(createRepresentativeDto) {
         const existingEmail = await this.prisma.representative.findUnique({
@@ -32,7 +35,7 @@ let RepresentativesService = class RepresentativesService {
             throw new common_1.ConflictException('Já existe um representante com este CPF/CNPJ');
         }
         const hashedPassword = await bcrypt.hash(createRepresentativeDto.password, 10);
-        return this.prisma.representative.create({
+        const rep = await this.prisma.representative.create({
             data: {
                 ...createRepresentativeDto,
                 password: hashedPassword,
@@ -57,6 +60,15 @@ let RepresentativesService = class RepresentativesService {
                 loginCount: true,
             },
         });
+        await this.activityLogService.log({
+            entityType: 'Representative',
+            entityId: rep.id,
+            action: 'CREATED',
+            description: `Representante "${rep.name}" cadastrado`,
+            representativeId: rep.id,
+            performedByRole: 'SYSTEM',
+        });
+        return rep;
     }
     async findAll() {
         return this.prisma.representative.findMany({
@@ -161,7 +173,7 @@ let RepresentativesService = class RepresentativesService {
         if (updateRepresentativeDto.password) {
             hashedPassword = await bcrypt.hash(updateRepresentativeDto.password, 10);
         }
-        return this.prisma.representative.update({
+        const updatedRep = await this.prisma.representative.update({
             where: { id },
             data: {
                 ...updateRepresentativeDto,
@@ -185,6 +197,23 @@ let RepresentativesService = class RepresentativesService {
                 loginCount: true,
             },
         });
+        if (existingRepresentative.status !== updatedRep.status) {
+            const statusLabels = {
+                ACTIVE: 'ATIVO',
+                INACTIVE: 'INATIVO',
+                PENDING_APPROVAL: 'PENDENTE DE APROVAÇÃO',
+                REJECTED: 'REJEITADO',
+            };
+            await this.activityLogService.log({
+                entityType: 'Representative',
+                entityId: updatedRep.id,
+                action: 'STATUS_CHANGED',
+                description: `Representante "${updatedRep.name}" mudou status para ${statusLabels[updatedRep.status] || updatedRep.status}`,
+                representativeId: updatedRep.id,
+                performedByRole: 'ADMIN',
+            });
+        }
+        return updatedRep;
     }
     async updateAvatar(id, avatarUrl) {
         const existing = await this.prisma.representative.findUnique({ where: { id } });
@@ -364,6 +393,7 @@ let RepresentativesService = class RepresentativesService {
 exports.RepresentativesService = RepresentativesService;
 exports.RepresentativesService = RepresentativesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        activity_log_service_1.ActivityLogService])
 ], RepresentativesService);
 //# sourceMappingURL=representatives.service.js.map

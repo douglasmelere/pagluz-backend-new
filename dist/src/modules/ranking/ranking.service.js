@@ -18,7 +18,7 @@ let RankingService = class RankingService {
         this.prisma = prisma;
     }
     async getRanking(period) {
-        const dateFilter = this.getDateFilter(period || 'month');
+        const dateFilter = this.getDateFilter(period || 'all');
         const representatives = await this.prisma.representative.findMany({
             where: { status: 'ACTIVE' },
             include: {

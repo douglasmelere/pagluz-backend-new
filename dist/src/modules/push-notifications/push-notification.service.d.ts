@@ -8,43 +8,43 @@ export declare class PushNotificationService {
         deviceName?: string;
     }): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     removeToken(token: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     deactivateToken(token: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     getTokens(representativeId: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }[]>;
     sendToRepresentative(representativeId: string, notification: {
         title: string;
@@ -52,20 +52,24 @@ export declare class PushNotificationService {
         data?: Record<string, string>;
     }): Promise<{
         sent: boolean;
-        reason: string;
-        tokens: number;
-        notification?: undefined;
-        message?: undefined;
-    } | {
-        sent: boolean;
         tokens: number;
         notification: {
             title: string;
             body: string;
             data?: Record<string, string>;
         };
+        successCount: number;
+        failureCount: number;
         message: string;
         reason?: undefined;
+    } | {
+        sent: boolean;
+        reason: any;
+        tokens: number;
+        notification?: undefined;
+        successCount?: undefined;
+        failureCount?: undefined;
+        message?: undefined;
     }>;
     sendToAll(notification: {
         title: string;
@@ -80,7 +84,19 @@ export declare class PushNotificationService {
             body: string;
             data?: Record<string, string>;
         };
+        successCount: number;
+        failureCount: number;
         message: string;
+        reason?: undefined;
+    } | {
+        sent: boolean;
+        reason: any;
+        totalTokens: number;
+        uniqueRepresentatives?: undefined;
+        notification?: undefined;
+        successCount?: undefined;
+        failureCount?: undefined;
+        message?: undefined;
     }>;
     getTokenStats(): Promise<{
         total: number;

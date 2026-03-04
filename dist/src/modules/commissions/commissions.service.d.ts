@@ -2,12 +2,16 @@ import { PrismaService } from '../../config/prisma.service';
 import { AuditService } from '../../common/services/audit.service';
 import { SettingsService } from '../settings/settings.service';
 import { PaymentProofStorageService } from '../../common/services/payment-proof-storage.service';
+import { ActivityLogService } from '../activity-log/activity-log.service';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 export declare class CommissionsService {
     private prisma;
     private auditService;
     private settingsService;
     private paymentProofStorage;
-    constructor(prisma: PrismaService, auditService: AuditService, settingsService: SettingsService, paymentProofStorage: PaymentProofStorageService);
+    private activityLogService;
+    private pushNotificationService;
+    constructor(prisma: PrismaService, auditService: AuditService, settingsService: SettingsService, paymentProofStorage: PaymentProofStorageService, activityLogService: ActivityLogService, pushNotificationService: PushNotificationService);
     calculateCommission(kwhConsumption: number, kwhPrice: number): number;
     createCommissionForApprovedConsumer(consumerId: string): Promise<{
         representative: {

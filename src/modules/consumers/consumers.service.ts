@@ -17,6 +17,7 @@ import { OcrService } from "../../common/services/ocr.service";
 import { ConsumerChangeRequestsService } from "./consumer-change-requests.service";
 import { WebhookService } from "../../common/services/webhook.service";
 import { ActivityLogService } from "../activity-log/activity-log.service";
+import { PushNotificationService } from "../push-notifications/push-notification.service";
 
 @Injectable()
 export class ConsumersService {
@@ -29,6 +30,7 @@ export class ConsumersService {
     private changeRequestsService: ConsumerChangeRequestsService,
     private webhookService: WebhookService,
     private activityLogService: ActivityLogService,
+    private pushNotificationService: PushNotificationService,
   ) { }
 
   async create(createConsumerDto: CreateConsumerDto) {
@@ -490,6 +492,14 @@ export class ConsumersService {
       performedByRole: 'ADMIN',
     });
 
+    if (approved.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(approved.representativeId, {
+        title: 'Consumidor Aprovado! 🎉',
+        body: `O cadastro do consumidor "${approved.name}" foi aprovado com sucesso!`,
+        data: { type: 'consumer', id: approved.id },
+      });
+    }
+
     return approved;
   }
 
@@ -527,6 +537,14 @@ export class ConsumersService {
       performedBy: approverUserId,
       performedByRole: 'ADMIN',
     });
+
+    if (rejected.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(rejected.representativeId, {
+        title: 'Consumidor Rejeitado ❌',
+        body: `O cadastro do consumidor "${rejected.name}" foi rejeitado. Verifique os detalhes.`,
+        data: { type: 'consumer', id: rejected.id },
+      });
+    }
 
     return rejected;
   }

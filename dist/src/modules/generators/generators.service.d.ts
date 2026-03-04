@@ -2,9 +2,11 @@ import { PrismaService } from '../../config/prisma.service';
 import { CreateGeneratorDto } from './dto/create-generator.dto';
 import { UpdateGeneratorDto } from './dto/update-generator.dto';
 import { Prisma } from '@prisma/client';
+import { ActivityLogService } from '../activity-log/activity-log.service';
 export declare class GeneratorsService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private activityLogService;
+    constructor(prisma: PrismaService, activityLogService: ActivityLogService);
     create(createGeneratorDto: CreateGeneratorDto): Promise<any>;
     findAll(): Promise<any[]>;
     findOne(id: string): Promise<any>;

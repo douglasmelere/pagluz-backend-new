@@ -8,6 +8,7 @@ import { PrismaService } from '../../config/prisma.service';
 import { ChangeRequestStatus } from '../../common/enums';
 import { AuditService } from '../../common/services/audit.service';
 import { WebhookService } from '../../common/services/webhook.service';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class ConsumerChangeRequestsService {
@@ -15,6 +16,7 @@ export class ConsumerChangeRequestsService {
     private prisma: PrismaService,
     private auditService: AuditService,
     private webhookService: WebhookService,
+    private pushNotificationService: PushNotificationService,
   ) { }
 
   /**
@@ -153,6 +155,12 @@ export class ConsumerChangeRequestsService {
       newValues: changeRequest.newValues,
     });
 
+    await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+      title: 'Alteração Aprovada! ✅',
+      body: `A solicitação de alteração para o cliente "${changeRequest.consumer.name}" foi aprovada.`,
+      data: { type: 'change_request', id: changeRequestId },
+    });
+
     return {
       changeRequest,
       consumer: updatedConsumer,
@@ -218,6 +226,12 @@ export class ConsumerChangeRequestsService {
         rejectionReason,
         consumerId: changeRequest.consumerId,
       },
+    });
+
+    await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+      title: 'Alteração Rejeitada ❌',
+      body: `A solicitação de alteração para o cliente "${updated.consumer.name}" foi rejeitada. Motivo: ${rejectionReason}`,
+      data: { type: 'change_request', id: changeRequestId },
     });
 
     return updated;

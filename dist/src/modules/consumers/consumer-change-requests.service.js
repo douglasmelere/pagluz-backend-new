@@ -15,14 +15,17 @@ const prisma_service_1 = require("../../config/prisma.service");
 const enums_1 = require("../../common/enums");
 const audit_service_1 = require("../../common/services/audit.service");
 const webhook_service_1 = require("../../common/services/webhook.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let ConsumerChangeRequestsService = class ConsumerChangeRequestsService {
     prisma;
     auditService;
     webhookService;
-    constructor(prisma, auditService, webhookService) {
+    pushNotificationService;
+    constructor(prisma, auditService, webhookService, pushNotificationService) {
         this.prisma = prisma;
         this.auditService = auditService;
         this.webhookService = webhookService;
+        this.pushNotificationService = pushNotificationService;
     }
     async createChangeRequest(consumerId, representativeId, newValues, userId) {
         const consumer = await this.prisma.consumer.findUnique({
@@ -116,6 +119,11 @@ let ConsumerChangeRequestsService = class ConsumerChangeRequestsService {
             oldValues: changeRequest.oldValues,
             newValues: changeRequest.newValues,
         });
+        await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+            title: 'Alteração Aprovada! ✅',
+            body: `A solicitação de alteração para o cliente "${changeRequest.consumer.name}" foi aprovada.`,
+            data: { type: 'change_request', id: changeRequestId },
+        });
         return {
             changeRequest,
             consumer: updatedConsumer,
@@ -165,6 +173,11 @@ let ConsumerChangeRequestsService = class ConsumerChangeRequestsService {
                 rejectionReason,
                 consumerId: changeRequest.consumerId,
             },
+        });
+        await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+            title: 'Alteração Rejeitada ❌',
+            body: `A solicitação de alteração para o cliente "${updated.consumer.name}" foi rejeitada. Motivo: ${rejectionReason}`,
+            data: { type: 'change_request', id: changeRequestId },
         });
         return updated;
     }
@@ -253,6 +266,7 @@ exports.ConsumerChangeRequestsService = ConsumerChangeRequestsService = __decora
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         audit_service_1.AuditService,
-        webhook_service_1.WebhookService])
+        webhook_service_1.WebhookService,
+        push_notification_service_1.PushNotificationService])
 ], ConsumerChangeRequestsService);
 //# sourceMappingURL=consumer-change-requests.service.js.map

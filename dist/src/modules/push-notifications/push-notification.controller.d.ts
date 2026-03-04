@@ -42,20 +42,24 @@ export declare class PushNotificationController {
         data?: Record<string, string>;
     }): Promise<{
         sent: boolean;
-        reason: string;
-        tokens: number;
-        notification?: undefined;
-        message?: undefined;
-    } | {
-        sent: boolean;
         tokens: number;
         notification: {
             title: string;
             body: string;
             data?: Record<string, string>;
         };
+        successCount: number;
+        failureCount: number;
         message: string;
         reason?: undefined;
+    } | {
+        sent: boolean;
+        reason: any;
+        tokens: number;
+        notification?: undefined;
+        successCount?: undefined;
+        failureCount?: undefined;
+        message?: undefined;
     }>;
     sendToAll(body: {
         title: string;
@@ -70,7 +74,19 @@ export declare class PushNotificationController {
             body: string;
             data?: Record<string, string>;
         };
+        successCount: number;
+        failureCount: number;
         message: string;
+        reason?: undefined;
+    } | {
+        sent: boolean;
+        reason: any;
+        totalTokens: number;
+        uniqueRepresentatives?: undefined;
+        notification?: undefined;
+        successCount?: undefined;
+        failureCount?: undefined;
+        message?: undefined;
     }>;
     getStats(): Promise<{
         total: number;

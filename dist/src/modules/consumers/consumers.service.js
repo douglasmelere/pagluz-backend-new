@@ -19,6 +19,8 @@ const supabase_storage_service_1 = require("../../common/services/supabase-stora
 const ocr_service_1 = require("../../common/services/ocr.service");
 const consumer_change_requests_service_1 = require("./consumer-change-requests.service");
 const webhook_service_1 = require("../../common/services/webhook.service");
+const activity_log_service_1 = require("../activity-log/activity-log.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let ConsumersService = class ConsumersService {
     prisma;
     auditService;
@@ -27,7 +29,9 @@ let ConsumersService = class ConsumersService {
     ocrService;
     changeRequestsService;
     webhookService;
-    constructor(prisma, auditService, commissionsService, supabaseStorage, ocrService, changeRequestsService, webhookService) {
+    activityLogService;
+    pushNotificationService;
+    constructor(prisma, auditService, commissionsService, supabaseStorage, ocrService, changeRequestsService, webhookService, activityLogService, pushNotificationService) {
         this.prisma = prisma;
         this.auditService = auditService;
         this.commissionsService = commissionsService;
@@ -35,6 +39,8 @@ let ConsumersService = class ConsumersService {
         this.ocrService = ocrService;
         this.changeRequestsService = changeRequestsService;
         this.webhookService = webhookService;
+        this.activityLogService = activityLogService;
+        this.pushNotificationService = pushNotificationService;
     }
     async create(createConsumerDto) {
         const { cpfCnpj, generatorId, birthDate, arrivalDate, ...consumerData } = createConsumerDto;
@@ -59,6 +65,13 @@ let ConsumersService = class ConsumersService {
             include: {
                 generator: true,
             },
+        });
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: consumer.id,
+            action: 'CREATED',
+            description: `Consumidor "${consumer.name}" cadastrado (origem: Painel Admin)`,
+            performedByRole: 'ADMIN',
         });
         return consumer;
     }
@@ -117,6 +130,16 @@ let ConsumersService = class ConsumersService {
             city: consumer.city,
             state: consumer.state,
             averageMonthlyConsumption: consumer.averageMonthlyConsumption,
+        });
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: consumer.id,
+            action: 'CREATED',
+            description: `Consumidor "${consumer.name}" submetido para aprovação`,
+            representativeId,
+            performedBy: representativeId,
+            performedByName: representative.name,
+            performedByRole: 'REPRESENTATIVE',
         });
         return {
             ...consumer,
@@ -301,6 +324,14 @@ let ConsumersService = class ConsumersService {
                 console.error("Erro ao criar comissão durante alocação:", error);
             }
         }
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: updatedConsumer.id,
+            action: 'STATUS_CHANGED',
+            description: `Consumidor "${updatedConsumer.name}" foi alocado (${percentage}%) ao gerador`,
+            representativeId: updatedConsumer.representativeId || undefined,
+            performedByRole: 'SYSTEM',
+        });
         return updatedConsumer;
     }
     async deallocate(consumerId) {
@@ -316,6 +347,14 @@ let ConsumersService = class ConsumersService {
                 generatorId: null,
                 allocatedPercentage: null,
             },
+        });
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: updatedConsumer.id,
+            action: 'STATUS_CHANGED',
+            description: `Consumidor "${updatedConsumer.name}" foi desalocado do gerador`,
+            representativeId: updatedConsumer.representativeId || undefined,
+            performedByRole: 'SYSTEM',
         });
         return updatedConsumer;
     }
@@ -345,6 +384,22 @@ let ConsumersService = class ConsumersService {
             oldValues: existing,
             newValues: approved,
         });
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: approved.id,
+            action: 'STATUS_CHANGED',
+            description: `Consumidor "${approved.name}" foi APROVADO`,
+            representativeId: approved.representativeId || undefined,
+            performedBy: approverUserId,
+            performedByRole: 'ADMIN',
+        });
+        if (approved.representativeId) {
+            await this.pushNotificationService.sendToRepresentative(approved.representativeId, {
+                title: 'Consumidor Aprovado! 🎉',
+                body: `O cadastro do consumidor "${approved.name}" foi aprovado com sucesso!`,
+                data: { type: 'consumer', id: approved.id },
+            });
+        }
         return approved;
     }
     async rejectConsumer(consumerId, approverUserId, reason) {
@@ -366,6 +421,22 @@ let ConsumersService = class ConsumersService {
             oldValues: existing,
             newValues: rejected,
         });
+        await this.activityLogService.log({
+            entityType: 'Consumer',
+            entityId: rejected.id,
+            action: 'STATUS_CHANGED',
+            description: `Consumidor "${rejected.name}" foi REJEITADO. Motivo: ${reason || "Sem motivo informado"}`,
+            representativeId: rejected.representativeId || undefined,
+            performedBy: approverUserId,
+            performedByRole: 'ADMIN',
+        });
+        if (rejected.representativeId) {
+            await this.pushNotificationService.sendToRepresentative(rejected.representativeId, {
+                title: 'Consumidor Rejeitado ❌',
+                body: `O cadastro do consumidor "${rejected.name}" foi rejeitado. Verifique os detalhes.`,
+                data: { type: 'consumer', id: rejected.id },
+            });
+        }
         return rejected;
     }
     async getByState(state) {
@@ -1528,6 +1599,8 @@ exports.ConsumersService = ConsumersService = __decorate([
         supabase_storage_service_1.SupabaseStorageService,
         ocr_service_1.OcrService,
         consumer_change_requests_service_1.ConsumerChangeRequestsService,
-        webhook_service_1.WebhookService])
+        webhook_service_1.WebhookService,
+        activity_log_service_1.ActivityLogService,
+        push_notification_service_1.PushNotificationService])
 ], ConsumersService);
 //# sourceMappingURL=consumers.service.js.map

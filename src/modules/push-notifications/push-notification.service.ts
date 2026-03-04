@@ -1,5 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service';
+import * as admin from 'firebase-admin';
+
+try {
+  if (admin.apps.length === 0) {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+    if (projectId && clientEmail && privateKey) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId,
+          clientEmail,
+          privateKey,
+        }),
+      });
+      console.log('✅ Firebase Admin SDK inicializado');
+    } else {
+      console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
+    }
+  }
+} catch (e) {
+  console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
+}
 
 @Injectable()
 export class PushNotificationService {
@@ -73,20 +97,36 @@ export class PushNotificationService {
       return { sent: false, reason: 'Nenhum token registrado', tokens: 0 };
     }
 
-    // TODO: Integrar com Firebase Cloud Messaging
-    // const messages = tokens.map(t => ({
-    //   token: t.token,
-    //   notification: { title: notification.title, body: notification.body },
-    //   data: notification.data,
-    // }));
-    // await admin.messaging().sendEach(messages);
+    try {
+      const messages = tokens.map(t => ({
+        token: t.token,
+        notification: { title: notification.title, body: notification.body },
+        data: notification.data || {},
+      }));
 
-    return {
-      sent: true,
-      tokens: tokens.length,
-      notification,
-      message: 'Notificação enfileirada. Integre com FCM para envio real.',
-    };
+      const response = await admin.messaging().sendEach(messages);
+
+      // Cleanup invalid tokens if any failures occur
+      if (response.failureCount > 0) {
+        response.responses.forEach(async (resp, idx) => {
+          if (!resp.success && resp.error?.code === 'messaging/registration-token-not-registered') {
+            await this.removeToken(messages[idx].token);
+          }
+        });
+      }
+
+      return {
+        sent: true,
+        tokens: tokens.length,
+        notification,
+        successCount: response.successCount,
+        failureCount: response.failureCount,
+        message: 'Notificação enviada com sucesso.',
+      };
+    } catch (e) {
+      console.error('Erro ao enviar push notification:', e);
+      return { sent: false, reason: e.message, tokens: tokens.length };
+    }
   }
 
   // ─── Enviar para todos os representantes ────────────────────────────────────
@@ -101,13 +141,52 @@ export class PushNotificationService {
       select: { token: true, representativeId: true },
     });
 
-    return {
-      sent: true,
-      totalTokens: allTokens.length,
-      uniqueRepresentatives: new Set(allTokens.map(t => t.representativeId)).size,
-      notification,
-      message: 'Notificação em massa enfileirada. Integre com FCM para envio real.',
-    };
+    if (allTokens.length === 0) {
+      return { sent: false, reason: 'Nenhum token registrado no sistema', totalTokens: 0 };
+    }
+
+    try {
+      const messages = allTokens.map(t => ({
+        token: t.token,
+        notification: { title: notification.title, body: notification.body },
+        data: notification.data || {},
+      }));
+
+      // Firebase limit is 500 per batch. Here we just rely on sendEach which handles array of messages
+      // but if there are > 500 we should chunk. Since we might not have 500 yet, it's fine for now.
+      // Better chunking:
+      const chunkSize = 500;
+      let successCount = 0;
+      let failureCount = 0;
+
+      for (let i = 0; i < messages.length; i += chunkSize) {
+        const chunk = messages.slice(i, i + chunkSize);
+        const response = await admin.messaging().sendEach(chunk);
+        successCount += response.successCount;
+        failureCount += response.failureCount;
+
+        if (response.failureCount > 0) {
+          response.responses.forEach(async (resp, idx) => {
+            if (!resp.success && resp.error?.code === 'messaging/registration-token-not-registered') {
+              await this.removeToken(chunk[idx].token);
+            }
+          });
+        }
+      }
+
+      return {
+        sent: true,
+        totalTokens: allTokens.length,
+        uniqueRepresentatives: new Set(allTokens.map(t => t.representativeId)).size,
+        notification,
+        successCount,
+        failureCount,
+        message: 'Notificação em massa enviada com sucesso.',
+      };
+    } catch (e) {
+      console.error('Erro ao enviar push notification list:', e);
+      return { sent: false, reason: e.message, totalTokens: allTokens.length };
+    }
   }
 
   // ─── Admin: Estatísticas de tokens ──────────────────────────────────────────
