@@ -2,36 +2,46 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service';
 import * as admin from 'firebase-admin';
 
-try {
-  if (admin.apps.length === 0) {
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-
-    let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-    if (privateKey) {
-      privateKey = privateKey.replace(/\\n/g, '\n').replace(/^"|"$/g, '').trim();
-    }
-
-    if (projectId && clientEmail && privateKey) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey,
-        }),
-      });
-      console.log('✅ Firebase Admin SDK inicializado');
-    } else {
-      console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
-    }
-  }
-} catch (e) {
-  console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
-}
-
 @Injectable()
 export class PushNotificationService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {
+    try {
+      if (admin.apps.length === 0) {
+        const projectId = process.env.FIREBASE_PROJECT_ID;
+        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+
+        let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+        if (privateKey) {
+          // Se tiver em Base64, descriptografa (LS0t é o prefixo de '-----' em b64)
+          if (privateKey.startsWith('LS0t')) {
+            privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
+          } else {
+            // Limpa possíveis chaves sujas injetadas por infraestruturas de deploy
+            privateKey = privateKey
+              .replace(/\\n/g, '\n')
+              .replace(/"/g, '')
+              .replace(/'/g, '')
+              .trim();
+          }
+        }
+
+        if (projectId && clientEmail && privateKey) {
+          admin.initializeApp({
+            credential: admin.credential.cert({
+              projectId,
+              clientEmail,
+              privateKey,
+            }),
+          });
+          console.log('✅ Firebase Admin SDK inicializado');
+        } else {
+          console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
+        }
+      }
+    } catch (e) {
+      console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
+    }
+  }
 
   // ─── Registrar token de push ────────────────────────────────────────────────
 

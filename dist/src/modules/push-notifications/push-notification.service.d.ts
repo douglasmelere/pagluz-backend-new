@@ -8,43 +8,43 @@ export declare class PushNotificationService {
         deviceName?: string;
     }): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     removeToken(token: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     deactivateToken(token: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }>;
     getTokens(representativeId: string): Promise<{
         id: string;
+        representativeId: string;
+        token: string;
+        platform: string;
+        deviceName: string | null;
         isActive: boolean;
         createdAt: Date;
         updatedAt: Date;
-        token: string;
-        representativeId: string;
-        platform: string;
-        deviceName: string | null;
     }[]>;
     sendToRepresentative(representativeId: string, notification: {
         title: string;

@@ -13,36 +13,45 @@ exports.PushNotificationService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
 const admin = require("firebase-admin");
-try {
-    if (admin.apps.length === 0) {
-        const projectId = process.env.FIREBASE_PROJECT_ID;
-        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-        let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-        if (privateKey) {
-            privateKey = privateKey.replace(/\\n/g, '\n').replace(/^"|"$/g, '').trim();
-        }
-        if (projectId && clientEmail && privateKey) {
-            admin.initializeApp({
-                credential: admin.credential.cert({
-                    projectId,
-                    clientEmail,
-                    privateKey,
-                }),
-            });
-            console.log('✅ Firebase Admin SDK inicializado');
-        }
-        else {
-            console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
-        }
-    }
-}
-catch (e) {
-    console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
-}
 let PushNotificationService = class PushNotificationService {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
+        try {
+            if (admin.apps.length === 0) {
+                const projectId = process.env.FIREBASE_PROJECT_ID;
+                const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+                let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+                if (privateKey) {
+                    if (privateKey.startsWith('LS0t')) {
+                        privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
+                    }
+                    else {
+                        privateKey = privateKey
+                            .replace(/\\n/g, '\n')
+                            .replace(/"/g, '')
+                            .replace(/'/g, '')
+                            .trim();
+                    }
+                }
+                if (projectId && clientEmail && privateKey) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert({
+                            projectId,
+                            clientEmail,
+                            privateKey,
+                        }),
+                    });
+                    console.log('✅ Firebase Admin SDK inicializado');
+                }
+                else {
+                    console.warn('⚠️ Firebase Admin SDK não configurado: Variáveis de ambiente ausentes.');
+                }
+            }
+        }
+        catch (e) {
+            console.error('⚠️ Firebase Admin SDK não configurado:', e.message);
+        }
     }
     async registerToken(representativeId, data) {
         return this.prisma.pushToken.upsert({
