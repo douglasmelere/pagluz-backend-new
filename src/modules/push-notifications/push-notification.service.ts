@@ -12,23 +12,15 @@ export class PushNotificationService {
 
         let privateKey = process.env.FIREBASE_PRIVATE_KEY;
         if (privateKey) {
-          if (privateKey.startsWith('LS0t')) {
-            privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
-          } else {
-            privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
+          // O Heroku, Render, e afins muitas vezes passam os literal \n ou perdem as quebras de linha
+          // Esta regex converte o 'texto' \n em 'quebra de linha' \n, remove aspas e forma o PEM.
+          privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
 
-            // Corrige plataformas de deploy que removem quebras de linha (substituindo por espaços nulos)
-            if (!privateKey.includes('\n')) {
-              const body = privateKey
-                .replace('-----BEGIN PRIVATE KEY-----', '')
-                .replace('-----END PRIVATE KEY-----', '')
-                .replace(/\s+/g, ''); // Remove espaços em branco
-
-              const chunks = body.match(/.{1,64}/g);
-              if (chunks) {
-                privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----\n`;
-              }
-            }
+          if (!privateKey.includes('-----BEGIN PRIVATE KEY-----\n')) {
+            privateKey = privateKey.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n');
+          }
+          if (!privateKey.includes('\n-----END PRIVATE KEY-----')) {
+            privateKey = privateKey.replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----');
           }
         }
 

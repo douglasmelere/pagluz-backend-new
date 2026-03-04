@@ -23,21 +23,12 @@ let PushNotificationService = class PushNotificationService {
                 const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
                 let privateKey = process.env.FIREBASE_PRIVATE_KEY;
                 if (privateKey) {
-                    if (privateKey.startsWith('LS0t')) {
-                        privateKey = Buffer.from(privateKey, 'base64').toString('ascii');
+                    privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
+                    if (!privateKey.includes('-----BEGIN PRIVATE KEY-----\n')) {
+                        privateKey = privateKey.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n');
                     }
-                    else {
-                        privateKey = privateKey.replace(/\\n/g, '\n').replace(/"/g, '').replace(/'/g, '').trim();
-                        if (!privateKey.includes('\n')) {
-                            const body = privateKey
-                                .replace('-----BEGIN PRIVATE KEY-----', '')
-                                .replace('-----END PRIVATE KEY-----', '')
-                                .replace(/\s+/g, '');
-                            const chunks = body.match(/.{1,64}/g);
-                            if (chunks) {
-                                privateKey = `-----BEGIN PRIVATE KEY-----\n${chunks.join('\n')}\n-----END PRIVATE KEY-----\n`;
-                            }
-                        }
+                    if (!privateKey.includes('\n-----END PRIVATE KEY-----')) {
+                        privateKey = privateKey.replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----');
                     }
                 }
                 if (projectId && clientEmail && privateKey) {
