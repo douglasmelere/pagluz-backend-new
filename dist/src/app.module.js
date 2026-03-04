@@ -29,6 +29,12 @@ const proposal_requests_module_1 = require("./modules/proposal-requests/proposal
 const commercial_materials_module_1 = require("./modules/commercial-materials/commercial-materials.module");
 const announcements_module_1 = require("./modules/announcements/announcements.module");
 const feedbacks_module_1 = require("./modules/feedbacks/feedbacks.module");
+const reports_module_1 = require("./modules/reports/reports.module");
+const ranking_module_1 = require("./modules/ranking/ranking.module");
+const activity_log_module_1 = require("./modules/activity-log/activity-log.module");
+const push_notification_module_1 = require("./modules/push-notifications/push-notification.module");
+const advanced_dashboard_module_1 = require("./modules/advanced-dashboard/advanced-dashboard.module");
+const kwh_price_module_1 = require("./modules/kwh-prices/kwh-price.module");
 const prisma_service_1 = require("./config/prisma.service");
 const audit_service_1 = require("./common/services/audit.service");
 const logout_service_1 = require("./common/services/logout.service");
@@ -65,6 +71,12 @@ exports.AppModule = AppModule = __decorate([
             commercial_materials_module_1.CommercialMaterialsModule,
             announcements_module_1.AnnouncementsModule,
             feedbacks_module_1.FeedbacksModule,
+            reports_module_1.ReportsModule,
+            ranking_module_1.RankingModule,
+            activity_log_module_1.ActivityLogModule,
+            push_notification_module_1.PushNotificationModule,
+            advanced_dashboard_module_1.AdvancedDashboardModule,
+            kwh_price_module_1.KwhPriceModule,
         ],
         controllers: [app_controller_1.AppController, health_controller_1.HealthController, metrics_controller_1.MetricsController],
         providers: [

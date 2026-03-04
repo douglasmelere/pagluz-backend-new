@@ -20,6 +20,12 @@ import { ProposalRequestsModule } from "./modules/proposal-requests/proposal-req
 import { CommercialMaterialsModule } from "./modules/commercial-materials/commercial-materials.module";
 import { AnnouncementsModule } from "./modules/announcements/announcements.module";
 import { FeedbacksModule } from "./modules/feedbacks/feedbacks.module";
+import { ReportsModule } from "./modules/reports/reports.module";
+import { RankingModule } from "./modules/ranking/ranking.module";
+import { ActivityLogModule } from "./modules/activity-log/activity-log.module";
+import { PushNotificationModule } from "./modules/push-notifications/push-notification.module";
+import { AdvancedDashboardModule } from "./modules/advanced-dashboard/advanced-dashboard.module";
+import { KwhPriceModule } from "./modules/kwh-prices/kwh-price.module";
 import { PrismaService } from "./config/prisma.service";
 import { AuditService } from "./common/services/audit.service";
 import { LogoutService } from "./common/services/logout.service";
@@ -56,6 +62,12 @@ import { MetricsController } from "./common/controllers/metrics.controller";
     CommercialMaterialsModule,
     AnnouncementsModule,
     FeedbacksModule,
+    ReportsModule,
+    RankingModule,
+    ActivityLogModule,
+    PushNotificationModule,
+    AdvancedDashboardModule,
+    KwhPriceModule,
   ],
   controllers: [AppController, HealthController, MetricsController],
   providers: [

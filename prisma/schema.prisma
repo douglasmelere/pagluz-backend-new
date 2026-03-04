@@ -91,6 +91,10 @@ model Representative {
   announcements         Announcement[]
   announcementReads     AnnouncementRead[]  @relation("announcement_reads")
   feedbacks             Feedback[]
+  pushTokens            PushToken[]
+  activityLogs          ActivityLog[]
+  goals                 RepresentativeGoal[]
+  badges                RepresentativeBadge[]
 
   @@map("commercial_representatives")
 }
@@ -482,4 +486,119 @@ enum FeedbackPriority {
   MEDIUM
   HIGH
   CRITICAL
+}
+
+// ─── Push Notifications (Mobile) ──────────────────────────────────────────────
+
+model PushToken {
+  id               String         @id @default(cuid())
+  representativeId String
+  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  token            String         @unique // Token FCM ou APNs
+  platform         String         // 'android', 'ios', 'web'
+  deviceName       String?        // Nome do dispositivo (opcional)
+  isActive         Boolean        @default(true)
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("push_tokens")
+}
+
+// ─── Activity Log / Timeline ──────────────────────────────────────────────────
+
+model ActivityLog {
+  id               String          @id @default(cuid())
+  representativeId String?
+  representative   Representative? @relation(fields: [representativeId], references: [id], onDelete: SetNull)
+
+  entityType       String         // 'Consumer', 'Commission', 'Generator', 'ProposalRequest', etc.
+  entityId         String         // ID da entidade
+  action           String         // 'CREATED', 'UPDATED', 'STATUS_CHANGED', 'ALLOCATED', etc.
+  description      String         // Descrição legível: "Consumidor João criado"
+  details          Json?          // Detalhes extras (valores antigos/novos)
+
+  performedBy      String?        // ID de quem realizou a ação
+  performedByName  String?        // Nome de quem realizou
+  performedByRole  String?        // 'ADMIN', 'REPRESENTATIVE'
+
+  createdAt        DateTime       @default(now())
+
+  @@index([entityType, entityId])
+  @@index([representativeId])
+  @@index([createdAt(sort: Desc)])
+  @@map("activity_logs")
+}
+
+// ─── Metas / OKRs dos Representantes ──────────────────────────────────────────
+
+model RepresentativeGoal {
+  id               String         @id @default(cuid())
+  representativeId String
+  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  title            String         // "Meta de Clientes Q1 2026"
+  type             GoalType       // CLIENTS, KWH, REVENUE, COMMISSION
+  targetValue      Float          // Valor alvo (ex: 50 clientes, 100000 kWh)
+  currentValue     Float          @default(0) // Valor atual
+  unit             String         // "clientes", "kWh", "R$"
+
+  periodStart      DateTime       // Início do período
+  periodEnd        DateTime       // Fim do período
+  status           GoalStatus     @default(IN_PROGRESS)
+
+  createdByUserId  String?        // Admin que criou
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("representative_goals")
+}
+
+enum GoalType {
+  CLIENTS    // Número de clientes convertidos
+  KWH        // Volume em kWh alocado
+  REVENUE    // Faturamento
+  COMMISSION // Valor de comissões
+}
+
+enum GoalStatus {
+  IN_PROGRESS
+  ACHIEVED
+  FAILED
+  CANCELLED
+}
+
+// ─── Gamificação: Badges / Conquistas ─────────────────────────────────────────
+
+model RepresentativeBadge {
+  id               String         @id @default(cuid())
+  representativeId String
+  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+
+  badgeKey         String         // 'first_client', 'top_seller_month', '100_clients', etc.
+  badgeName        String         // "Primeiro Cliente"
+  badgeDescription String         // "Converteu o primeiro cliente"
+  badgeIcon        String         // Emoji ou URL do ícone
+  earnedAt         DateTime       @default(now())
+
+  @@unique([representativeId, badgeKey])
+  @@map("representative_badges")
+}
+
+// ─── Versionamento de Preços / Tarifas ────────────────────────────────────────
+
+model KwhPriceHistory {
+  id              String   @id @default(cuid())
+  concessionaire  String   // Nome da concessionária
+  pricePerKwh     Float    // Preço do kWh
+  effectiveFrom   DateTime // Data de início da vigência
+  effectiveUntil  DateTime? // Data de fim (null = vigente)
+  source          String?  // Fonte da informação (ANEEL, manual, etc.)
+  notes           String?  // Observações
+  createdByUserId String?  // Admin que cadastrou
+  createdAt       DateTime @default(now())
+
+  @@index([concessionaire, effectiveFrom])
+  @@map("kwh_price_history")
 }
