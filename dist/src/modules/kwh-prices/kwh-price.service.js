@@ -18,6 +18,9 @@ let KwhPriceService = class KwhPriceService {
         this.prisma = prisma;
     }
     async create(data) {
+        if (data.concessionaire) {
+            data.concessionaire = data.concessionaire.toUpperCase().trim();
+        }
         const current = await this.prisma.kwhPriceHistory.findFirst({
             where: {
                 concessionaire: data.concessionaire,

@@ -7,6 +7,7 @@ import {
   IsOptional,
   Min,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { SourceType, GeneratorStatus } from '../../../common/enums';
 
 export class CreateGeneratorDto {
@@ -46,6 +47,7 @@ export class CreateGeneratorDto {
     description: 'Concessionária de energia',
     example: 'CELESC',
   })
+  @Transform(({ value }) => typeof value === 'string' ? value.toUpperCase().trim() : value)
   @IsString()
   @IsNotEmpty()
   concessionaire: string;

@@ -16,6 +16,10 @@ export class KwhPriceService {
     notes?: string;
     createdByUserId?: string;
   }) {
+    if (data.concessionaire) {
+      data.concessionaire = data.concessionaire.toUpperCase().trim();
+    }
+
     // Fecha o preço anterior (se existir) para a mesma concessionária
     const current = await this.prisma.kwhPriceHistory.findFirst({
       where: {

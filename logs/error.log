@@ -140,3 +140,9 @@
 {"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 00:41:33"}
 {"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 00:45:03"}
 {"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 00:51:59"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:52:58"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:53:35"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:53:42"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:55:13"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:55:40"}
+{"context":"NestApplication","level":"error","message":"Error: listen EADDRINUSE: address already in use 0.0.0.0:3000","service":"pagluz-api","timestamp":"2026-03-04 12:56:16"}

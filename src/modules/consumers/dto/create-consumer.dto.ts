@@ -11,6 +11,7 @@ import {
   IsEmail,
   IsDateString,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ConsumerType, PhaseType, ConsumerStatus, DocumentType } from '../../../common/enums';
 
 export class CreateConsumerDto {
@@ -80,6 +81,7 @@ export class CreateConsumerDto {
     description: 'Concessionária de energia',
     example: 'CELESC',
   })
+  @Transform(({ value }) => typeof value === 'string' ? value.toUpperCase().trim() : value)
   @IsString()
   @IsNotEmpty()
   concessionaire: string;

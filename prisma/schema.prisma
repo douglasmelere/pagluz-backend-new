@@ -17,7 +17,7 @@ model User {
   name                 String?
   role                 UserRole  @default(ADMIN)
   isActive             Boolean   @default(true)
-  avatarUrl            String?   // URL da foto de perfil no Supabase Storage
+  avatarUrl            String? // URL da foto de perfil no Supabase Storage
   lastLoginAt          DateTime?
   loginCount           Int       @default(0)
   failedLoginAttempts  Int       @default(0) // Contador de tentativas de login falhadas
@@ -76,7 +76,7 @@ model Representative {
   specializations String[]             @default([])
   status          RepresentativeStatus @default(PENDING_APPROVAL)
   notes           String?
-  avatarUrl       String?              // URL da foto de perfil no Supabase Storage
+  avatarUrl       String? // URL da foto de perfil no Supabase Storage
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
   lastLoginAt     DateTime?
@@ -89,7 +89,7 @@ model Representative {
   changeRequests        ConsumerChangeRequest[]
   proposalRequests      ProposalRequest[]
   announcements         Announcement[]
-  announcementReads     AnnouncementRead[]  @relation("announcement_reads")
+  announcementReads     AnnouncementRead[]      @relation("announcement_reads")
   feedbacks             Feedback[]
   pushTokens            PushToken[]
   activityLogs          ActivityLog[]
@@ -328,31 +328,31 @@ enum ChangeRequestStatus {
 }
 
 model ProposalRequest {
-  id               String               @id @default(cuid())
-  representativeId String
-  clientName       String
-  invoiceAmount    Float
-  phaseType        PhaseType
-  kwhValue         Float
-  status           ProposalRequestStatus @default(PENDING)
-  documentUrl      String?
-  documentFileName String?
+  id                 String                @id @default(cuid())
+  representativeId   String
+  clientName         String
+  invoiceAmount      Float
+  phaseType          PhaseType
+  kwhValue           Float
+  status             ProposalRequestStatus @default(PENDING)
+  documentUrl        String?
+  documentFileName   String?
   documentUploadedAt DateTime?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
 
-  representative   Representative       @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  representative Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
   @@map("proposal_requests")
 }
 
 model AdminNotification {
-  id          String   @id @default(cuid())
-  title       String
-  message     String
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("admin_notifications")
 }
@@ -365,18 +365,18 @@ enum ProposalRequestStatus {
 // ─── Materiais Comerciais ─────────────────────────────────────────────────────
 
 model CommercialMaterial {
-  id          String               @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
-  fileUrl     String               // URL pública no Supabase Storage
-  fileName    String               // Nome original do arquivo
-  fileType    String               // MIME type (ex: application/pdf, image/png)
-  fileSize    Int?                 // Tamanho em bytes
-  category    String?              // Categoria livre (ex: "Apresentações", "Tabelas de Preço")
-  isActive    Boolean              @default(true)
-  uploadedAt  DateTime             @default(now())
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
+  fileUrl     String // URL pública no Supabase Storage
+  fileName    String // Nome original do arquivo
+  fileType    String // MIME type (ex: application/pdf, image/png)
+  fileSize    Int? // Tamanho em bytes
+  category    String? // Categoria livre (ex: "Apresentações", "Tabelas de Preço")
+  isActive    Boolean  @default(true)
+  uploadedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("commercial_materials")
 }
@@ -384,30 +384,30 @@ model CommercialMaterial {
 // ─── Comunicados ──────────────────────────────────────────────────────────────
 
 model Announcement {
-  id               String             @id @default(cuid())
+  id               String               @id @default(cuid())
   title            String
   message          String
   priority         AnnouncementPriority @default(NORMAL)
   // Se null => comunicado para TODOS os representantes
   representativeId String?
-  representative   Representative?    @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  representative   Representative?      @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
   // Controle de leitura por representante
-  reads            AnnouncementRead[]
+  reads AnnouncementRead[]
 
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("announcements")
 }
 
 model AnnouncementRead {
-  id             String       @id @default(cuid())
-  announcementId String
-  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  announcementId   String
+  announcement     Announcement   @relation(fields: [announcementId], references: [id], onDelete: Cascade)
   representativeId String
   representative   Representative @relation("announcement_reads", fields: [representativeId], references: [id], onDelete: Cascade)
-  readAt          DateTime     @default(now())
+  readAt           DateTime       @default(now())
 
   @@unique([announcementId, representativeId])
   @@map("announcement_reads")
@@ -423,17 +423,17 @@ enum AnnouncementPriority {
 // ─── Feedback / Suporte ───────────────────────────────────────────────────────
 
 model Feedback {
-  id               String           @id @default(cuid())
+  id               String         @id @default(cuid())
   representativeId String
-  representative   Representative   @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
-  type             FeedbackType
-  subject          String           // Título / assunto curto
-  description      String           // Descrição detalhada
-  category         String?          // Categoria livre (ex: "Dashboard", "Comissões", "Alocação")
+  type        FeedbackType
+  subject     String // Título / assunto curto
+  description String // Descrição detalhada
+  category    String? // Categoria livre (ex: "Dashboard", "Comissões", "Alocação")
 
-  status           FeedbackStatus   @default(OPEN)
-  priority         FeedbackPriority @default(MEDIUM)
+  status   FeedbackStatus   @default(OPEN)
+  priority FeedbackPriority @default(MEDIUM)
 
   // Anexo opcional (screenshot, documento)
   attachmentUrl      String?
@@ -444,10 +444,10 @@ model Feedback {
   resolvedByUserId String?
 
   // Respostas do admin (thread)
-  responses        FeedbackResponse[]
+  responses FeedbackResponse[]
 
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("feedbacks")
 }
@@ -457,28 +457,28 @@ model FeedbackResponse {
   feedbackId String
   feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
 
-  message    String   // Texto da resposta
-  authorType String   // 'ADMIN' ou 'REPRESENTATIVE'
-  authorId   String   // ID do admin (userId) ou do representante
-  authorName String   // Nome de quem respondeu
+  message    String // Texto da resposta
+  authorType String // 'ADMIN' ou 'REPRESENTATIVE'
+  authorId   String // ID do admin (userId) ou do representante
+  authorName String // Nome de quem respondeu
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@map("feedback_responses")
 }
 
 enum FeedbackType {
-  COMPLAINT   // Reclamação
-  SUGGESTION  // Sugestão de melhoria
-  BUG         // Reporte de bug
-  PRAISE      // Elogio
+  COMPLAINT // Reclamação
+  SUGGESTION // Sugestão de melhoria
+  BUG // Reporte de bug
+  PRAISE // Elogio
 }
 
 enum FeedbackStatus {
-  OPEN        // Aberto, aguardando análise
+  OPEN // Aberto, aguardando análise
   IN_ANALYSIS // Em análise pelo admin
-  RESOLVED    // Resolvido
-  REJECTED    // Recusado / Não procede
+  RESOLVED // Resolvido
+  REJECTED // Recusado / Não procede
 }
 
 enum FeedbackPriority {
@@ -495,13 +495,13 @@ model PushToken {
   representativeId String
   representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
-  token            String         @unique // Token FCM ou APNs
-  platform         String         // 'android', 'ios', 'web'
-  deviceName       String?        // Nome do dispositivo (opcional)
-  isActive         Boolean        @default(true)
+  token      String  @unique // Token FCM ou APNs
+  platform   String // 'android', 'ios', 'web'
+  deviceName String? // Nome do dispositivo (opcional)
+  isActive   Boolean @default(true)
 
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("push_tokens")
 }
@@ -513,17 +513,17 @@ model ActivityLog {
   representativeId String?
   representative   Representative? @relation(fields: [representativeId], references: [id], onDelete: SetNull)
 
-  entityType       String         // 'Consumer', 'Commission', 'Generator', 'ProposalRequest', etc.
-  entityId         String         // ID da entidade
-  action           String         // 'CREATED', 'UPDATED', 'STATUS_CHANGED', 'ALLOCATED', etc.
-  description      String         // Descrição legível: "Consumidor João criado"
-  details          Json?          // Detalhes extras (valores antigos/novos)
+  entityType  String // 'Consumer', 'Commission', 'Generator', 'ProposalRequest', etc.
+  entityId    String // ID da entidade
+  action      String // 'CREATED', 'UPDATED', 'STATUS_CHANGED', 'ALLOCATED', etc.
+  description String // Descrição legível: "Consumidor João criado"
+  details     Json? // Detalhes extras (valores antigos/novos)
 
-  performedBy      String?        // ID de quem realizou a ação
-  performedByName  String?        // Nome de quem realizou
-  performedByRole  String?        // 'ADMIN', 'REPRESENTATIVE'
+  performedBy     String? // ID de quem realizou a ação
+  performedByName String? // Nome de quem realizou
+  performedByRole String? // 'ADMIN', 'REPRESENTATIVE'
 
-  createdAt        DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([entityType, entityId])
   @@index([representativeId])
@@ -538,27 +538,27 @@ model RepresentativeGoal {
   representativeId String
   representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
-  title            String         // "Meta de Clientes Q1 2026"
-  type             GoalType       // CLIENTS, KWH, REVENUE, COMMISSION
-  targetValue      Float          // Valor alvo (ex: 50 clientes, 100000 kWh)
-  currentValue     Float          @default(0) // Valor atual
-  unit             String         // "clientes", "kWh", "R$"
+  title        String // "Meta de Clientes Q1 2026"
+  type         GoalType // CLIENTS, KWH, REVENUE, COMMISSION
+  targetValue  Float // Valor alvo (ex: 50 clientes, 100000 kWh)
+  currentValue Float    @default(0) // Valor atual
+  unit         String // "clientes", "kWh", "R$"
 
-  periodStart      DateTime       // Início do período
-  periodEnd        DateTime       // Fim do período
-  status           GoalStatus     @default(IN_PROGRESS)
+  periodStart DateTime // Início do período
+  periodEnd   DateTime // Fim do período
+  status      GoalStatus @default(IN_PROGRESS)
 
-  createdByUserId  String?        // Admin que criou
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  createdByUserId String? // Admin que criou
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("representative_goals")
 }
 
 enum GoalType {
-  CLIENTS    // Número de clientes convertidos
-  KWH        // Volume em kWh alocado
-  REVENUE    // Faturamento
+  CLIENTS // Número de clientes convertidos
+  KWH // Volume em kWh alocado
+  REVENUE // Faturamento
   COMMISSION // Valor de comissões
 }
 
@@ -576,11 +576,11 @@ model RepresentativeBadge {
   representativeId String
   representative   Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
 
-  badgeKey         String         // 'first_client', 'top_seller_month', '100_clients', etc.
-  badgeName        String         // "Primeiro Cliente"
-  badgeDescription String         // "Converteu o primeiro cliente"
-  badgeIcon        String         // Emoji ou URL do ícone
-  earnedAt         DateTime       @default(now())
+  badgeKey         String // 'first_client', 'top_seller_month', '100_clients', etc.
+  badgeName        String // "Primeiro Cliente"
+  badgeDescription String // "Converteu o primeiro cliente"
+  badgeIcon        String // Emoji ou URL do ícone
+  earnedAt         DateTime @default(now())
 
   @@unique([representativeId, badgeKey])
   @@map("representative_badges")
@@ -589,15 +589,15 @@ model RepresentativeBadge {
 // ─── Versionamento de Preços / Tarifas ────────────────────────────────────────
 
 model KwhPriceHistory {
-  id              String   @id @default(cuid())
-  concessionaire  String   // Nome da concessionária
-  pricePerKwh     Float    // Preço do kWh
+  id              String    @id @default(cuid())
+  concessionaire  String // Nome da concessionária
+  pricePerKwh     Float // Preço do kWh
   effectiveFrom   DateTime // Data de início da vigência
   effectiveUntil  DateTime? // Data de fim (null = vigente)
-  source          String?  // Fonte da informação (ANEEL, manual, etc.)
-  notes           String?  // Observações
-  createdByUserId String?  // Admin que cadastrou
-  createdAt       DateTime @default(now())
+  source          String? // Fonte da informação (ANEEL, manual, etc.)
+  notes           String? // Observações
+  createdByUserId String? // Admin que cadastrou
+  createdAt       DateTime  @default(now())
 
   @@index([concessionaire, effectiveFrom])
   @@map("kwh_price_history")

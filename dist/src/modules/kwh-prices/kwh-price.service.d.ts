@@ -12,58 +12,58 @@ export declare class KwhPriceService {
         createdByUserId?: string;
     }): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }>;
     getHistory(concessionaire: string): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }[]>;
     getCurrentPrices(): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }[]>;
     getCurrentPrice(concessionaire: string): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }>;
     getPriceAtDate(concessionaire: string, date: string): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }>;
     getConcessionaires(): Promise<string[]>;
     update(id: string, data: {
@@ -74,25 +74,25 @@ export declare class KwhPriceService {
         notes?: string;
     }): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }>;
     remove(id: string): Promise<{
         id: string;
-        createdAt: Date;
         concessionaire: string;
-        notes: string | null;
-        createdByUserId: string | null;
         pricePerKwh: number;
         effectiveFrom: Date;
         effectiveUntil: Date | null;
         source: string | null;
+        notes: string | null;
+        createdByUserId: string | null;
+        createdAt: Date;
     }>;
     getPriceComparison(): Promise<{
         concessionaire: string;
