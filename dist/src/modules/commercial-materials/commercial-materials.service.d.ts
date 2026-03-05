@@ -2,12 +2,14 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../config/prisma.service';
 import { CreateCommercialMaterialDto } from './dto/create-commercial-material.dto';
 import { UpdateCommercialMaterialDto } from './dto/update-commercial-material.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 export declare class CommercialMaterialsService {
     private prisma;
     private configService;
+    private pushNotificationService;
     private supabase;
     private readonly BUCKET_NAME;
-    constructor(prisma: PrismaService, configService: ConfigService);
+    constructor(prisma: PrismaService, configService: ConfigService, pushNotificationService: PushNotificationService);
     create(file: Express.Multer.File, dto: CreateCommercialMaterialDto): Promise<{
         description: string | null;
         title: string;

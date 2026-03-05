@@ -14,14 +14,17 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const supabase_js_1 = require("@supabase/supabase-js");
 const prisma_service_1 = require("../../config/prisma.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let CommercialMaterialsService = class CommercialMaterialsService {
     prisma;
     configService;
+    pushNotificationService;
     supabase;
     BUCKET_NAME = 'materiais-comerciais';
-    constructor(prisma, configService) {
+    constructor(prisma, configService, pushNotificationService) {
         this.prisma = prisma;
         this.configService = configService;
+        this.pushNotificationService = pushNotificationService;
         const supabaseUrl = this.configService.get('SUPABASE_URL');
         const supabaseKey = this.configService.get('SUPABASE_SERVICE_ROLE_KEY') ||
             this.configService.get('SUPABASE_ANON_KEY');
@@ -53,7 +56,7 @@ let CommercialMaterialsService = class CommercialMaterialsService {
         const { data: publicData } = this.supabase.storage
             .from(this.BUCKET_NAME)
             .getPublicUrl(uniqueFileName);
-        return this.prisma.commercialMaterial.create({
+        const material = await this.prisma.commercialMaterial.create({
             data: {
                 title: dto.title,
                 description: dto.description,
@@ -64,6 +67,11 @@ let CommercialMaterialsService = class CommercialMaterialsService {
                 fileSize: file.size,
             },
         });
+        await this.pushNotificationService.sendToAll({
+            title: 'Novo Material Comercial! 📁',
+            body: `O material "${dto.title}" acabou de ser adicionado e já está disponível para você.`
+        });
+        return material;
     }
     async findAll(onlyActive = false) {
         return this.prisma.commercialMaterial.findMany({
@@ -109,6 +117,7 @@ exports.CommercialMaterialsService = CommercialMaterialsService;
 exports.CommercialMaterialsService = CommercialMaterialsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        config_1.ConfigService])
+        config_1.ConfigService,
+        push_notification_service_1.PushNotificationService])
 ], CommercialMaterialsService);
 //# sourceMappingURL=commercial-materials.service.js.map

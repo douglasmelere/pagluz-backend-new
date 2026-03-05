@@ -11,11 +11,13 @@ const common_1 = require("@nestjs/common");
 const commercial_materials_service_1 = require("./commercial-materials.service");
 const commercial_materials_controller_1 = require("./commercial-materials.controller");
 const prisma_service_1 = require("../../config/prisma.service");
+const push_notification_module_1 = require("../push-notifications/push-notification.module");
 let CommercialMaterialsModule = class CommercialMaterialsModule {
 };
 exports.CommercialMaterialsModule = CommercialMaterialsModule;
 exports.CommercialMaterialsModule = CommercialMaterialsModule = __decorate([
     (0, common_1.Module)({
+        imports: [push_notification_module_1.PushNotificationModule],
         controllers: [commercial_materials_controller_1.CommercialMaterialsController],
         providers: [commercial_materials_service_1.CommercialMaterialsService, prisma_service_1.PrismaService],
         exports: [commercial_materials_service_1.CommercialMaterialsService],

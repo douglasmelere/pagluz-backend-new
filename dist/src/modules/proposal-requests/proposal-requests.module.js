@@ -13,12 +13,13 @@ const proposal_requests_controller_1 = require("./proposal-requests.controller")
 const admin_notifications_module_1 = require("../admin-notifications/admin-notifications.module");
 const prisma_service_1 = require("../../config/prisma.service");
 const webhook_service_1 = require("../../common/services/webhook.service");
+const push_notification_module_1 = require("../push-notifications/push-notification.module");
 let ProposalRequestsModule = class ProposalRequestsModule {
 };
 exports.ProposalRequestsModule = ProposalRequestsModule;
 exports.ProposalRequestsModule = ProposalRequestsModule = __decorate([
     (0, common_1.Module)({
-        imports: [admin_notifications_module_1.AdminNotificationsModule],
+        imports: [admin_notifications_module_1.AdminNotificationsModule, push_notification_module_1.PushNotificationModule],
         controllers: [proposal_requests_controller_1.ProposalRequestsController],
         providers: [proposal_requests_service_1.ProposalRequestsService, prisma_service_1.PrismaService, webhook_service_1.WebhookService],
     })

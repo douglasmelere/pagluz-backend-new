@@ -4,14 +4,16 @@ import { AdminNotificationsService } from '../admin-notifications/admin-notifica
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { WebhookService } from '../../common/services/webhook.service';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 export declare class ProposalRequestsService {
     private prisma;
     private notificationsService;
     private configService;
     private webhookService;
+    private pushNotificationService;
     private supabase;
     private readonly BUCKET_NAME;
-    constructor(prisma: PrismaService, notificationsService: AdminNotificationsService, configService: ConfigService, webhookService: WebhookService);
+    constructor(prisma: PrismaService, notificationsService: AdminNotificationsService, configService: ConfigService, webhookService: WebhookService, pushNotificationService: PushNotificationService);
     create(representativeId: string, dto: CreateProposalRequestDto): Promise<{
         representative: {
             name: string;

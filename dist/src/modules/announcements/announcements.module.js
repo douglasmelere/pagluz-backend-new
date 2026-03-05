@@ -11,11 +11,13 @@ const common_1 = require("@nestjs/common");
 const announcements_service_1 = require("./announcements.service");
 const announcements_controller_1 = require("./announcements.controller");
 const prisma_service_1 = require("../../config/prisma.service");
+const push_notification_module_1 = require("../push-notifications/push-notification.module");
 let AnnouncementsModule = class AnnouncementsModule {
 };
 exports.AnnouncementsModule = AnnouncementsModule;
 exports.AnnouncementsModule = AnnouncementsModule = __decorate([
     (0, common_1.Module)({
+        imports: [push_notification_module_1.PushNotificationModule],
         controllers: [announcements_controller_1.AnnouncementsController],
         providers: [announcements_service_1.AnnouncementsService, prisma_service_1.PrismaService],
         exports: [announcements_service_1.AnnouncementsService],

@@ -8,6 +8,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { PrismaService } from '../../config/prisma.service';
 import { CreateCommercialMaterialDto } from './dto/create-commercial-material.dto';
 import { UpdateCommercialMaterialDto } from './dto/update-commercial-material.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class CommercialMaterialsService {
@@ -17,6 +18,7 @@ export class CommercialMaterialsService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
+    private pushNotificationService: PushNotificationService,
   ) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey =
@@ -64,7 +66,7 @@ export class CommercialMaterialsService {
       .from(this.BUCKET_NAME)
       .getPublicUrl(uniqueFileName);
 
-    return this.prisma.commercialMaterial.create({
+    const material = await this.prisma.commercialMaterial.create({
       data: {
         title: dto.title,
         description: dto.description,
@@ -75,6 +77,14 @@ export class CommercialMaterialsService {
         fileSize: file.size,
       },
     });
+
+    // Notificar todos os representantes sobre o novo material
+    await this.pushNotificationService.sendToAll({
+      title: 'Novo Material Comercial! 📁',
+      body: `O material "${dto.title}" acabou de ser adicionado e já está disponível para você.`
+    });
+
+    return material;
   }
 
   // ─── Admin + Representante: Listar materiais ativos ──────────────────────────

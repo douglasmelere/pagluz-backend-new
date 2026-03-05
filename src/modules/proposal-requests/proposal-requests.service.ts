@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Response } from 'express';
 import { WebhookService } from '../../common/services/webhook.service';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class ProposalRequestsService {
@@ -17,6 +18,7 @@ export class ProposalRequestsService {
     private notificationsService: AdminNotificationsService,
     private configService: ConfigService,
     private webhookService: WebhookService,
+    private pushNotificationService: PushNotificationService,
   ) {
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
     const supabaseKey =
@@ -110,7 +112,7 @@ export class ProposalRequestsService {
       documentUploadedAt = new Date();
     }
 
-    return this.prisma.proposalRequest.update({
+    const updated = await this.prisma.proposalRequest.update({
       where: { id },
       data: {
         status: 'GENERATED',
@@ -120,6 +122,19 @@ export class ProposalRequestsService {
       },
       include: { representative: { select: { name: true } } }
     });
+
+    // Notificar representante
+    if (updated.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(
+        updated.representativeId,
+        {
+          title: 'Proposta Gerada! 📄',
+          body: `A proposta para o cliente ${updated.clientName} está pronta e disponível no seu painel.`
+        }
+      );
+    }
+
+    return updated;
   }
 
   async downloadDocument(id: string, res: Response, representativeId?: string) {

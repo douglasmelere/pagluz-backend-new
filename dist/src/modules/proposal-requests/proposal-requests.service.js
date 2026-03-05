@@ -16,18 +16,21 @@ const admin_notifications_service_1 = require("../admin-notifications/admin-noti
 const config_1 = require("@nestjs/config");
 const supabase_js_1 = require("@supabase/supabase-js");
 const webhook_service_1 = require("../../common/services/webhook.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let ProposalRequestsService = class ProposalRequestsService {
     prisma;
     notificationsService;
     configService;
     webhookService;
+    pushNotificationService;
     supabase;
     BUCKET_NAME = 'propostas-representantes';
-    constructor(prisma, notificationsService, configService, webhookService) {
+    constructor(prisma, notificationsService, configService, webhookService, pushNotificationService) {
         this.prisma = prisma;
         this.notificationsService = notificationsService;
         this.configService = configService;
         this.webhookService = webhookService;
+        this.pushNotificationService = pushNotificationService;
         const supabaseUrl = this.configService.get('SUPABASE_URL');
         const supabaseKey = this.configService.get('SUPABASE_SERVICE_ROLE_KEY') ||
             this.configService.get('SUPABASE_ANON_KEY');
@@ -103,7 +106,7 @@ let ProposalRequestsService = class ProposalRequestsService {
             documentFileName = file.originalname;
             documentUploadedAt = new Date();
         }
-        return this.prisma.proposalRequest.update({
+        const updated = await this.prisma.proposalRequest.update({
             where: { id },
             data: {
                 status: 'GENERATED',
@@ -113,6 +116,13 @@ let ProposalRequestsService = class ProposalRequestsService {
             },
             include: { representative: { select: { name: true } } }
         });
+        if (updated.representativeId) {
+            await this.pushNotificationService.sendToRepresentative(updated.representativeId, {
+                title: 'Proposta Gerada! 📄',
+                body: `A proposta para o cliente ${updated.clientName} está pronta e disponível no seu painel.`
+            });
+        }
+        return updated;
     }
     async downloadDocument(id, res, representativeId) {
         const request = await this.prisma.proposalRequest.findUnique({ where: { id } });
@@ -149,6 +159,7 @@ exports.ProposalRequestsService = ProposalRequestsService = __decorate([
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         admin_notifications_service_1.AdminNotificationsService,
         config_1.ConfigService,
-        webhook_service_1.WebhookService])
+        webhook_service_1.WebhookService,
+        push_notification_service_1.PushNotificationService])
 ], ProposalRequestsService);
 //# sourceMappingURL=proposal-requests.service.js.map

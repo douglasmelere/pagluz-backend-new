@@ -4,10 +4,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../config/prisma.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 
 @Injectable()
 export class AnnouncementsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private pushNotificationService: PushNotificationService,
+  ) { }
 
   // ─── Admin: Criar comunicado ──────────────────────────────────────────────────
 
@@ -20,7 +24,7 @@ export class AnnouncementsService {
       if (!rep) throw new NotFoundException('Representante não encontrado.');
     }
 
-    return this.prisma.announcement.create({
+    const announcement = await this.prisma.announcement.create({
       data: {
         title: dto.title,
         message: dto.message,
@@ -31,6 +35,25 @@ export class AnnouncementsService {
         representative: { select: { id: true, name: true, email: true } },
       },
     });
+
+    // Enviar notificação push
+    const emoji = dto.priority === 'HIGH' ? '🚨' : '📢';
+    if (dto.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(
+        dto.representativeId,
+        {
+          title: `Novo Comunicado ${emoji}`,
+          body: dto.title
+        }
+      );
+    } else {
+      await this.pushNotificationService.sendToAll({
+        title: `Aviso Importante ${emoji}`,
+        body: dto.title
+      });
+    }
+
+    return announcement;
   }
 
   // ─── Admin: Listar todos os comunicados ───────────────────────────────────────

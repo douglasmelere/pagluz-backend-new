@@ -12,10 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AnnouncementsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../config/prisma.service");
+const push_notification_service_1 = require("../push-notifications/push-notification.service");
 let AnnouncementsService = class AnnouncementsService {
     prisma;
-    constructor(prisma) {
+    pushNotificationService;
+    constructor(prisma, pushNotificationService) {
         this.prisma = prisma;
+        this.pushNotificationService = pushNotificationService;
     }
     async create(dto) {
         if (dto.representativeId) {
@@ -25,7 +28,7 @@ let AnnouncementsService = class AnnouncementsService {
             if (!rep)
                 throw new common_1.NotFoundException('Representante não encontrado.');
         }
-        return this.prisma.announcement.create({
+        const announcement = await this.prisma.announcement.create({
             data: {
                 title: dto.title,
                 message: dto.message,
@@ -36,6 +39,20 @@ let AnnouncementsService = class AnnouncementsService {
                 representative: { select: { id: true, name: true, email: true } },
             },
         });
+        const emoji = dto.priority === 'HIGH' ? '🚨' : '📢';
+        if (dto.representativeId) {
+            await this.pushNotificationService.sendToRepresentative(dto.representativeId, {
+                title: `Novo Comunicado ${emoji}`,
+                body: dto.title
+            });
+        }
+        else {
+            await this.pushNotificationService.sendToAll({
+                title: `Aviso Importante ${emoji}`,
+                body: dto.title
+            });
+        }
+        return announcement;
     }
     async findAll() {
         return this.prisma.announcement.findMany({
@@ -109,6 +126,7 @@ let AnnouncementsService = class AnnouncementsService {
 exports.AnnouncementsService = AnnouncementsService;
 exports.AnnouncementsService = AnnouncementsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        push_notification_service_1.PushNotificationService])
 ], AnnouncementsService);
 //# sourceMappingURL=announcements.service.js.map

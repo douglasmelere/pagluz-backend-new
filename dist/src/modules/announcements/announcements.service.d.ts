@@ -1,8 +1,10 @@
 import { PrismaService } from '../../config/prisma.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
+import { PushNotificationService } from '../push-notifications/push-notification.service';
 export declare class AnnouncementsService {
     private prisma;
-    constructor(prisma: PrismaService);
+    private pushNotificationService;
+    constructor(prisma: PrismaService, pushNotificationService: PushNotificationService);
     create(dto: CreateAnnouncementDto): Promise<{
         representative: {
             email: string;
