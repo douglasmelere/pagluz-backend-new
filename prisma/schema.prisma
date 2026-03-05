@@ -142,11 +142,11 @@ model Consumer {
   invoiceScannedData Json? // Dados extraídos do OCR (opcional)
 
   // Relacionamento com gerador
-  generator Generator? @relation(fields: [generatorId], references: [id])
+  generator Generator? @relation(fields: [generatorId], references: [id], onDelete: SetNull)
 
   createdAt        DateTime                @default(now())
   updatedAt        DateTime                @updatedAt
-  Representative   Representative?         @relation(fields: [representativeId], references: [id])
+  Representative   Representative?         @relation(fields: [representativeId], references: [id], onDelete: SetNull)
   representativeId String?
   commissions      Commission[]
   changeRequests   ConsumerChangeRequest[] // Mudanças pendentes de aprovação
@@ -229,8 +229,8 @@ model ConsumerChangeRequest {
   id               String         @id @default(cuid())
   consumerId       String
   consumer         Consumer       @relation(fields: [consumerId], references: [id], onDelete: Cascade)
-  representativeId String // Representante que solicitou a mudança
-  representative   Representative @relation(fields: [representativeId], references: [id])
+  representativeId String? // Representante que solicitou a mudança
+  representative   Representative? @relation(fields: [representativeId], references: [id], onDelete: SetNull)
 
   // Dados da mudança
   oldValues     Json? // Valores antigos

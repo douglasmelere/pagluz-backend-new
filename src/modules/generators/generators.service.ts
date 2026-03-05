@@ -104,11 +104,16 @@ export class GeneratorsService {
     // Verifica se o gerador existe
     const generator = await this.findOne(id);
 
-    // Verifica se há consumidores alocados
+    // Desvincula consumidores alocados a este gerador (volta para AVAILABLE)
     if (generator.consumers && generator.consumers.length > 0) {
-      throw new ConflictException(
-        'Não é possível remover um gerador que possui consumidores alocados',
-      );
+      await this.prisma.consumer.updateMany({
+        where: { generatorId: id },
+        data: {
+          generatorId: null,
+          status: 'AVAILABLE',
+          allocatedPercentage: null,
+        },
+      });
     }
 
     await this.prisma.generator.delete({

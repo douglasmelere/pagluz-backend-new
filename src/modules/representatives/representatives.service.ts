@@ -265,17 +265,31 @@ export class RepresentativesService {
       throw new NotFoundException('Representante não encontrado');
     }
 
-    // Verifica se há tokens vinculados
-    const tokensCount = await this.prisma.representative_tokens.count({
+    // 1. Desvincula consumidores (voltam para AVAILABLE sem representante)
+    await this.prisma.consumer.updateMany({
       where: { representativeId: id },
+      data: {
+        representativeId: null,
+        status: 'AVAILABLE',
+        generatorId: null,
+        allocatedPercentage: null,
+      },
     });
 
-    if (tokensCount > 0) {
-      throw new BadRequestException(
-        'Não é possível excluir o representante pois há tokens vinculados a ele.',
-      );
-    }
+    // 2. Remove registros dependentes manualmente (outros com FK sem Cascade)
+    await this.prisma.consumerChangeRequest.deleteMany({ where: { representativeId: id } });
+    await this.prisma.commission.deleteMany({ where: { representativeId: id } });
+    await this.prisma.representative_tokens.deleteMany({ where: { representativeId: id } });
+    await (this.prisma as any).pushToken.deleteMany({ where: { representativeId: id } });
+    await (this.prisma as any).activityLog.deleteMany({ where: { representativeId: id } });
+    await (this.prisma as any).representativeGoal.deleteMany({ where: { representativeId: id } });
+    await (this.prisma as any).representativeBadge.deleteMany({ where: { representativeId: id } });
+    await this.prisma.announcement.deleteMany({ where: { representativeId: id } });
+    await this.prisma.announcementRead.deleteMany({ where: { representativeId: id } });
+    await (this.prisma as any).feedback.deleteMany({ where: { representativeId: id } });
+    await this.prisma.proposalRequest.deleteMany({ where: { representativeId: id } });
 
+    // 3. Deleta o representante com segurança
     return this.prisma.representative.delete({
       where: { id },
     });
