@@ -284,10 +284,11 @@ let ConsumersService = class ConsumersService {
         if (toAllocate.approvalStatus !== enums_1.ConsumerApprovalStatus.APPROVED) {
             throw new common_1.BadRequestException("Consumidor ainda não aprovado para alocação");
         }
-        if (percentage <= 0 || percentage > 100) {
+        const consumer = await this.findOne(consumerId);
+        const finalPercentage = percentage ?? consumer.allocatedPercentage;
+        if (finalPercentage === undefined || finalPercentage === null || finalPercentage <= 0 || finalPercentage > 100) {
             throw new common_1.BadRequestException("Porcentagem deve estar entre 0 e 100");
         }
-        const consumer = await this.findOne(consumerId);
         const generator = await this.prisma.generator.findUnique({
             where: { id: generatorId },
         });
@@ -302,7 +303,7 @@ let ConsumersService = class ConsumersService {
             data: {
                 status: enums_1.ConsumerStatus.ALLOCATED,
                 generatorId,
-                allocatedPercentage: percentage,
+                allocatedPercentage: finalPercentage,
             },
             include: {
                 generator: true,
@@ -328,7 +329,7 @@ let ConsumersService = class ConsumersService {
             entityType: 'Consumer',
             entityId: updatedConsumer.id,
             action: 'STATUS_CHANGED',
-            description: `Consumidor "${updatedConsumer.name}" foi alocado (${percentage}%) ao gerador`,
+            description: `Consumidor "${updatedConsumer.name}" foi alocado (${updatedConsumer.allocatedPercentage}%) ao gerador "${updatedConsumer.generator?.ownerName || 'Desconhecido'}"`,
             representativeId: updatedConsumer.representativeId || undefined,
             performedByRole: 'SYSTEM',
         });

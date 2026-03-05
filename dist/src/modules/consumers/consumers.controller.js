@@ -71,7 +71,7 @@ let ConsumersController = class ConsumersController {
         return this.consumersService.remove(id);
     }
     allocateToGenerator(consumerId, body) {
-        return this.consumersService.allocateToGenerator(consumerId, body.generatorId, body.percentage);
+        return this.consumersService.allocateToGenerator(consumerId, body.generatorId, body.percentage ?? body.allocatedPercentage ?? 0);
     }
     deallocate(consumerId) {
         return this.consumersService.deallocate(consumerId);

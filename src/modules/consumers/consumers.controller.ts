@@ -168,12 +168,12 @@ export class ConsumersController {
   @Post(':id/allocate')
   allocateToGenerator(
     @Param('id') consumerId: string,
-    @Body() body: { generatorId: string; percentage: number },
+    @Body() body: { generatorId: string; percentage?: number; allocatedPercentage?: number },
   ) {
     return this.consumersService.allocateToGenerator(
       consumerId,
       body.generatorId,
-      body.percentage,
+      body.percentage ?? body.allocatedPercentage ?? 0,
     );
   }
 
