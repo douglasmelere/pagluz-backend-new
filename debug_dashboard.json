@@ -1,0 +1,225 @@
+{
+  "totalConsumers": 36,
+  "totalKwh": 46839.16,
+  "allocatedConsumersCount": 36,
+  "allocatedKwh": 0,
+  "allocationRate": 0,
+  "consumers": [
+    {
+      "id": "cmm8mrn5r0007tnqgp1adxual",
+      "status": "ALLOCATED",
+      "kwh": 1000,
+      "perc": null
+    },
+    {
+      "id": "ee40e981-0d6d-46a4-9e74-8aae9ab039fe",
+      "status": "ALLOCATED",
+      "kwh": 509.16,
+      "perc": null
+    },
+    {
+      "id": "6836566e-354f-434c-9d22-fd9251a21cda",
+      "status": "ALLOCATED",
+      "kwh": 1296,
+      "perc": null
+    },
+    {
+      "id": "58ef5205-684b-4b2b-b5ed-3b95b55e972a",
+      "status": "ALLOCATED",
+      "kwh": 3197,
+      "perc": null
+    },
+    {
+      "id": "9a1920d3-04f1-42a6-9e18-a1efc32a2ce6",
+      "status": "ALLOCATED",
+      "kwh": 897,
+      "perc": null
+    },
+    {
+      "id": "c7725804-09bd-4a1f-8c97-1e40a7fcd8da",
+      "status": "ALLOCATED",
+      "kwh": 350,
+      "perc": null
+    },
+    {
+      "id": "836bd0bf-e579-4121-9689-452fe1e109dc",
+      "status": "ALLOCATED",
+      "kwh": 2383,
+      "perc": null
+    },
+    {
+      "id": "87802462-28ae-4fc1-be00-2b8f8a237e7a",
+      "status": "ALLOCATED",
+      "kwh": 453,
+      "perc": null
+    },
+    {
+      "id": "91050e21-67f5-4c35-93ce-70147160c40f",
+      "status": "ALLOCATED",
+      "kwh": 485,
+      "perc": null
+    },
+    {
+      "id": "72fb3b19-1eff-4c65-97a9-f35c1a670980",
+      "status": "ALLOCATED",
+      "kwh": 772,
+      "perc": null
+    },
+    {
+      "id": "35ecd4ba-6e82-4fb3-82b8-509a28817d21",
+      "status": "ALLOCATED",
+      "kwh": 349,
+      "perc": null
+    },
+    {
+      "id": "0771a9c1-f2f7-4882-8b6b-bfae59ee02ea",
+      "status": "ALLOCATED",
+      "kwh": 4256,
+      "perc": null
+    },
+    {
+      "id": "899ebb42-9f23-4138-958c-1a85a80eb1d5",
+      "status": "ALLOCATED",
+      "kwh": 2372,
+      "perc": null
+    },
+    {
+      "id": "e12fb0f0-f72a-4c03-9768-bee2dd00373d",
+      "status": "ALLOCATED",
+      "kwh": 2096,
+      "perc": null
+    },
+    {
+      "id": "8a902d36-5ff4-45fe-a56d-ff6b8bc581fa",
+      "status": "ALLOCATED",
+      "kwh": 731,
+      "perc": null
+    },
+    {
+      "id": "89d359cf-8625-4c15-862a-36ede3517d07",
+      "status": "ALLOCATED",
+      "kwh": 1920,
+      "perc": null
+    },
+    {
+      "id": "a352c8c8-2d73-4922-92ec-dbe51d4ee0a8",
+      "status": "ALLOCATED",
+      "kwh": 490,
+      "perc": null
+    },
+    {
+      "id": "78240b54-580f-4cdb-8538-d11781df5f86",
+      "status": "ALLOCATED",
+      "kwh": 3327,
+      "perc": null
+    },
+    {
+      "id": "2d44bb35-bfdb-4f24-8e3a-4d71558fd49b",
+      "status": "ALLOCATED",
+      "kwh": 1708,
+      "perc": null
+    },
+    {
+      "id": "040bff07-884b-496b-9d95-a1a4d73d2cd4",
+      "status": "ALLOCATED",
+      "kwh": 2554,
+      "perc": null
+    },
+    {
+      "id": "a9d35204-5c1d-4d1a-ab7c-ec59d659277a",
+      "status": "ALLOCATED",
+      "kwh": 705,
+      "perc": null
+    },
+    {
+      "id": "42a4397e-c214-4e93-a6b3-2355c718d0b9",
+      "status": "ALLOCATED",
+      "kwh": 406,
+      "perc": null
+    },
+    {
+      "id": "61ca0cd8-e67a-4cc6-841e-e323d64f434e",
+      "status": "ALLOCATED",
+      "kwh": 908,
+      "perc": null
+    },
+    {
+      "id": "ea31c54a-5b22-4427-925b-0cfe54ced745",
+      "status": "ALLOCATED",
+      "kwh": 457,
+      "perc": null
+    },
+    {
+      "id": "d44da9d1-207c-4323-b505-b5730ed41db8",
+      "status": "ALLOCATED",
+      "kwh": 510,
+      "perc": null
+    },
+    {
+      "id": "f4dc6e04-509e-41d5-a919-3327f8e15e59",
+      "status": "ALLOCATED",
+      "kwh": 2386,
+      "perc": null
+    },
+    {
+      "id": "ec7d4d44-3fa1-405a-ad0e-36ba17a994aa",
+      "status": "ALLOCATED",
+      "kwh": 327,
+      "perc": null
+    },
+    {
+      "id": "bbe898fe-db0c-45bb-8887-340fdeb71392",
+      "status": "ALLOCATED",
+      "kwh": 234,
+      "perc": null
+    },
+    {
+      "id": "7dd8f118-869d-4f39-8ee0-622ef56b78dc",
+      "status": "ALLOCATED",
+      "kwh": 419,
+      "perc": null
+    },
+    {
+      "id": "10040a29-9a95-48fa-a13a-38cdee0f58e6",
+      "status": "ALLOCATED",
+      "kwh": 2185,
+      "perc": null
+    },
+    {
+      "id": "62516e2a-47a2-4daf-976f-59378b7f4e0c",
+      "status": "ALLOCATED",
+      "kwh": 330,
+      "perc": null
+    },
+    {
+      "id": "f0022650-b97c-41d4-9f96-caefbde94f48",
+      "status": "ALLOCATED",
+      "kwh": 328,
+      "perc": null
+    },
+    {
+      "id": "19c5d2c3-e28f-4107-b354-6b4ffdec221e",
+      "status": "ALLOCATED",
+      "kwh": 450,
+      "perc": null
+    },
+    {
+      "id": "f7d03e1a-ff1d-4f23-ac9f-cb295a8f85e9",
+      "status": "ALLOCATED",
+      "kwh": 1553,
+      "perc": null
+    },
+    {
+      "id": "f042ba77-fba2-48ed-939d-fb89e23de65a",
+      "status": "ALLOCATED",
+      "kwh": 287,
+      "perc": null
+    },
+    {
+      "id": "f7eeeaaa-af9c-4979-9381-dd2953a95b72",
+      "status": "ALLOCATED",
+      "kwh": 4209,
+      "perc": null
+    }
+  ]
+}

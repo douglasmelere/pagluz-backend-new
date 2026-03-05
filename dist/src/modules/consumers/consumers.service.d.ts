@@ -25,6 +25,8 @@ export declare class ConsumersService {
     create(createConsumerDto: CreateConsumerDto): Promise<{
         generator: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             cpfCnpj: string;
             concessionaire: string;
             ucNumber: string;
@@ -32,22 +34,22 @@ export declare class ConsumersService {
             state: string;
             observations: string | null;
             status: import(".prisma/client").$Enums.GeneratorStatus;
-            createdAt: Date;
-            updatedAt: Date;
             ownerName: string;
             sourceType: import(".prisma/client").$Enums.SourceType;
             installedPower: number;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -67,6 +69,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -76,9 +79,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     createAsRepresentative(createConsumerDto: CreateConsumerDto, representativeId: string): Promise<any>;
     findAll(): Promise<({
@@ -90,14 +90,16 @@ export declare class ConsumersService {
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -117,6 +119,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -126,13 +129,12 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     })[]>;
     findOne(id: string): Promise<{
         generator: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             cpfCnpj: string;
             concessionaire: string;
             ucNumber: string;
@@ -140,22 +142,22 @@ export declare class ConsumersService {
             state: string;
             observations: string | null;
             status: import(".prisma/client").$Enums.GeneratorStatus;
-            createdAt: Date;
-            updatedAt: Date;
             ownerName: string;
             sourceType: import(".prisma/client").$Enums.SourceType;
             installedPower: number;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -175,6 +177,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -184,9 +187,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     findByCpfCnpj(cpfCnpj: string): Promise<({
         generator: {
@@ -197,14 +197,16 @@ export declare class ConsumersService {
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -224,6 +226,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -233,9 +236,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     })[]>;
     findByRepresentative(representativeId: string): Promise<({
         generator: {
@@ -246,20 +246,22 @@ export declare class ConsumersService {
             installedPower: number;
         } | null;
         Representative: {
-            id: string;
-            name: string;
             email: string;
+            name: string;
+            id: string;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -279,6 +281,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -288,13 +291,12 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     })[]>;
     update(id: string, updateConsumerDto: UpdateConsumerDto): Promise<{
         generator: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             cpfCnpj: string;
             concessionaire: string;
             ucNumber: string;
@@ -302,22 +304,22 @@ export declare class ConsumersService {
             state: string;
             observations: string | null;
             status: import(".prisma/client").$Enums.GeneratorStatus;
-            createdAt: Date;
-            updatedAt: Date;
             ownerName: string;
             sourceType: import(".prisma/client").$Enums.SourceType;
             installedPower: number;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -337,6 +339,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -346,9 +349,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     remove(id: string): Promise<{
         message: string;
@@ -356,6 +356,8 @@ export declare class ConsumersService {
     allocateToGenerator(consumerId: string, generatorId: string, percentage: number): Promise<{
         generator: {
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
             cpfCnpj: string;
             concessionaire: string;
             ucNumber: string;
@@ -363,22 +365,22 @@ export declare class ConsumersService {
             state: string;
             observations: string | null;
             status: import(".prisma/client").$Enums.GeneratorStatus;
-            createdAt: Date;
-            updatedAt: Date;
             ownerName: string;
             sourceType: import(".prisma/client").$Enums.SourceType;
             installedPower: number;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -398,6 +400,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -407,20 +410,19 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     deallocate(consumerId: string): Promise<{
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -440,6 +442,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -449,20 +452,19 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     approveConsumer(consumerId: string, approverUserId?: string): Promise<{
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -482,6 +484,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -491,20 +494,19 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     rejectConsumer(consumerId: string, approverUserId: string, reason?: string): Promise<{
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -524,6 +526,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -533,9 +536,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     getByState(state: string): Promise<({
         generator: {
@@ -545,14 +545,16 @@ export declare class ConsumersService {
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -572,6 +574,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -581,9 +584,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     })[]>;
     findPending(filters: {
         state?: string;
@@ -596,20 +596,22 @@ export declare class ConsumersService {
     }): Promise<{
         consumers: ({
             Representative: {
-                id: string;
-                name: string;
                 email: string;
+                name: string;
+                id: string;
             } | null;
         } & {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -629,6 +631,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -638,9 +641,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         })[];
         pagination: {
             page: number;
@@ -675,20 +675,22 @@ export declare class ConsumersService {
             installedPower: number;
         } | null;
         Representative: {
-            id: string;
-            name: string;
             email: string;
+            name: string;
+            id: string;
         } | null;
     } & {
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -708,6 +710,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -717,9 +720,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }) | null>;
     findRepresentativeConsumersWithFilters(representativeId: string, filters: {
         status?: ConsumerStatus;
@@ -744,14 +744,16 @@ export declare class ConsumersService {
             } | null;
         } & {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -771,6 +773,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -780,9 +783,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         })[];
         pagination: {
             page: number;
@@ -808,14 +808,16 @@ export declare class ConsumersService {
     updateRepresentativeConsumerWithApproval(representativeId: string, consumerId: string, updateData: Partial<UpdateConsumerDto>): Promise<{
         consumer: {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -835,6 +837,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -844,9 +847,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         };
         changeRequest: any;
         message: string;
@@ -858,14 +858,16 @@ export declare class ConsumersService {
     updateRepresentativeConsumer(representativeId: string, consumerId: string, updateData: Partial<UpdateConsumerDto>): Promise<{
         consumer: {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -885,6 +887,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -894,9 +897,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         };
         changeRequest: any;
         message: string;
@@ -980,9 +980,9 @@ export declare class ConsumersService {
             cpfCnpj: string;
             averageMonthlyConsumption: number;
             representative: {
-                id: string;
-                name: string;
                 email: string;
+                name: string;
+                id: string;
             } | null;
             generator: {
                 id: string;
@@ -1024,20 +1024,22 @@ export declare class ConsumersService {
         message: string;
         consumer: {
             Representative: {
-                id: string;
-                name: string;
                 email: string;
+                name: string;
+                id: string;
             } | null;
         } & {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -1057,6 +1059,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -1066,9 +1069,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         };
     }>;
     generateCommissionForConsumer(consumerId: string): Promise<{
@@ -1113,14 +1113,16 @@ export declare class ConsumersService {
     uploadInvoice(consumerId: string, representativeId: string, file: Express.Multer.File): Promise<{
         consumer: {
             number: string | null;
-            id: string;
+            email: string | null;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
             documentType: import(".prisma/client").$Enums.DocumentType | null;
             cpfCnpj: string;
             representativeName: string | null;
             representativeRg: string | null;
             phone: string | null;
-            email: string | null;
             concessionaire: string;
             ucNumber: string;
             consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -1140,6 +1142,7 @@ export declare class ConsumersService {
             status: import(".prisma/client").$Enums.ConsumerStatus;
             allocatedPercentage: number | null;
             generatorId: string | null;
+            representativeId: string | null;
             approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
             submittedByRepresentativeId: string | null;
             approvedByUserId: string | null;
@@ -1149,9 +1152,6 @@ export declare class ConsumersService {
             invoiceFileName: string | null;
             invoiceUploadedAt: Date | null;
             invoiceScannedData: Prisma.JsonValue | null;
-            createdAt: Date;
-            updatedAt: Date;
-            representativeId: string | null;
         };
         invoiceUrl: string;
         invoiceStorageUrl: string;
@@ -1163,14 +1163,16 @@ export declare class ConsumersService {
     private processOcrAsync;
     removeInvoice(consumerId: string, representativeId: string): Promise<{
         number: string | null;
-        id: string;
+        email: string | null;
         name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
         documentType: import(".prisma/client").$Enums.DocumentType | null;
         cpfCnpj: string;
         representativeName: string | null;
         representativeRg: string | null;
         phone: string | null;
-        email: string | null;
         concessionaire: string;
         ucNumber: string;
         consumerType: import(".prisma/client").$Enums.ConsumerType;
@@ -1190,6 +1192,7 @@ export declare class ConsumersService {
         status: import(".prisma/client").$Enums.ConsumerStatus;
         allocatedPercentage: number | null;
         generatorId: string | null;
+        representativeId: string | null;
         approvalStatus: import(".prisma/client").$Enums.ConsumerApprovalStatus;
         submittedByRepresentativeId: string | null;
         approvedByUserId: string | null;
@@ -1199,9 +1202,6 @@ export declare class ConsumersService {
         invoiceFileName: string | null;
         invoiceUploadedAt: Date | null;
         invoiceScannedData: Prisma.JsonValue | null;
-        createdAt: Date;
-        updatedAt: Date;
-        representativeId: string | null;
     }>;
     downloadInvoice(consumerId: string, representativeId: string, res: any): Promise<void>;
     downloadInvoiceAdmin(consumerId: string, res: any): Promise<void>;

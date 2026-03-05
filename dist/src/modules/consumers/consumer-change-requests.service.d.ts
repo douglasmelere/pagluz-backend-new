@@ -13,7 +13,7 @@ export declare class ConsumerChangeRequestsService {
             email: string;
             name: string;
             id: string;
-        };
+        } | null;
         consumer: {
             name: string;
             id: string;
@@ -24,7 +24,7 @@ export declare class ConsumerChangeRequestsService {
         createdAt: Date;
         updatedAt: Date;
         status: import(".prisma/client").$Enums.ChangeRequestStatus;
-        representativeId: string;
+        representativeId: string | null;
         oldValues: import("@prisma/client/runtime/library").JsonValue | null;
         newValues: import("@prisma/client/runtime/library").JsonValue;
         rejectionReason: string | null;
@@ -83,7 +83,7 @@ export declare class ConsumerChangeRequestsService {
             createdAt: Date;
             updatedAt: Date;
             status: import(".prisma/client").$Enums.ChangeRequestStatus;
-            representativeId: string;
+            representativeId: string | null;
             oldValues: import("@prisma/client/runtime/library").JsonValue | null;
             newValues: import("@prisma/client/runtime/library").JsonValue;
             rejectionReason: string | null;
@@ -141,7 +141,7 @@ export declare class ConsumerChangeRequestsService {
             email: string;
             name: string;
             id: string;
-        };
+        } | null;
         consumer: {
             name: string;
             id: string;
@@ -152,7 +152,7 @@ export declare class ConsumerChangeRequestsService {
         createdAt: Date;
         updatedAt: Date;
         status: import(".prisma/client").$Enums.ChangeRequestStatus;
-        representativeId: string;
+        representativeId: string | null;
         oldValues: import("@prisma/client/runtime/library").JsonValue | null;
         newValues: import("@prisma/client/runtime/library").JsonValue;
         rejectionReason: string | null;
@@ -168,7 +168,7 @@ export declare class ConsumerChangeRequestsService {
                 email: string;
                 name: string;
                 id: string;
-            };
+            } | null;
             consumer: {
                 name: string;
                 id: string;
@@ -180,7 +180,7 @@ export declare class ConsumerChangeRequestsService {
             createdAt: Date;
             updatedAt: Date;
             status: import(".prisma/client").$Enums.ChangeRequestStatus;
-            representativeId: string;
+            representativeId: string | null;
             oldValues: import("@prisma/client/runtime/library").JsonValue | null;
             newValues: import("@prisma/client/runtime/library").JsonValue;
             rejectionReason: string | null;
@@ -213,7 +213,7 @@ export declare class ConsumerChangeRequestsService {
         createdAt: Date;
         updatedAt: Date;
         status: import(".prisma/client").$Enums.ChangeRequestStatus;
-        representativeId: string;
+        representativeId: string | null;
         oldValues: import("@prisma/client/runtime/library").JsonValue | null;
         newValues: import("@prisma/client/runtime/library").JsonValue;
         rejectionReason: string | null;

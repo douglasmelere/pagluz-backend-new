@@ -5,13 +5,13 @@ import { ConsumerStatus, GeneratorStatus, ChangeRequestStatus } from '../../comm
 
 @Injectable()
 export class DashboardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getDashboardData() {
     // Estatísticas básicas
     const totalGenerators = await this.prisma.generator.count();
     const totalConsumers = await this.prisma.consumer.count();
-    
+
     // Potência instalada total
     const totalInstalledPower = await this.prisma.generator.aggregate({
       _sum: {
@@ -137,7 +137,7 @@ export class DashboardService {
         id: req.id,
         consumerId: req.consumerId,
         consumerName: req.consumer.name,
-        representativeName: req.representative.name,
+        representativeName: req.representative?.name ?? 'Removido',
         changedFields: req.changedFields,
         requestedAt: req.requestedAt,
       })),
@@ -228,7 +228,7 @@ export class DashboardService {
       if (consumer.generator && consumer.allocatedPercentage) {
         const allocatedEnergy = (consumer.averageMonthlyConsumption * consumer.allocatedPercentage) / 100;
         totalAllocatedEnergy += allocatedEnergy;
-        
+
         // Estimativa de economia: desconto oferecido aplicado à energia alocada
         // Assumindo um valor médio de R$ 0,65 por kWh
         const energyCost = allocatedEnergy * 0.65;
@@ -310,7 +310,7 @@ export class DashboardService {
       stateMap.set(item.state, existing);
     });
 
-    return Array.from(stateMap.values()).sort((a, b) => 
+    return Array.from(stateMap.values()).sort((a, b) =>
       (b.generators + b.consumers) - (a.generators + a.consumers)
     );
   }

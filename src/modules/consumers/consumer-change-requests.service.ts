@@ -99,7 +99,7 @@ export class ConsumerChangeRequestsService {
     await this.webhookService.sendNotification('ALTERACAO_SOLICITADA', {
       requestId: changeRequest.id,
       consumerName: changeRequest.consumer.name,
-      representativeName: changeRequest.representative.name,
+      representativeName: changeRequest.representative?.name ?? 'Desconhecido',
       changedFields,
     });
 
@@ -155,11 +155,13 @@ export class ConsumerChangeRequestsService {
       newValues: changeRequest.newValues,
     });
 
-    await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
-      title: 'Alteração Aprovada! ✅',
-      body: `A solicitação de alteração para o cliente "${changeRequest.consumer.name}" foi aprovada.`,
-      data: { type: 'change_request', id: changeRequestId },
-    });
+    if (changeRequest.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+        title: 'Alteração Aprovada! ✅',
+        body: `A solicitação de alteração para o cliente "${changeRequest.consumer.name}" foi aprovada.`,
+        data: { type: 'change_request', id: changeRequestId },
+      });
+    }
 
     return {
       changeRequest,
@@ -228,11 +230,13 @@ export class ConsumerChangeRequestsService {
       },
     });
 
-    await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
-      title: 'Alteração Rejeitada ❌',
-      body: `A solicitação de alteração para o cliente "${updated.consumer.name}" foi rejeitada. Motivo: ${rejectionReason}`,
-      data: { type: 'change_request', id: changeRequestId },
-    });
+    if (changeRequest.representativeId) {
+      await this.pushNotificationService.sendToRepresentative(changeRequest.representativeId, {
+        title: 'Alteração Rejeitada ❌',
+        body: `A solicitação de alteração para o cliente "${updated.consumer.name}" foi rejeitada. Motivo: ${rejectionReason}`,
+        data: { type: 'change_request', id: changeRequestId },
+      });
+    }
 
     return updated;
   }

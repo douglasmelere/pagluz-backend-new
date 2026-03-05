@@ -125,7 +125,7 @@ let DashboardService = class DashboardService {
                 id: req.id,
                 consumerId: req.consumerId,
                 consumerName: req.consumer.name,
-                representativeName: req.representative.name,
+                representativeName: req.representative?.name ?? 'Removido',
                 changedFields: req.changedFields,
                 requestedAt: req.requestedAt,
             })),

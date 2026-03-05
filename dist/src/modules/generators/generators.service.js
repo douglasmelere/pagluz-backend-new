@@ -92,7 +92,14 @@ let GeneratorsService = class GeneratorsService {
     async remove(id) {
         const generator = await this.findOne(id);
         if (generator.consumers && generator.consumers.length > 0) {
-            throw new common_1.ConflictException('Não é possível remover um gerador que possui consumidores alocados');
+            await this.prisma.consumer.updateMany({
+                where: { generatorId: id },
+                data: {
+                    generatorId: null,
+                    status: 'AVAILABLE',
+                    allocatedPercentage: null,
+                },
+            });
         }
         await this.prisma.generator.delete({
             where: { id },
