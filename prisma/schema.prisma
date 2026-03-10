@@ -333,6 +333,7 @@ model ProposalRequest {
   clientName         String
   invoiceAmount      Float
   phaseType          PhaseType
+  consumerType       ConsumerType
   kwhValue           Float
   status             ProposalRequestStatus @default(PENDING)
   documentUrl        String?

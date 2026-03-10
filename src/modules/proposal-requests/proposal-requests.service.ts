@@ -65,6 +65,8 @@ export class ProposalRequestsService {
       representativeName: representative.name,
       invoiceAmount: dto.invoiceAmount,
       kwhValue: dto.kwhValue,
+      consumerType: dto.consumerType,
+      phaseType: dto.phaseType,
     });
 
     return request;
